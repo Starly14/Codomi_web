@@ -1,0 +1,17 @@
+<h1>Importes</h1>
+
+
+<form method="get">
+    {{ filterset.form.as_p }}
+    <button type="submit">Filtrar</button>
+</form>
+
+<ul>
+    {% for importe in importes %}
+        <li>
+            Dpto: {{ importe.id_dpto.id_dpto }} - Fecha: {{ importe.fecha_importe }} - Pago $: {{ importe.pago_dl }}
+        </li>
+    {% empty %}
+        <li>No se encontraron resultados.</li>
+    {% endfor %}
+</ul>
