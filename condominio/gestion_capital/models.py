@@ -27,3 +27,4 @@ class importe(models.Model):
 
     def __str__(self):
         return f"Dpto: {self.nro_dpto.nro_dpto} - Fecha: {self.fecha}"
+
