@@ -3,8 +3,9 @@ from django.views.generic import ListView # permite mostrar una lista de objetos
 from .models import importe
 from .filters import ImporteFilter
 
+def gestion_capital(request):
+    return render(request, "gestion_capital/gestionCapital.html")
 
-# Creacion de una vista basada en clase
 class ImporteListView(ListView):
     model = importe # modelo que se va a listar
     template_name = 'importe_list.html'
@@ -21,3 +22,4 @@ class ImporteListView(ListView):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         return context
+
