@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Propietario, Correo
 from .forms import PropietarioForm, CorreoForm
+from django.db import IntegrityError
 
 def propietario_detail(request, id):
     propietario = get_object_or_404(Propietario, id_prop=id)
     correos = Correo.objects.filter(id_prop=propietario)
 
+    propietario_form = PropietarioForm(instance=propietario)
+    correo_form = CorreoForm()
     if request.method == 'POST':
         if 'edit_nombre' in request.POST:
             propietario_form = PropietarioForm(request.POST, instance=propietario)

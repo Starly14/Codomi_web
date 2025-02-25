@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gestion_propietario.apps.GestionPropietarioConfig',
-    'inicioSesion',
+    'iniciarSesion',
+    'gestion_capital',
+    'tailwind',
+    'tailwindcss',
+    'django_browser_reload'
 ]
 
 MIDDLEWARE = [
@@ -49,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+
 ]
 
 ROOT_URLCONF = 'condominio.urls'
@@ -134,10 +140,21 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = "inicioSesion:home"
-LOGIN_REDIRECT_URL = "inicioSesion:login"
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
+
+TAILWIND_APP_NAME = 'tailwindcss'
+
+NPM_BIN_PATH = 'c:/Program Files/nodejs/npm.cmd'
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

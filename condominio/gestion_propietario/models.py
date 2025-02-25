@@ -39,7 +39,7 @@ class Asignacion(models.Model):
         return f"Propietario: {self.id_prop.nombre_prop} - Dpto: {self.nro_dpto.nro_dpto} Fecha inicio:{self.fecha_inicio}{fecha_fin_str}."
     
 class Correo(models.Model):
-    correo = models.CharField(primary_key=True)
+    correo = models.EmailField(primary_key=True, unique=True)
     id_prop = models.ForeignKey('Propietario', on_delete=models.CASCADE, db_column='id_prop', related_name='correos')
 
     class Meta:
