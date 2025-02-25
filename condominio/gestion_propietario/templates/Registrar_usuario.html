@@ -1,168 +1,125 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Panel de Control</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
+{% extends "base.html" %}
+{% load tailwind_tags %}
+{% load static %}
 
-        .container {
-            width: 90%;
-            max-width: 960px;
-            margin: 0 auto;
-        }
-        
-        header {
-    background-color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+{% block scripts %}
+<script>
+    function validateEmail() {
+        var emailInput = document.getElementById('correo');
+        emailInput.setCustomValidity('');
 
-        .logo {
-        font-size: 1.5em;
-            font-weight: bold;
+        if (!emailInput.validity.valid) {
+            emailInput.setCustomValidity('Por favor, introduce un correo electrónico válido.');
         }
+    }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
+    function toggleDropdown() {
+        const dropdown = document.getElementById('correoDropdown');
+        dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
+    }
+</script>
+{% endblock %}
 
-        .admin-name {
-            margin-right: 10px;
-        }
+{% block content %}
 
-        .user-icon {
-            width: 30px;
-            height: 30px;
-            background-color: #ccc;
-            border-radius: 50%;
-        }
+<section class="propietario p-6 bg-white rounded-lg shadow-md relative flex justify-center">
 
-        nav {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-        }
+  
+  <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md mb-64 ">  
 
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: space-around;
-        }
+    <div class="flex flex-wrap ">
 
-        nav li a {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px;
-        }
+    <div class="p-20 pb-5">
 
-        main {
-            background-color: #fff;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .propietario {
-            border: 1px solid #ccc;
-            padding: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 10px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="email"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-
-    </style>
-    <script>
-        function validateEmail() {
-            var emailInput = document.getElementById('correo');
-            emailInput.setCustomValidity('');
-    
-            if (!emailInput.validity.valid) {
-                emailInput.setCustomValidity('Por favor, introduce un correo electrónico válido.');
-            }
-        }
-    </script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <div class="logo">CODOMI</div>
-            <div class="user-info">
-                <div class="admin-name">admin name</div>
-                <div class="user-icon"></div>
-            </div>
-        </header>
-
-        <nav>
-            <ul>
-                <li><a href="#">Gestion de Propietario</a></li>
-                <li><a href="#">Gestión de Capital</a></li>
-                <li><a href="#">Gestión de Recibo</a></li>
-                <li><a href="#">Análisis de datos</a></li>
-                <li><a href="#">Gestionar Edificio</a></li>
+    <div class="mb-4">
+        <h2 class="text-xl font-bold mb-5">Propietario:</h2>
+        <button onclick="toggleDropdown()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            Seleccionar propietario
+        </button>
+        <div class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">
+            <ul class="list-none inline-flex flex-col bg-white border border-gray-200 rounded-md">
+                {% for correo in correos %}
+                <li class="hover:bg-gray-100">
+                    <div class="inline-flex w-max items-center p-2 ">
+                        <span class="mr-2">{{ correo.correo }}</span>
+                        <form method="post" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="correo_id" value="{{ correo.correo }}">
+                            <button type="submit" name="delete_correo" class="p-2">
+                                <img src="{% static 'gestion_propietario/delete.svg' %}" alt="Eliminar" class="h-4 w-4 inline object-cover">
+                            </button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
             </ul>
-        </nav>
+        </div>
+    </div>
+    
+    </div>
 
-        <main>
-            <section class="propietario">
-                <h2>Propietario: {{ propietario.nombre_prop }}</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    {{ propietario_form.as_p }}
-                    <button type="submit" name="edit_nombre">Guardar Nombre</button>
-                </form>
+    <div class="p-20 pb-10 pl-15 pr-20">
 
-                <h2>Correos:</h2>
-                <ul class="correo-list">
+        <h2 class="text-2xl font-bold mb-6 ">
+            Propietario: {{ propietario.nombre_prop }}
+        </h2>
+    
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            {{ propietario_form.as_p }}
+            <button type="submit" name="edit_nombre"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-6">
+                Guardar Nombre
+            </button>
+        </form>
+    
+        </div>
+
+    </div>
+
+    <div class="flex flex-wrap">
+
+    <div class="p-20 pt-5 pb-10">
+        <h3 class="text-xl font-bold my-8">Agregar Correo:</h3>
+            <form method="post">
+            {% csrf_token %}
+            {{ correo_form.as_p }}
+                <button type="submit" name="add_correo"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-5">Agregar</button>
+            </form>
+    </div>
+
+    <div class="p-20 pb-10 pl-5 pr-48 pt-12">
+
+        <div class="mb-4">
+            <h2 class="text-xl font-bold mb-5">Correos:</h2>
+            <button onclick="toggleDropdown()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                Correos registrados
+            </button>
+            <div id="correoDropdown" class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">
+                <ul class="list-none inline-flex flex-col bg-white border border-gray-200 rounded-md">
                     {% for correo in correos %}
-                        <li class="correo-item">
-                            {{ correo.correo }}
-                            <form method="post" style="display:inline;">
+                    <li class="hover:bg-gray-100">
+                        <div class="inline-flex w-max items-center p-2 ">
+                            <span class="mr-2">{{ correo.correo }}</span>
+                            <form method="post" class="inline">
                                 {% csrf_token %}
                                 <input type="hidden" name="correo_id" value="{{ correo.correo }}">
-                                <button type="submit" name="delete_correo" class="delete-btn">x</button>
+                                <button type="submit" name="delete_correo" class="p-2">
+                                    <img src="{% static 'gestion_propietario/delete.svg' %}" alt="Eliminar" class="h-4 w-4 inline object-cover">
+                                </button>
                             </form>
-                        </li>
+                        </div>
+                    </li>
                     {% endfor %}
                 </ul>
+            </div>
+        </div>
+        </div>
 
-                <h3>Agregar Correo:</h3>
-                <form method="post">
-                    {% csrf_token %}
-                    {{ correo_form.as_p }}
-
-                    <button type="submit" name="add_correo">Agregar</button>
-                </form>
-            </section>
-        </main>
     </div>
-</body>
-</html>
+
+  </div> 
+</section>
+
+{% endblock %}
