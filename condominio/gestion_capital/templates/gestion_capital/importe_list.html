@@ -1,17 +1,23 @@
-<h1>Importes</h1>
-
-
 <form method="get">
-    {{ filterset.form.as_p }}
+    {{ filtro.form.as_p }} 
     <button type="submit">Filtrar</button>
 </form>
 
-<ul>
-    {% for importe in importes %}
-        <li>
-            Dpto: {{ importe.id_dpto.id_dpto }} - Fecha: {{ importe.fecha_importe }} - Pago $: {{ importe.pago_dl }}
-        </li>
-    {% empty %}
-        <li>No se encontraron resultados.</li>
-    {% endfor %}
-</ul>
+<table>
+    <thead>
+        <tr>
+            <th>Departamento</th>
+            <th>Fecha</th>
+            <th>Pago (Dl)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in queryset %}
+        <tr>
+            <td>{{ item.id_dpto }}</td>
+            <td>{{ item.fecha_importe }}</td>
+            <td>{{ item.pago_dl }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
