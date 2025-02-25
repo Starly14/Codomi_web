@@ -152,4 +152,9 @@ LOGOUT_REDIRECT_URL = "login"
 
 TAILWIND_APP_NAME = 'tailwindcss'
 
-NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
+NPM_BIN_PATH = 'c:/Program Files/nodejs/npm.cmd'
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
