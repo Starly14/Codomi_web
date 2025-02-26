@@ -25,11 +25,11 @@
 <section class="propietario p-6 bg-white rounded-lg shadow-md relative flex justify-center">
 
   
-  <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md mb-64 ">  
+  <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md mb-10 ">  
 
     <div class="flex flex-wrap ">
 
-    <div class="p-20 pb-5">
+    <div class="p-20 pb-5 pr-8 pl-32">
 
     <div class="mb-4">
         <h2 class="text-xl font-bold mb-5">Propietario:</h2>
@@ -55,41 +55,8 @@
             </ul>
         </div>
     </div>
-    
-    </div>
 
-    <div class="p-20 pb-10 pl-15 pr-20">
-
-        <h2 class="text-2xl font-bold mb-6 ">
-            Propietario: {{ propietario.nombre_prop }}
-        </h2>
-    
-        <form method="post" class="mb-4">
-            {% csrf_token %}
-            {{ propietario_form.as_p }}
-            <button type="submit" name="edit_nombre"
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-6">
-                Guardar Nombre
-            </button>
-        </form>
-    
-        </div>
-
-    </div>
-
-    <div class="flex flex-wrap">
-
-    <div class="p-20 pt-5 pb-10">
-        <h3 class="text-xl font-bold my-8">Agregar Correo:</h3>
-            <form method="post">
-            {% csrf_token %}
-            {{ correo_form.as_p }}
-                <button type="submit" name="add_correo"
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-5">Agregar</button>
-            </form>
-    </div>
-
-    <div class="p-20 pb-10 pl-5 pr-48 pt-12">
+    <div class="p-20 pb-0 pl-0 pr-48 pt-12">
 
         <div class="mb-4">
             <h2 class="text-xl font-bold mb-5">Correos:</h2>
@@ -116,6 +83,39 @@
             </div>
         </div>
         </div>
+    
+    </div>
+
+        <div class="p-20 pb-10 pl-0 pr-32">
+
+            <h2 class="text-xl font-bold mb-5">Editar nombre</h2>
+    
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            {{ propietario_form.as_p }}
+            <button type="submit" name="edit_nombre"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-6">
+                Guardar Nombre
+            </button>
+        </form>
+    
+        </div>
+
+    </div>
+
+    <div class="flex flex-wrap">
+
+    <div class="p-20 pt-0 pb-10 pl-32">
+        <h3 class="text-xl font-bold my-5">Agregar Correo:</h3>
+            <form method="post">
+            {% csrf_token %}
+            {{ correo_form.as_p }}
+                <button type="submit" name="add_correo"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-5">Agregar</button>
+            </form>
+    </div>
+
+    
 
     </div>
 
