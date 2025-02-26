@@ -43,7 +43,7 @@ def propietario_detail(request, id):
         propietario_form = PropietarioForm(instance=propietario)
         correo_form = CorreoForm()
 
-    return render(request, 'editarUsuario.html', {
+    return render(request, 'editarPropietario.html', {
         'propietario': propietario,
         'correos': correos,
         'propietario_form': propietario_form,
@@ -91,7 +91,7 @@ def registrarPropietarioView(request, id):
         propietario_form = PropietarioForm(instance=propietario)
         correo_form = CorreoForm()
 
-    return render(request, 'registrarUsuario.html', {
+    return render(request, 'registrarPropietario.html', {
         'propietario': propietario,
         'correos': correos,
         'propietario_form': propietario_form,
