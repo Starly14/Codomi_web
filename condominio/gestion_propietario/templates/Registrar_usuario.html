@@ -33,7 +33,7 @@
 
     <div class="mb-4">
         <h2 class="text-xl font-bold mb-5">Propietario:</h2>
-        <button onclick="toggleDropdown()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+        <button onclick="toggleDropdown()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
             Seleccionar propietario
         </button>
         <div class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">
@@ -60,7 +60,7 @@
 
         <div class="mb-4">
             <h2 class="text-xl font-bold mb-5">Correos:</h2>
-            <button onclick="toggleDropdown()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+            <button onclick="toggleDropdown()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
                 Correos registrados
             </button>
             <div id="correoDropdown" class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">
@@ -94,7 +94,7 @@
             {% csrf_token %}
             {{ propietario_form.as_p }}
             <button type="submit" name="edit_nombre"
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-6">
+                class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded my-6">
                 Guardar Nombre
             </button>
         </form>
@@ -111,7 +111,7 @@
             {% csrf_token %}
             {{ correo_form.as_p }}
                 <button type="submit" name="add_correo"
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded my-5">Agregar</button>
+                class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded my-5">Agregar</button>
             </form>
     </div>
 
