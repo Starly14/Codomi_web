@@ -21,6 +21,20 @@
         const dropdown = document.getElementById('correoDropdown');
         dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
     }
+
+        // Agregar la función para ocultar los menús desplegables al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        const propDropdown = document.getElementById('propDropdown');
+        const correoDropdown = document.getElementById('correoDropdown');
+
+        if (!event.target.closest('#propDropdown') && !event.target.closest('button[onclick="toggleDropdown1()"]')) {
+            propDropdown.classList.add('hidden');
+        }
+
+        if (!event.target.closest('#correoDropdown') && !event.target.closest('button[onclick="toggleDropdown2()"]')) {
+            correoDropdown.classList.add('hidden');
+        }
+    });
 </script>
 {% endblock %}
 
