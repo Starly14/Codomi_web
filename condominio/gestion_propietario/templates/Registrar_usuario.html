@@ -13,7 +13,11 @@
         }
     }
 
-    function toggleDropdown() {
+    function toggleDropdown1() {
+        const dropdown = document.getElementById('propDropdown');
+        dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
+    }
+    function toggleDropdown2() {
         const dropdown = document.getElementById('correoDropdown');
         dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
     }
@@ -33,19 +37,20 @@
 
     <div class="mb-4">
         <h2 class="text-xl font-bold mb-5">Propietario:</h2>
-        <button onclick="toggleDropdown()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+        <button onclick="toggleDropdown1()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
             Seleccionar propietario
         </button>
-        <div class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">
+        <div id="propDropdown" class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">
             <ul class="list-none inline-flex flex-col bg-white border border-gray-200 rounded-md">
-                {% for correo in correos %}
+                {% for prop in propietarios %}
                 <li class="hover:bg-gray-100">
                     <div class="inline-flex w-max items-center p-2 ">
-                        <span class="mr-2">{{ correo.correo }}</span>
                         <form method="post" class="inline">
+                        <input type="hidden" name="propietario_id" value="{{ prop.id_prop }}">
+                        <button type="submit" name="redirect_propietario" class="mr-2">{{ prop.nombre_prop }}</button>
                             {% csrf_token %}
-                            <input type="hidden" name="correo_id" value="{{ correo.correo }}">
-                            <button type="submit" name="delete_correo" class="p-2">
+                            <input type="hidden" name="propietario_id" value="{{ prop.id_prop }}">
+                            <button type="submit" name="delete_propietario" class="p-2">
                                 <img src="{% static 'gestion_propietario/delete.svg' %}" alt="Eliminar" class="h-4 w-4 inline object-cover">
                             </button>
                         </form>
@@ -60,7 +65,7 @@
 
         <div class="mb-4">
             <h2 class="text-xl font-bold mb-5">Correos:</h2>
-            <button onclick="toggleDropdown()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+            <button onclick="toggleDropdown2()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
                 Correos registrados
             </button>
             <div id="correoDropdown" class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">

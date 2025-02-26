@@ -6,6 +6,7 @@ from django.db import IntegrityError
 def propietario_detail(request, id):
     propietario = get_object_or_404(Propietario, id_prop=id)
     correos = Correo.objects.filter(id_prop=propietario)
+    propietarios = Propietario.objects.all()
 
     propietario_form = PropietarioForm(instance=propietario)
     correo_form = CorreoForm()
@@ -28,6 +29,15 @@ def propietario_detail(request, id):
             correo_id = request.POST.get('correo_id')
             Correo.objects.filter(correo=correo_id).delete()
             return redirect('propietario-detail', id=id)
+        
+        elif 'delete_propietario' in request.POST:
+            propietario_id = request.POST.get('propietario_id')
+            Propietario.objects.filter(id_prop=propietario_id).delete()
+            return redirect('propietario-detail', id=id)
+        
+        elif 'redirect_propietario' in request.POST:
+            propietario_id = request.POST.get('propietario_id')
+            return redirect('propietario-detail', id=propietario_id)  # Redirige al detalle del propietario con el id seleccionado
 
     else:
         propietario_form = PropietarioForm(instance=propietario)
@@ -38,4 +48,5 @@ def propietario_detail(request, id):
         'correos': correos,
         'propietario_form': propietario_form,
         'correo_form': correo_form,
+        'propietarios': propietarios,
     })
