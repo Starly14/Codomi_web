@@ -13,3 +13,4 @@ urlpatterns = [
     path('gestion_capital/', include('gestion_capital.urls'))
     ] + static(settings.STATIC_URL)
 
+

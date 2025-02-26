@@ -1,0 +1,23 @@
+<form method="get">
+    {{ filtro.form.as_p }} 
+    <button type="submit">Filtrar</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Departamento</th>
+            <th>Fecha</th>
+            <th>Pago (Dl)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in queryset %}
+        <tr>
+            <td>{{ item.id_dpto }}</td>
+            <td>{{ item.fecha_importe }}</td>
+            <td>{{ item.pago_dl }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
