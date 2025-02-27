@@ -7,6 +7,7 @@
   // Agregar la función para ocultar los menús desplegables al hacer clic fuera
   document.addEventListener('click', function (event) {
     const gestPropDropdown = document.getElementById('gestPropDropdown');
+    const gestCapDropdown = document.getElementById('gestCapDropdown');
     const gestRecDropdown = document.getElementById('gestRecDropdown');
     const gestAnaDropdown = document.getElementById('gestAnaDropdown');
     const gestEdifDropdown = document.getElementById('gestEdifDropdown');
@@ -18,6 +19,14 @@
       !event.target.closest('button[onclick="toggleDropdown(\'gestPropDropdown\')"]')
     ) {
       gestPropDropdown.classList.add('hidden');
+    }
+
+    if (
+      gestCapDropdown &&
+      !event.target.closest('#gestCapDropdown') &&
+      !event.target.closest('button[onclick="toggleDropdown(\'gestCapDropdown\')"]')
+    ) {
+      gestCapDropdown.classList.add('hidden');
     }
 
     if (
@@ -74,6 +83,23 @@
               <div id="gestPropDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
                   <a href="/gestion_propietario/1/registrarPropietario" class="block px-4 py-2 hover:bg-gray-100">Registrar Propietario</a>
                   <a href="/gestion_propietario/1" class="block px-4 py-2 hover:bg-gray-100">Editar Propietario</a>
+              </div>
+          </div>
+        </li>
+
+        <li>
+          <div class="relative"> 
+              <button onclick="toggleDropdown('gestCapDropdown')" class="text-white no-underline p-2.5 flex items-center">
+                  Gestión de Capital
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke-width="1.5"/>
+                    <path d="M12 6V18" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M15 9.5C15 8.11929 13.6569 7 12 7C10.3431 7 9 8.11929 9 9.5C9 10.8807 10.3431 12 12 12C13.6569 12 15 13.1193 15 14.5C15 15.8807 13.6569 17 12 17C10.3431 17 9 15.8807 9 14.5" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+              </button>
+              <div id="gestCapDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
+                  <a href="/gestion_capital/gestion_capital/" class="block px-4 py-2 hover:bg-gray-100">Gestión capital base</a>
+                  <a href="/gestion_capital/importes/" class="block px-4 py-2 hover:bg-gray-100">Importes</a>
               </div>
           </div>
         </li>

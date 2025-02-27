@@ -98,3 +98,7 @@ def registrarPropietarioView(request, id):
         'correo_form': correo_form,
         'propietarios': propietarios,
     })
+
+
+def plantillaBase(request):
+    return render(request, "Plantilla.html")
