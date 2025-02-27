@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gestion_propietario.apps.GestionPropietarioConfig',
     'iniciarSesion',
+    'homepage',
     'gestion_capital',
     'tailwind',
     'tailwindcss',
