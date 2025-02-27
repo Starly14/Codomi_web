@@ -1,0 +1,23 @@
+{% load static %}
+{% load tailwind_tags %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel de Control</title>
+
+    {% block scripts %}
+    {% endblock %}
+
+    {% tailwind_css %}
+
+</head>
+<body>
+    {% include 'layout/navbar.html' %}
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+</body>
+</html>
