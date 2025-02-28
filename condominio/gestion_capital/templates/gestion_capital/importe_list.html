@@ -1,23 +1,107 @@
-<form method="get">
-    {{ filtro.form.as_p }} 
-    <button type="submit">Filtrar</button>
-</form>
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importe</title>
+{% tailwind_css %}
+</head>
 
-<table>
-    <thead>
-        <tr>
-            <th>Departamento</th>
-            <th>Fecha</th>
-            <th>Pago (Dl)</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in queryset %}
-        <tr>
-            <td>{{ item.id_dpto }}</td>
-            <td>{{ item.fecha_importe }}</td>
-            <td>{{ item.pago_dl }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<body >
+    {% include 'layout/navbar.html'%}
+
+    <div class="font-poppins flex flex-col min-h-screen p-4">
+
+        <form method="get" class="flex flex-col items-start w-full p-4 bg-white shadow-md rounded-lg mb-6">
+            <!-- Contenedor flexible para los labels -->
+            <div class="flex space-x-[30vw] mb-2">
+                <div>
+                    <label>Mes</label>
+                </div>
+                <div>
+                    <label>Año</label>
+                </div>
+                <div>
+                    <label>Departamento</label>
+                </div>
+
+            </div>
+        
+            <!-- Contenedor flexible para los campos del formulario y el botón -->
+            <div class="flex items-center w-full">
+                <!-- Contenedor flexible para los campos del formulario -->
+                <div class="flex space-x-4 w-full">
+                    {% for field in filtro.form %}
+                        <div class="flex-1">
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                </div>
+        
+                <!-- Botón alineado a la derecha -->
+                <div class="ml-4">
+                    <button type="submit" class="bg-blue-800 w-[10vw] text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+                        Filtrar
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+    <div class="flex-1 overflow-x-auto bg-white shadow-sm rounded-lg">
+    <table class="min-w-full border-collapse border border-gray-200">
+        <thead>
+            <tr class="bg-gray-50">
+                <th class="border border-gray-200 px-4 py-2 text-left">Departamento</th>
+                <th class="border border-gray-200 px-4 py-2 text-left">Fecha</th>
+                <th class="border border-gray-200 px-4 py-2 text-left">Pago (Dl)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in queryset %}
+            <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 px-4 py-2">{{ item.id_dpto }}</td>
+                <td class="border border-gray-200 px-4 py-2">{{ item.fecha_importe }}</td>
+                <td class="border border-gray-200 px-4 py-2">{{ item.pago_dl }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    </div>
+
+    </div>
+
+    <style>
+        /* Esta seccion de aqui es para poder editar el css de los filtros*/
+        select {
+            width: 15em;
+            border-radius: 9999px; 
+            padding: 0.5rem 1rem; 
+            border: 1px solid #d1d5db; 
+            transition: all 0.3s ease; 
+            outline: none; 
+        }
+
+        select:hover {
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
+        }
+
+        select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
