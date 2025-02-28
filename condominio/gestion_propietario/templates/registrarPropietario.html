@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load tailwind_tags %}
+
+{% block scripts %}
+<script>
+    function toggleDropdown() {
+        document.getElementById("correoDropdown").classList.toggle("hidden");
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="propietario p-6 bg-white rounded-lg shadow-md relative flex justify-center">
+    <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md mb-10">  
+        <div class="flex flex-wrap">
+            <form method="post">
+                {% csrf_token %}
+                <div class="p-20 pb-5 pr-8 pl-32">
+                    
+                    <!-- 📌 Nombre del propietario -->
+                    <div class="pb-5 pl-0 pr-32">
+                        <h2 class="text-xl font-bold mb-5">Nombre:</h2>
+                        {{ propietario_form.as_p }}
+                    </div>
+                    
+                    <!-- 📌 Agregar Correo -->
+                    <div class="p-20 pt-5 pb-5 pl-0">
+                        <h3 class="text-xl font-bold my-5">Agregar Correo:</h3>
+                        {{ correo_form.as_p }}
+                    </div>
+
+                </div>
+
+                <div class="flex-row flex-wrap pt-5 pr-10">
+                    
+                    <!-- 📌 Número de Departamento -->
+                    <div class="p-20 pt-8 pb-8 pl-0">
+                        <h3 class="text-xl font-bold my-5">Número de departamento:</h3>
+                        {{ dpto_form.as_p }}
+                    </div>
+
+                    <!-- 📌 Fecha de Inicio -->
+                    <div class="p-20 pt-8 pb-10 pl-0">
+                        <h3 class="text-xl font-bold my-5">Fecha de Inicio:</h3>
+                        {{ fecha_form.as_p }}
+
+                        <!-- 📌 Botón para enviar todos los datos -->
+                        <button type="submit" name="add_propietario" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 mt-20 px-4 rounded my-5">
+                            Agregar propietario
+                        </button>
+                    </div>
+
+                </div>
+            </form> <!-- Cierra el formulario aquí -->
+        </div>
+    </div>
+</section>
+{% endblock %}
