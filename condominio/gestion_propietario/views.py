@@ -102,3 +102,7 @@ def registrarPropietarioView(request, id):
 
 def plantillaBase(request):
     return render(request, "Plantilla.html")
+
+
+def registrarDepartamento(request):
+    return render(request, "registrarDep.html")
