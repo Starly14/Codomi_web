@@ -1,0 +1,41 @@
+<!-- presupuesto/crear_presupuestos.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Agregar Presupuestos al Recibo: {{ recibo.id_recibo }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+      {% for form in formset %}
+        <tr>
+          <td>{{ form.as_p }}</td>
+          <td>
+            {% if form.instance.pk %}
+              <label>{{ form.DELETE }} Eliminar</label>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+    <button type="submit">Guardar Presupuestos</button>
+  </form>
+
+  <!-- Opcional: Script para clonar formularios dinámicamente -->
+  <button id="add-form">Agregar otro presupuesto</button>
+  <script>
+    const addButton = document.getElementById('add-form');
+    addButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Clona el formulario vacío (último formulario del formset)
+      let formsetPrefix = "{{ formset.prefix }}";
+      let totalForms = document.getElementById('id_' + formsetPrefix + '-TOTAL_FORMS');
+      let currentFormCount = parseInt(totalForms.value);
+      
+      // Clonación simple: si tienes una plantilla oculta para el formulario, la insertas aquí.
+      // Por simplicidad, este ejemplo no incluye el código JS completo, pero hay
+      // muchas guías sobre cómo agregar formularios dinámicamente a un formset.
+      alert('Aquí deberías implementar la clonación del formulario usando JavaScript.');
+    });
+  </script>
+{% endblock %}
