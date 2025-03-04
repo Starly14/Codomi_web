@@ -15,6 +15,7 @@ class PropietarioForm(forms.ModelForm):
         widgets = { # 
             'nombre_prop': forms.TextInput(attrs={
                 'placeholder': 'Nuevo nombre',  # Placeholder
+                'class': 'rounded-lg py-1 pl-5' ,
             }),
         }
 
@@ -28,6 +29,7 @@ class CorreoForm(forms.ModelForm):
                 'required': 'required',
                 'oninvalid': "this.setCustomValidity('Por favor, introduce un correo electrónico válido.')",
                 'oninput': "this.setCustomValidity('')",
+                'class': 'rounded-lg py-1 pl-5' ,
             }),
         }
         labels = {  # Eliminar el label "Correo"
@@ -48,7 +50,8 @@ class DptoForm(forms.ModelForm):
             'id_dpto': '',
         }
         widgets = {
-            'id_dpto': forms.TextInput(attrs={'placeholder': 'Departamento'}),
+            'id_dpto': forms.TextInput(attrs={'placeholder': 'Departamento',
+                                              'class': 'rounded-lg' ,}),
         }
 
     def clean_id_dpto(self):
@@ -62,7 +65,10 @@ class FechaForm(forms.ModelForm):
         model = Asignacion
         fields = ['fecha_inicio']
         widgets = {
-            'fecha_inicio': forms.DateInput(attrs={'type': 'date', 'value': date.today().strftime('%Y-%m-%d')}),
+            'fecha_inicio': forms.DateInput(attrs={'type': 'date', 'value': date.today().strftime('%Y-%m-%d'),
+                                                    'class': 'rounded-lg' ,
+            }),
+           
         }
         labels = {
             'fecha_inicio': '',

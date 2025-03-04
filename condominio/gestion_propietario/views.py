@@ -144,3 +144,6 @@ def registrarPropietarioView(request):
 
 def plantillaBase(request):
     return render(request, "Plantilla.html")
+
+def reciboBase(request):
+    return render(request, "recibo.html")

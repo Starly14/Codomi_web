@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load tailwind_tags %}
+
+{% block scripts %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
+
+  
+  <div class="w-fit bg-white rounded-lg shadow-md mb-10 ">  
+
+    <div class="flex flex-wrap flex-column">
+
+    <div class="p-20 pb-5 pr-10 pl-10">
+
+    <div class="mb-4 flex-row flex justify-between">
+
+        <!-- Aquí va el nombre de la residencia -->
+        <h2 class="text-xl font-bold mb-5 pr-64">Condominio "Residencias ......"</h2>
+
+        <!-- Aquí va el RIF de la residencia -->
+        <h1 class="text-l font-bold mb-5"> Rif :  J-304812367</h1>
+    </div>
+
+    <div class="mb-4">
+        
+        <!-- Aquí va la dirección de la residencia -->
+        <h1 class="text-l font-bold mb-5">Calle .... Urbanizacion ..... </h1>
+    </div>
+
+    <div class="mb-4s mt-16 flex flex-row justify-center">
+        <h2 class="text-l font-bold mb-5 mr-10">Recibo de condominio mes de:</h2>
+
+        <!-- Aquí va el mes del recibo -->
+        <h2 class="text-l font-bold mb-5">Mes</h2>
+
+    </div>
+
+    <div class="pb-0 pl-0 border border-gray-500 rounded-lg bg-white">
+
+        <div class="w-full flex flex-row justify-between">
+            
+            <div class=" flex flex-row justify-center border border-transparent border-r-gray-500 pr-8">
+                <h1 class="text-l font-bold my-3 mx-3">Propietario:</h1>
+            
+                <!-- Acá va el nombre del propietario -->
+                <h1 class="text-l font-bold my-3 mr-3">Franco Lattanzio</h1>
+
+            </div>
+
+            <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-10">
+                <h1 class="text-l font-bold my-3 mx-3">Alícuota:</h1>
+            
+                <!-- Acá va la alícuota -->
+                <h1 class="text-l font-bold my-3 mr-3">19,34</h1>
+
+            </div>
+
+            <div class=" flex flex-row justify-center pr-10">
+                <h1 class="text-l font-bold my-3 mx-3">Apartamento:</h1>
+            
+                <!-- Acá va el departamento -->
+                <h1 class="text-l font-bold my-3 mr-3">2A</h1>
+
+            </div>
+
+        </div>
+        
+
+        <div class=" pl-5 border border-y-gray-500 flex flex-row justify-between">
+
+            <div class=" flex flex-row">
+                <h1 class="text-l font-bold my-3 mr-2">Presupuesto para el mes de</h1>
+            
+                <!-- Acá va el mes del recibo -->
+                <h1 class="text-l font-bold my-3">Diciembre</h1>
+
+            </div>
+
+            <div class=" flex flex-row border border-transparent border-l-gray-500 px-10">            
+                <!-- Acá va la moneda en la que está el recibo -->
+                <h1 class="text-l font-bold my-3">$</h1>
+
+            </div>
+
+        </div>
+
+        <!-- Aquí va cada campo de presupuesto, siguiendo la siguiente estructura: -->
+
+
+        <div class="px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">Mantenimiento jardín</h1>
+            <h1 class="text-l font-bold my-3">70,00</h1>
+
+        </div>
+
+        <div class="px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">Mantenimiento ascensor</h1>
+            <h1 class="text-l font-bold my-3">100,00</h1>
+
+        </div>
+
+        <div class="px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">CANTV</h1>
+            <h1 class="text-l font-bold my-3">10,00</h1>
+
+        </div>
+
+
+        <!-- Aquí empieza la sección de presupuesto -->
+
+        <div class=" pl-5 border border-t-gray-500 border-transparent pr-5">
+
+            <h1 class="text-l font-bold my-3">Subtotal presupuesto para</h1>
+
+            <!-- Aquí va el mes del recibo -->
+            <h1 class="text-l font-bold my-3">Diciembre</h1>
+
+
+        </div>
+
+        <div class="flex flex-row justify-between px-5">
+
+            <h1 class="text-l font-bold my-3">Fondo de reserva 50%</h1>
+
+            <!-- Aquí va el fondo de reserva 50% -->
+            <h1 class="text-l font-bold my-3">300</h1>
+
+
+        </div>
+
+        <div class=" px-5 border border-b-gray-500 border-transparent flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">Fondo para gastos imprevistos</h1>
+
+            <!-- Aquí va el mes del recibo -->
+            <h1 class="text-l font-bold my-3">Diciembre</h1>
+
+
+        </div>
+
+        
+
+        <div class=" pl-5 border border-b-gray-500 pr-5">
+
+            <h1 class="text-l font-bold my-3">Alícuota de su apartamento (correspondiente a los gastos comunes): </h1>
+
+        </div>
+
+        <div class=" pl-5 border border-b-gray-500 pr-5">
+
+            <h1 class="text-l font-bold my-3">Gatos directos de su apartamento</h1>
+
+        </div>
+
+        <div class=" pl-5 border border-b-gray-500 pr-5">
+
+            <h1 class="text-l font-bold my-3">Total gatos directos de su apartamento</h1>
+
+        </div>
+
+        <div class=" pl-5 border border-b-gray-500 pr-5">
+
+            <h1 class="text-l font-bold my-3">Total alícuota más gastos directos de su apartamento correspondiente al mes de </h1>
+
+        </div>
+
+        <div class=" pl-5 border border-b-gray-500 pr-5">
+
+            <h1 class="text-l font-bold my-3">Atrasos (monto contable de recibos no pagados al cierre del mes)</h1>
+
+        </div>
+
+        <div class=" pl-5 border border-b-gray-500 pr-5">
+
+            <h1 class="text-l font-bold my-3">Total a pagar (Alícuota más acumulado por pagar de su apartamento):</h1>
+
+        </div>
+
+        <div class=" pl-5 border border-b-gray-500 pr-5 flex flex-col items-center">
+
+            <h1 class="text-l font-bold my-3">Para efectuar el pago en dolares contactar al sr. Luis Musci</h1>
+            <h1 class="text-l font-bold my-3">Depósitos en bolívares al cambio del BCV correspondiente al momento de hacer la transferencia</h1>
+
+        </div>
+
+        <div class=" pl-5">
+
+            <h1 class="text-l font-bold my-3">Nota: -----------------</h1>
+
+        </div>
+    
+    </div>
+
+
+  </div> 
+</section>
+
+{% endblock %}
