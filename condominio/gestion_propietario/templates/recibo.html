@@ -147,7 +147,7 @@
         </div>
 
         
-        <div class=" px-5 border border-b-gray-500 border-transparent flex flex-row justify-between bg-amber-100">
+        <div class=" px-5 border border-b-gray-500 border-transparent flex flex-row justify-between bg-amber-200">
 
             <h1 class="text-l font-bold my-3">Total presupuesto para diciembre</h1>
 
@@ -158,39 +158,105 @@
         </div>
 
 
-        <div class=" pl-5 border border-b-gray-500 pr-5">
+        <div class="border-2 border-gray-800 flex flex-row justify-between px-5">
 
             <h1 class="text-l font-bold my-3">Alícuota de su apartamento (correspondiente a los gastos comunes): </h1>
 
+            <!-- Aquí va el porcentaje de la alícuota que representa o que ocupa el apartamento del propietario -->
+            <h1 class="text-l font-bold my-3">17,4% </h1>
+
+            <!-- Acá primero va la moneda en la que está el costo y después va el monto como tal (de la alícuota) -->
+            <h1 class="text-l font-bold my-3">$ 221,17 </h1>
+
+
+
         </div>
 
-        <div class=" pl-5 border border-b-gray-500 pr-5">
+        <!-- Aquí empieza la sección de gastos directos -->
+
+        <div class="border border-b-gray-500 flex flex-row justify-between pl-5">
 
             <h1 class="text-l font-bold my-3">Gatos directos de su apartamento</h1>
+            
+            <div class=" flex flex-row border border-transparent border-l-gray-800 px-10">            
+                <!-- Acá va la moneda en la que está el recibo -->
+                <h1 class="text-l font-bold my-3">$</h1>
+
+            </div>
 
         </div>
 
-        <div class=" pl-5 border border-b-gray-500 pr-5">
+        <!-- Aquí va cada campo de gastos directos, siguiendo la siguiente estructura: -->
+
+        <div class="flex flex-row justify-between px-5">
+
+            <!-- Aquí va el detalle del gasto -->
+            <h1 class="text-l font-bold my-3">Cuota vecinal "Acueducto"</h1>
+
+            <!-- Aquí va el monto -->
+            <h1 class="text-l font-bold my-3">30</h1>
+
+
+        </div>
+
+        <div class="flex flex-row justify-between px-5">
+
+            <!-- Aquí va el detalle del gasto -->
+            <h1 class="text-l font-bold my-3">Cuota vecinal "Administración"</h1>
+
+            <!-- Aquí va el monto -->
+            <h1 class="text-l font-bold my-3">10</h1>
+
+
+        </div>
+
+        <div class="flex flex-row justify-between px-5">
+
+            <!-- Aquí va el detalle del gasto -->
+            <h1 class="text-l font-bold my-3">Cuota vecinal "Seguridad"</h1>
+
+            <!-- Aquí va el monto -->
+            <h1 class="text-l font-bold my-3">5</h1>
+
+
+        </div>
+
+        <div class="border border-y-gray-500 px-5 flex flex-row justify-between">
 
             <h1 class="text-l font-bold my-3">Total gatos directos de su apartamento</h1>
 
-        </div>
-
-        <div class=" pl-5 border border-b-gray-500 pr-5">
-
-            <h1 class="text-l font-bold my-3">Total alícuota más gastos directos de su apartamento correspondiente al mes de </h1>
+            <!-- Aquí va el monto (que sería la suma de todos los montos anteriores) -->
+            <h1 class="text-l font-bold my-3">45</h1>
 
         </div>
 
-        <div class=" pl-5 border border-b-gray-500 pr-5">
+        <div class="border-2 border-gray-800 px-5 flex flex-row justify-between items-center">
 
-            <h1 class="text-l font-bold my-3">Atrasos (monto contable de recibos no pagados al cierre del mes)</h1>
+            <h1 class="text-l font-bold my-3 max-w-xs">Total alícuota más gastos directos de su apartamento correspondiente al mes de:</h1>
+
+            <!-- Acá va el mes y el año del mes siguiente al recibo -->
+            <h1 class="text-l font-bold my-3">Diciembre 2024</h1>
+
+            <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
+            <h1 class="text-l font-bold my-3">$ 266,17</h1>
 
         </div>
 
-        <div class=" pl-5 border border-b-gray-500 pr-5">
+        <div class="border border-b-gray-500 px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3 text-red-600">Atrasos (monto contable de recibos no pagados al cierre del mes)</h1>
+
+            <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
+            <h1 class="text-l font-bold my-3 text-red-600">$ 20</h1>
+
+        </div>
+
+        <div class="border border-b-gray-500 px-5 flex flex-row justify-between" style="background-color: #ffff00;">
 
             <h1 class="text-l font-bold my-3">Total a pagar (Alícuota más acumulado por pagar de su apartamento):</h1>
+
+            <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
+            <h1 class="text-l font-bold my-3">$ 286,17</h1>
 
         </div>
 
