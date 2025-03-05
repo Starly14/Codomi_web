@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load tailwind_tags %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block content %}
+
+<section class="propietario p-6 rounded-lg w-screen flex justify-center">
+    <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md mb-10">  
+        <div class="flex flex-wrap flex-row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="p-20 pb-0 pr-32 pl-32 flex flex-wrap flex-row">
+                    
+                    <!-- Nombre del propietario -->
+                    <div class="pb-5 pl-0 pr-36">
+                        <h2 class="text-xl font-bold mb-5">Nombre:</h2>
+                        {{ propietario_form.as_p }}
+                    </div>
+                    
+                    <!-- Agregar Correo -->
+                    <div class=" pt-0 pb-5 pl-0">
+                        <h3 class="text-xl font-bold mb-5">Agregar Correo:</h3>
+                        {{ correo_form.as_p }}
+                    </div>
+
+                </div>
+
+                <div class="flex-row flex flex-wrap pt-5 pl-32">
+                    
+                    <!-- Número de Departamento -->
+                    <div class="py-10 pr-24">
+                        <h3 class="text-xl font-bold my-5">Número de departamento:</h3>
+                        {{ dpto_form.as_p }}
+                    </div>
+
+                    <!-- Fecha de Inicio -->
+                    <div class="py-10 pl-3 w-fit">
+                        <h3 class="text-xl font-bold my-5">Fecha de Inicio:</h3>
+                        {{ fecha_form.as_p }}
+
+                        <!-- Botón para enviar todos los datos -->
+                        <button type="submit" name="add_propietario" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 mt-14 mb-4 px-4 rounded">
+                            Agregar propietario
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

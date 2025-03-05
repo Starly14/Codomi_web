@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load tailwind_tags %}
+
+{% block scripts %}
+<script>
+    function validateEmail() {
+        var emailInput = document.getElementById('correo');
+        emailInput.setCustomValidity('');
+
+        if (!emailInput.validity.valid) {
+            emailInput.setCustomValidity('Por favor, introduce un correo electrónico válido.');
+        }
+    }
+
+    function toggleDropdown1() {
+        const dropdown = document.getElementById('propDropdown');
+        dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
+    }
+    function toggleDropdown2() {
+        const dropdown = document.getElementById('correoDropdown');
+        dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
+    }
+
+        // Agregar la función para ocultar los menús desplegables al hacer clic fuera
+        
+    document.addEventListener('click', function(event) {
+        const propDropdown = document.getElementById('propDropdown');
+        const correoDropdown = document.getElementById('correoDropdown');
+
+        if (!event.target.closest('#propDropdown') && !event.target.closest('button[onclick="toggleDropdown1()"]')) {
+            propDropdown.classList.add('hidden');
+        }
+
+        if (!event.target.closest('#correoDropdown') && !event.target.closest('button[onclick="toggleDropdown2()"]')) {
+            correoDropdown.classList.add('hidden');
+        }
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<section class="propietario p-6 rounded-lg relative flex justify-center">
+
+  
+  <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md ">  
+
+    <div class="flex flex-wrap ">
+
+    <div class="p-20 pb-5 pr-8 pl-32">
+
+    <div class="mb-4">
+        <h2 class="text-xl font-bold mb-5">Propietario:</h2>
+        <button onclick="toggleDropdown1()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+            Seleccionar propietario
+        </button>
+        <div id="propDropdown" class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2 w-auto">
+            <ul class="list-none inline-flex flex-col bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-max">
+                {% for prop in propietarios %}
+                <li class="hover:bg-gray-100">
+                    <div class="inline-flex w-max items-center p-2 pl-5 px-5 ">
+                        <form method="post" class="inline flex items-center">
+                        <input type="hidden" name="propietario_id" value="{{ prop.id_prop }}">
+                        <button type="submit" name="redirect_propietario" class="mr-2">{{ prop.nombre_prop }}</button>
+                            {% csrf_token %}
+                            <input type="hidden" name="propietario_id" value="{{ prop.id_prop }}">
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="p-20 pb-0 pl-0 pr-48 pt-7">
+
+        <div class="mb-4">
+            <h2 class="text-xl font-bold mb-5">Correos:</h2>
+            <button onclick="toggleDropdown2()" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+                Correos registrados
+            </button>
+            <div id="correoDropdown" class="hidden absolute z-10 w-48 rounded-md shadow-lg mt-2">
+                <ul class="list-none inline-flex flex-col bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-max">
+                    {% for correo in correos %}
+                    <li class="hover:bg-gray-100">
+                        <div class="inline-flex w-max items-center p-2 pl-5">
+                            <span class="mr-2">{{ correo.correo }}</span>
+                            <form method="post" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="correo_id" value="{{ correo.correo }}">
+                                <button type="submit" name="delete_correo" class="p-2">
+                                    <div class="rounded-full bg-gray-200 hover:bg-red-500 hover:stroke-white transition-colors duration-200 stroke-gray-700">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-5 stroke p-1">
+                                            <path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>       
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        </div>
+
+        <div class="p-20 pt-2 pb-5 pl-0">
+            <h3 class="text-xl font-bold my-5">Agregar Correo:</h3>
+                <form method="post">
+                {% csrf_token %}
+                {{ correo_form.as_p }}
+                    <button type="submit" name="add_correo"
+                    class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md my-5">Agregar</button>
+                </form>
+        </div>
+    
+    </div>
+
+
+    <div class="flex flex-wrap">
+
+        <div class="p-20 pb-10 pl-0 pr-32">
+
+            <h2 class="text-xl font-bold mb-5">Editar nombre</h2>
+    
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            {{ propietario_form.as_p }}
+            <button type="submit" name="edit_nombre"
+                class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded my-6">
+                Guardar Nombre
+            </button>
+        </form>
+    
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    </div>
+
+  </div> 
+</section>
+
+{% endblock %}
