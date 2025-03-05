@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 
@@ -27,11 +28,18 @@ class Dpto(models.Model):
 
 
 class Fondo(models.Model):
+    MONEDA_CHOICES = [
+        ('$', 'Dólares ($)'),
+        ('bs', 'Bolivares (Bs. S)'),
+    ]
+    
+
+
     id_fondo = models.IntegerField(primary_key=True)
-    moneda_fondo = models.CharField(max_length=1)
-    egresos = models.DecimalField(max_length=30, decimal_places=2)
-    ingresos = models.DecimalField(max_length=30, decimal_places=2)
-    saldo_fondo = models.DecimalField(max_length=30, decimal_places=2)
+    moneda_fondo = models.CharField(max_length=10, choices=MONEDA_CHOICES)
+    ingresos = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    egresos = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    saldo_fondo = models.DecimalField(max_length=30, decimal_places=2, max_digits=30)
     fecha_fondo = models.DateTimeField()
     detalles_fondo = models.CharField(max_length=255)
     
@@ -66,7 +74,7 @@ class Presupuesto(models.Model):
 
 class Gasto(models.Model):
     id_gasto = models.IntegerField(primary_key=True)
-    # id_fondo
+    id_fondo = models.ForeignKey(Fondo, db_column="id_fondo", on_delete=models.CASCADE)
     titulo_gasto = models.CharField(max_length=100)
     detalle_gasto = models.CharField(max_length=255)
     monto_gasto_bs = models.DecimalField(max_digits=30, decimal_places=2)

@@ -45,8 +45,12 @@ INSTALLED_APPS = [
     'gestion_capital',
     'tailwind',
     'tailwindcss',
+
+    'django_browser_reload',
+    'gestion_recibo',
+
     'editar_edificio.apps.editarEdificioConfig',
-    'django_browser_reload'
+
 ]
 
 TAILWIND_APP_NAME = 'theme'

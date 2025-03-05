@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Sección de Registro -->
+<div class="seccion-formulario">
+    <h2>Registrar Nuevo Ingreso</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form_registro.as_p }}
+        <button type="submit" class="btn-guardar">Guardar Ingreso</button>
+    </form>
+</div>
+
+<!-- Sección de Filtrado -->
+<div class="seccion-filtros">
+    <h2>Filtrar Fondos</h2>
+    <form method="get">
+        {{ form_filtro.as_p }}
+        <button type="submit" class="btn-filtrar">Aplicar Filtros</button>
+    </form>
+</div>
+
+<!-- Sección de Listado -->
+<div class="seccion-listado">
+    <h2>Historial de Fondos</h2>
+    
+    {% if fondos %}
+    <table class="tabla-fondos">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Ingresos</th>
+                <th>Egresos</th>
+                <th>Moneda</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fondo in fondos %}
+            <tr>
+                <td>{{ fondo.fecha_fondo|date:"d/m/Y H:i" }}</td>
+                <td>{{ fondo.ingresos }}</td>
+                <td>{{ fondo.egresos }}</td>
+                <td>{{ fondo.moneda_fondo }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No se encontraron registros con los filtros aplicados.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

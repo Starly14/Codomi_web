@@ -12,8 +12,12 @@ urlpatterns = [
     path("iniciarSesion/", include("iniciarSesion.urls")),
     path('gestion_propietario/', include('gestion_propietario.urls')),
     path('gestion_capital/', include('gestion_capital.urls')),
+
+    path('gestion_recibo/', include('gestion_recibo.urls')),
+
+
     path('editar_edificio/', include('editar_edificio.urls')),
-    
+
     ] + static(settings.STATIC_URL)
 
 #Para el manejo de imágenes
