@@ -1,0 +1,48 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    {% tailwind_css %}
+
+</head>
+<body class="font-poppins bg-gradient-to-r from-[#0C1250] to-[#99583C] flex justify-center items-center h-screen m-0">
+    <div class="container inline-flex w-[1200px] h-[747px] flex-shrink-0 bg-white rounded-[2em]">
+        <div class="container-hijo w-fit h-fit p-8 space-y-16">
+            <h2 class="w-[256px] h-[37px] flex-shrink-0 text-black font-montserrat text-[40px] font-bold py-5">Bienvenido</h2>
+            {% if error %}
+                <div class="error text-red-500 text-sm mb-2.5">❌ {{ error }}</div>
+            {% endif %}
+            <form method="POST" class="space-y-8 w-[20em]">
+                {% csrf_token %} 
+                <h4 class="text-lg font-medium mt-4">Usuario</h4>
+
+                <div class="input-group flex items-center bg-[#f4f4f4] p-2.5 rounded-lg mb-4">
+                    <i class="fas fa-user mr-2.5 text-[#667eea]"></i>
+                    <input type="text" name="username" placeholder="Nombre de usuario" class="border-none bg-transparent w-full text-base focus:outline-none" required>
+                </div>
+
+                <h4 class="text-lg font-medium mt-4">Contraseña</h4>
+
+                <div class="input-group flex items-center bg-[#f4f4f4] p-2.5 rounded-lg mb-4">
+                    <i class="fas fa-lock mr-2.5 text-[#667eea]"></i>
+                    <input type="password" name="password" placeholder="Contraseña" class="border-none bg-transparent w-full text-base focus:outline-none" required>
+                </div>
+
+                <button type="submit" class="bg-[#2C2C2C] text-white border-none py-3 w-full rounded-lg cursor-pointer text-base transition-all duration-300 hover:bg-[#4e4e4e]">
+                    Iniciar sesión
+                </button>
+
+                <h5 class="text-md w-full m-0 py-5 text-center cursor-pointer hover:text-blue-800"> ¿Olvidaste tu contraseña?</h5>
+                
+            </form>
+        </div>
+        <div class="img flex">
+            <img src="{% static 'iniciarSesion/FotoStockEdificio.png' %}" alt="Foto de edificio" class="rounded-r-[2em]">
+        </div>
+    </div>
+</body>
+</html>

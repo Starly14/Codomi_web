@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,9 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gestion_propietario.apps.GestionPropietarioConfig',
-    'editar_edificio.apps.editarEdificioConfig',
+    'iniciarSesion',
+    'homepage',
+    'gestion_capital',
     'tailwind',
-    'theme',
+    'tailwindcss',
+    'editar_edificio.apps.editarEdificioConfig',
     'django_browser_reload'
 ]
 
@@ -57,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware'
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'condominio.urls'
@@ -69,7 +73,7 @@ INTERNAL_IPS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,7 +96,7 @@ import json
 import os
 
 # Ruta al archivo JSON
-with open(os.path.join(BASE_DIR,'.json')) as config_file:
+with open(os.path.join(BASE_DIR, '.json')) as config_file:
     config = json.load(config_file)
 
 print(f"Archivo JSON cargado: config.json")
@@ -147,10 +151,27 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
+
+
+TAILWIND_APP_NAME = 'tailwindcss'
+
+
+NPM_BIN_PATH = 'c:/Program Files/nodejs/npm.cmd'
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 #Para la selección de archivos de imagen para editar_edificio
 MEDIA_URL = '/media/'

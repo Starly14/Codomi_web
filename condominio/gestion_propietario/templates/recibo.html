@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% load tailwind_tags %}
+
+{% block scripts %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
+
+  
+  <div class="w-fit bg-white rounded-lg shadow-md mb-10 ">  
+
+    <div class="flex flex-wrap flex-column">
+
+    <div class="p-20 pb-5 pr-10 pl-10">
+
+    <div class="mb-4 flex-row flex justify-between">
+
+        <!-- Aquí va el nombre de la residencia -->
+        <h2 class="text-xl font-bold mb-5 pr-64">Condominio "Residencias ......"</h2>
+
+        <!-- Aquí va el RIF de la residencia -->
+        <h1 class="text-l font-bold mb-5"> Rif :  J-304812367</h1>
+    </div>
+
+    <div class="mb-4">
+        
+        <!-- Aquí va la dirección de la residencia -->
+        <h1 class="text-l font-bold mb-5">Calle .... Urbanizacion ..... </h1>
+    </div>
+
+    <div class="mb-4s mt-16 flex flex-row justify-center">
+        <h2 class="text-l font-bold mb-5 mr-10">Recibo de condominio mes de:</h2>
+
+        <!-- Aquí va el mes del recibo -->
+        <h2 class="text-l font-bold mb-5">Noviembre</h2>
+
+    </div>
+
+    <div class="pb-0 pl-0 border border-gray-500 rounded-lg bg-white">
+
+        <div class="w-full flex flex-row justify-between">
+            
+            <div class=" flex flex-row justify-center border border-transparent border-r-gray-500 pr-8">
+                <h1 class="text-l font-bold my-3 mx-3">Propietario:</h1>
+            
+                <!-- Acá va el nombre del propietario -->
+                <h1 class="text-l font-bold my-3 mr-3">Franco Lattanzio</h1>
+
+            </div>
+
+            <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-10">
+                <h1 class="text-l font-bold my-3 mx-3">Alícuota:</h1>
+            
+                <!-- Acá va la alícuota -->
+                <h1 class="text-l font-bold my-3 mr-3">19,34</h1>
+
+            </div>
+
+            <div class=" flex flex-row justify-center pr-10">
+                <h1 class="text-l font-bold my-3 mx-3">Apartamento:</h1>
+            
+                <!-- Acá va el departamento -->
+                <h1 class="text-l font-bold my-3 mr-3">2A</h1>
+
+            </div>
+
+        </div>
+        
+
+        <div class=" pl-5 border border-gray-800 flex flex-row justify-between bg-gray-400">
+
+            <div class=" flex flex-row">
+                <h1 class="text-l font-bold my-3 mr-2">Presupuesto para el mes de</h1>
+            
+                <!-- Acá va el mes siguiente del recibo -->
+                <h1 class="text-l font-bold my-3">Diciembre</h1>
+
+            </div>
+
+            <div class=" flex flex-row border border-transparent border-l-gray-800 px-10">            
+                <!-- Acá va la moneda en la que está el recibo -->
+                <h1 class="text-l font-bold my-3">$</h1>
+
+            </div>
+
+        </div>
+
+        <!-- Aquí va cada campo de presupuesto, siguiendo la siguiente estructura: -->
+
+
+        <div class="px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">Mantenimiento jardín</h1>
+            <h1 class="text-l font-bold my-3">70,00</h1>
+
+        </div>
+
+        <div class="px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">Mantenimiento ascensor</h1>
+            <h1 class="text-l font-bold my-3">100,00</h1>
+
+        </div>
+
+        <div class="px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">CANTV</h1>
+            <h1 class="text-l font-bold my-3">10,00</h1>
+
+        </div>
+
+
+        <!-- Aquí empieza la sección de presupuesto -->
+
+        <div class=" pl-5 border border-t-gray-500 border-transparent pr-5 flex flex-row justify-between">
+
+            <!-- Aquí va el mes siguiente al recibo -->
+            <h1 class="text-l font-bold my-3">Subtotal presupuesto para diciembre</h1>
+
+            <!-- Aquí va el subtotal del presupuesto para el mes -->
+            <h1 class="text-l font-bold my-3">600</h1>
+
+
+        </div>
+
+        <div class="flex flex-row justify-between px-5">
+
+            <h1 class="text-l font-bold my-3">Fondo de reserva 50%</h1>
+
+            <!-- Aquí va el fondo de reserva 50% -->
+            <h1 class="text-l font-bold my-3">300</h1>
+
+
+        </div>
+
+        <div class=" px-5 border-transparent flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">Fondo para gastos imprevistos</h1>
+
+            <!-- Aquí van los fondos para gastos imprevistos -->
+            <h1 class="text-l font-bold my-3">500</h1>
+
+
+        </div>
+
+        
+        <div class=" px-5 border border-b-gray-500 border-transparent flex flex-row justify-between bg-amber-200">
+
+            <h1 class="text-l font-bold my-3">Total presupuesto para diciembre</h1>
+
+            <!-- Aquí va el presupuesto total del mes siguiente al recibo -->
+            <h1 class="text-l font-bold my-3">1400</h1>
+
+
+        </div>
+
+
+        <div class="border-2 border-gray-800 flex flex-row justify-between px-5">
+
+            <h1 class="text-l font-bold my-3">Alícuota de su apartamento (correspondiente a los gastos comunes): </h1>
+
+            <!-- Aquí va el porcentaje de la alícuota que representa o que ocupa el apartamento del propietario -->
+            <h1 class="text-l font-bold my-3">17,4% </h1>
+
+            <!-- Acá primero va la moneda en la que está el costo y después va el monto como tal (de la alícuota) -->
+            <h1 class="text-l font-bold my-3">$ 221,17 </h1>
+
+
+
+        </div>
+
+        <!-- Aquí empieza la sección de gastos directos -->
+
+        <div class="border border-b-gray-500 flex flex-row justify-between pl-5">
+
+            <h1 class="text-l font-bold my-3">Gatos directos de su apartamento</h1>
+            
+            <div class=" flex flex-row border border-transparent border-l-gray-800 px-10">            
+                <!-- Acá va la moneda en la que está el recibo -->
+                <h1 class="text-l font-bold my-3">$</h1>
+
+            </div>
+
+        </div>
+
+        <!-- Aquí va cada campo de gastos directos, siguiendo la siguiente estructura: -->
+
+        <div class="flex flex-row justify-between px-5">
+
+            <!-- Aquí va el detalle del gasto -->
+            <h1 class="text-l font-bold my-3">Cuota vecinal "Acueducto"</h1>
+
+            <!-- Aquí va el monto -->
+            <h1 class="text-l font-bold my-3">30</h1>
+
+
+        </div>
+
+        <div class="flex flex-row justify-between px-5">
+
+            <!-- Aquí va el detalle del gasto -->
+            <h1 class="text-l font-bold my-3">Cuota vecinal "Administración"</h1>
+
+            <!-- Aquí va el monto -->
+            <h1 class="text-l font-bold my-3">10</h1>
+
+
+        </div>
+
+        <div class="flex flex-row justify-between px-5">
+
+            <!-- Aquí va el detalle del gasto -->
+            <h1 class="text-l font-bold my-3">Cuota vecinal "Seguridad"</h1>
+
+            <!-- Aquí va el monto -->
+            <h1 class="text-l font-bold my-3">5</h1>
+
+
+        </div>
+
+        <div class="border border-y-gray-500 px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3">Total gatos directos de su apartamento</h1>
+
+            <!-- Aquí va el monto (que sería la suma de todos los montos anteriores) -->
+            <h1 class="text-l font-bold my-3">45</h1>
+
+        </div>
+
+        <div class="border-2 border-gray-800 px-5 flex flex-row justify-between items-center">
+
+            <h1 class="text-l font-bold my-3 max-w-xs">Total alícuota más gastos directos de su apartamento correspondiente al mes de:</h1>
+
+            <!-- Acá va el mes y el año del mes siguiente al recibo -->
+            <h1 class="text-l font-bold my-3">Diciembre 2024</h1>
+
+            <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
+            <h1 class="text-l font-bold my-3">$ 266,17</h1>
+
+        </div>
+
+        <div class="border border-b-gray-500 px-5 flex flex-row justify-between">
+
+            <h1 class="text-l font-bold my-3 text-red-600">Atrasos (monto contable de recibos no pagados al cierre del mes)</h1>
+
+            <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
+            <h1 class="text-l font-bold my-3 text-red-600">$ 20</h1>
+
+        </div>
+
+        <div class="border border-b-gray-500 px-5 flex flex-row justify-between" style="background-color: #ffff00;">
+
+            <h1 class="text-l font-bold my-3">Total a pagar (Alícuota más acumulado por pagar de su apartamento):</h1>
+
+            <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
+            <h1 class="text-l font-bold my-3">$ 286,17</h1>
+
+        </div>
+
+        <div class=" pl-5 border border-b-gray-500 pr-5 flex flex-col items-center">
+
+            <h1 class="text-l font-bold my-3">Para efectuar el pago en dolares contactar al sr. Luis Musci</h1>
+            <h1 class="text-l font-bold my-3">Depósitos en bolívares al cambio del BCV correspondiente al momento de hacer la transferencia</h1>
+
+        </div>
+
+        <div class=" pl-5">
+
+            <h1 class="text-l font-bold my-3">Nota: -----------------</h1>
+
+        </div>
+    
+    </div>
+
+
+  </div> 
+</section>
+
+{% endblock %}
