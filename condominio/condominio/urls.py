@@ -11,7 +11,9 @@ urlpatterns = [
     path('', include("homepage.urls")),
     path("iniciarSesion/", include("iniciarSesion.urls")),
     path('gestion_propietario/', include('gestion_propietario.urls')),
-    path('gestion_capital/', include('gestion_capital.urls'))
+    path('gestion_capital/', include('gestion_capital.urls')),
+    path('gestion_recibo/', include('gestion_recibo.urls')),
+
     ] + static(settings.STATIC_URL)
 
 

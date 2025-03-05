@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'gestion_capital',
     'tailwind',
     'tailwindcss',
-    'django_browser_reload'
+    'django_browser_reload',
+    'gestion_recibo',
 ]
 
 MIDDLEWARE = [
