@@ -70,29 +70,29 @@
       </div>
   </header>
 
-  <nav class="bg-gray-800 text-white p-2.5 ">
+  <nav class="bg-slate-500 text-white">
       <ul class="list-none m-0 p-0 flex justify-around items-center"> 
        
-        <li>
+        <li class=" ml-10 ">
           <div class="relative"> 
-              <button onclick="toggleDropdown('gestPropDropdown')" class="text-white no-underline p-2.5 flex items-center">
+              <button onclick="toggleDropdown('gestPropDropdown')" class="text-white no-underline p-5 flex items-center group">
                   Gestión de Propietario
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white group-hover:fill-white group-hover:animate-bounce">
                       <path d="M11 15C10.1183 15 9.28093 14.8098 8.52682 14.4682C8.00429 14.2315 7.74302 14.1131 7.59797 14.0722C7.4472 14.0297 7.35983 14.0143 7.20361 14.0026C7.05331 13.9914 6.94079 14 6.71575 14.0172C6.6237 14.0242 6.5425 14.0341 6.46558 14.048C5.23442 14.2709 4.27087 15.2344 4.04798 16.4656C4 16.7306 4 17.0485 4 17.6841V19.4C4 19.9601 4 20.2401 4.10899 20.454C4.20487 20.6422 4.35785 20.7951 4.54601 20.891C4.75992 21 5.03995 21 5.6 21H8.4M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7ZM12.5898 21L14.6148 20.595C14.7914 20.5597 14.8797 20.542 14.962 20.5097C15.0351 20.4811 15.1045 20.4439 15.1689 20.399C15.2414 20.3484 15.3051 20.2848 15.4324 20.1574L19.5898 16C20.1421 15.4477 20.1421 14.5523 19.5898 14C19.0376 13.4477 18.1421 13.4477 17.5898 14L13.4324 18.1574C13.3051 18.2848 13.2414 18.3484 13.1908 18.421C13.1459 18.4853 13.1088 18.5548 13.0801 18.6279C13.0478 18.7102 13.0302 18.7985 12.9948 18.975L12.5898 21Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
               </button>
               <div id="gestPropDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
-                  <a href="/gestion_propietario/1/registrarPropietario" class="block px-4 py-2 hover:bg-gray-100">Registrar Propietario</a>
-                  <a href="/gestion_propietario/1" class="block px-4 py-2 hover:bg-gray-100">Editar Propietario</a>
+                  <a href="/gestion_propietario/registrarPropietario" class="block px-4 py-2 hover:bg-gray-100">Registrar Propietario</a>
+                  <a href="/gestion_propietario/1/editarPropietario" class="block px-4 py-2 hover:bg-gray-100">Editar Propietario</a>
               </div>
           </div>
         </li>
 
-        <li>
+        <li class=" mr-5">
           <div class="relative"> 
-              <button onclick="toggleDropdown('gestCapDropdown')" class="text-white no-underline p-2.5 flex items-center">
+              <button onclick="toggleDropdown('gestCapDropdown')" class="text-white no-underline p-5 flex items-center group">
                   Gestión de Capital
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white group-hover:fill-white group-hover:stroke-gray-500 group-hover:animate-bounce">
                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke-width="1.5"/>
                     <path d="M12 6V18" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M15 9.5C15 8.11929 13.6569 7 12 7C10.3431 7 9 8.11929 9 9.5C9 10.8807 10.3431 12 12 12C13.6569 12 15 13.1193 15 14.5C15 15.8807 13.6569 17 12 17C10.3431 17 9 15.8807 9 14.5" stroke-width="1.5" stroke-linecap="round"/>
@@ -105,11 +105,11 @@
           </div>
         </li>
 
-        <li>
+        <li class=" mr-5">
           <div class="relative"> 
-              <button onclick="toggleDropdown('gestRecDropdown')" class="text-white no-underline p-2.5 flex items-center">
+              <button onclick="toggleDropdown('gestRecDropdown')" class="text-white no-underline p-5 flex items-center group">
                   Gestión de Recibo
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 fill-white">  <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V12L14 2Z" fill="currentColor"/>  </svg>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 fill-white group-hover:animate-bounce group-hover:fill-gray-700">  <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V12L14 2Z" fill="currentColor"/>  </svg>
               </button>
               <div id="gestRecDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
                   <a href="#" class="block px-4 py-2 hover:bg-gray-100">Recibo opción 1</a>
@@ -118,11 +118,11 @@
           </div>
         </li>
 
-        <li>
+        <li class=" mr-5">
           <div class="relative"> 
-              <button onclick="toggleDropdown('gestAnaDropdown')" class="text-white no-underline p-2.5 flex items-center">
+              <button onclick="toggleDropdown('gestAnaDropdown')" class="text-white no-underline p-5 flex items-center group">
                   Análisis de datos
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white group-hover:fill-white group-hover:animate-bounce">
                     <path d="M9 12H4.6C4.03995 12 3.75992 12 3.54601 12.109C3.35785 12.2049 3.20487 12.3578 3.10899 12.546C3 12.7599 3 13.0399 3 13.6V19.4C3 19.9601 3 20.2401 3.10899 20.454C3.20487 20.6422 3.35785 20.7951 3.54601 20.891C3.75992 21 4.03995 21 4.6 21H9M9 21H15M9 21V8.6C9 8.03995 9 7.75992 9.10899 7.54601C9.20487 7.35785 9.35785 7.20487 9.54601 7.10899C9.75992 7 10.0399 7 10.6 7H13.4C13.9601 7 14.2401 7 14.454 7.10899C14.6422 7.20487 14.7951 7.35785 14.891 7.54601C15 7.75992 15 8.03995 15 8.6V21M15 21H19.4C19.9601 21 20.2401 21 20.454 20.891C20.6422 20.7951 20.7951 20.6422 20.891 20.454C21 20.2401 21 19.9601 21 19.4V4.6C21 4.03995 21 3.75992 20.891 3.54601C20.7951 3.35785 20.6422 3.20487 20.454 3.10899C20.2401 3 19.9601 3 19.4 3H16.6C16.0399 3 15.7599 3 15.546 3.10899C15.3578 3.20487 15.2049 3.35785 15.109 3.54601C15 3.75992 15 4.03995 15 4.6V8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg></button>
               <div id="gestAnaDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
@@ -132,11 +132,11 @@
           </div>
         </li>
 
-        <li>
+        <li class=" mr-10">
           <div class="relative"> 
-              <button onclick="toggleDropdown('gestEdifDropdown')" class="text-white no-underline p-2.5 flex items-center">
+              <button onclick="toggleDropdown('gestEdifDropdown')" class="text-white no-underline p-5 flex items-center group">
                   Gestión de Edificio
-                  <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white">
+                  <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="ml-2 size-5 stroke-white group-hover:fill-white group-hover:animate-bounce">
                     <path d="M13 19V20C13.5523 20 14 19.5523 14 19H13ZM1.00001 19H5.09885e-06C5.09885e-06 19.5523 0.447725 20 1.00001 20V19ZM4.00001 4.00001C3.44773 4.00001 3.00001 4.44773 3.00001 5.00001C3.00001 5.55229 3.44773 6.00001 4.00001 6.00001V4.00001ZM5.00001 6.00001C5.55231 6.00001 6.00001 5.55229 6.00001 5.00001C6.00001 4.44773 5.55231 4.00001 5.00001 4.00001V6.00001ZM4.00001 7.00001C3.44773 7.00001 3.00001 7.44772 3.00001 8C3.00001 8.55231 3.44773 9 4.00001 9V7.00001ZM5.00001 9C5.55231 9 6.00001 8.55231 6.00001 8C6.00001 7.44772 5.55231 7.00001 5.00001 7.00001V9ZM9 7.00001C8.4477 7.00001 8 7.44772 8 8C8 8.55231 8.4477 9 9 9V7.00001ZM10 9C10.5523 9 11 8.55231 11 8C11 7.44772 10.5523 7.00001 10 7.00001V9ZM9 10C8.4477 10 8 10.4477 8 11C8 11.5523 8.4477 12 9 12V10ZM10 12C10.5523 12 11 11.5523 11 11C11 10.4477 10.5523 10 10 10V12ZM4.00001 10C3.44773 10 3.00001 10.4477 3.00001 11C3.00001 11.5523 3.44773 12 4.00001 12V10ZM5.00001 12C5.55231 12 6.00001 11.5523 6.00001 11C6.00001 10.4477 5.55231 10 5.00001 10V12ZM9 4.00001C8.4477 4.00001 8 4.44773 8 5.00001C8 5.55229 8.4477 6.00001 9 6.00001V4.00001ZM10 6.00001C10.5523 6.00001 11 5.55229 11 5.00001C11 4.44773 10.5523 4.00001 10 4.00001V6.00001ZM2.6 2.00001H11.4V5.10328e-06H2.6V2.00001ZM12 2.6V19H14V2.6H12ZM13 18H1.00001V20H13V18ZM2.00001 19V2.6H5.09885e-06V19H2.00001ZM11.4 2.00001C11.6965 2.00001 11.8588 2.00079 11.9754 2.01031C12.0803 2.01888 12.0575 2.0293 12 2.00001L12.908 0.217995C12.6366 0.079695 12.3668 0.035625 12.1382 0.016955C11.9213 -0.000775004 11.6635 5.10328e-06 11.4 5.10328e-06V2.00001ZM14 2.6C14 2.33647 14.0008 2.0787 13.9831 1.86178C13.9644 1.63319 13.9203 1.36345 13.782 1.09203L12 2.00001C11.9707 1.94249 11.9811 1.91973 11.9897 2.02464C11.9992 2.14123 12 2.30347 12 2.6H14ZM12 2.00001L13.782 1.09203C13.5903 0.715705 13.2843 0.409735 12.908 0.217995L12 2.00001ZM2.6 5.10328e-06C2.33647 5.10328e-06 2.0787 -0.000775004 1.86178 0.016955C1.63319 0.035625 1.36345 0.079695 1.09203 0.217995L2.00001 2.00001C1.94249 2.0293 1.91973 2.01888 2.02464 2.01031C2.14123 2.00079 2.30347 2.00001 2.6 2.00001V5.10328e-06ZM2.00001 2.6C2.00001 2.30347 2.00079 2.14123 2.01031 2.02464C2.01888 1.91973 2.0293 1.94249 2.00001 2.00001L0.217995 1.09203C0.079695 1.36345 0.0356252 1.63319 0.0169552 1.86178C-0.000774771 2.0787 5.09885e-06 2.33647 5.09885e-06 2.6H2.00001ZM1.09203 0.217995C0.715695 0.409735 0.409735 0.715695 0.217995 1.09203L2.00001 2.00001L1.09203 0.217995ZM4.00001 6.00001H5.00001V4.00001H4.00001V6.00001ZM4.00001 9H5.00001V7.00001H4.00001V9ZM9 9H10V7.00001H9V9ZM9 12H10V10H9V12ZM4.00001 12H5.00001V10H4.00001V12ZM9 6.00001H10V4.00001H9V6.00001ZM8 16V19H10V16H8ZM6.00001 19V16H4.00001V19H6.00001ZM7.00001 15C7.55231 15 8 15.4477 8 16H10C10 14.3431 8.65691 13 7.00001 13V15ZM7.00001 13C5.34311 13 4.00001 14.3431 4.00001 16H6.00001C6.00001 15.4477 6.44771 15 7.00001 15V13Z" fill="#4A4A4A"/>
                     </svg></button>
               <div id="gestEdifDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
