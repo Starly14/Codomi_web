@@ -1,4 +1,3 @@
-
 {% load tailwind_tags %}
 
 <!DOCTYPE html>
@@ -55,7 +54,8 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <button type="submit" class="w-[50%] bg-indigo-900 text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition duration-300">
+                    <button type="submit"
+                        class="w-[50%] bg-indigo-900 text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition duration-300">
                         Aplicar Filtros
                     </button>
                 </form>
@@ -76,12 +76,18 @@
                             <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Moneda</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         {% for fondo in fondos %}
                         <tr class="hover:bg-gray-50 transition duration-200">
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ fondo.fecha_fondo|date:"d/m/Y H:i" }}</td>
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ fondo.ingresos }}</td>
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ fondo.egresos }}</td>
+                            <td class="border px-4 py-2 text-sm text-gray-700">{{ fondo.fecha_fondo|date:"d/m/Y H:i" }}
+                            </td>
+                            <td class="border px-4 py-2 text-sm text-gray-700">
+                                {{ fondo.ingresos }}
+                            </td>
+                            <td class="border px-4 py-2 text-sm text-gray-700">
+                                {{ fondo.egresos }}
+                            </td>
                             <td class="border px-4 py-2 text-sm text-gray-700">{{ fondo.moneda_fondo }}</td>
                         </tr>
                         {% endfor %}
@@ -98,18 +104,20 @@
     <style>
         /* Estilos para los selectores */
         select {
-            width: 50%; /* Ocupa el ancho completo del contenedor */
-            border-radius: 9999px; 
-            padding: 0.5rem 1rem; 
-            border: 1px solid #d1d5db; 
-            transition: all 0.3s ease; 
-            outline: none; 
-            background-color: white; /* Fondo blanco */
+            width: 50%;
+            /* Ocupa el ancho completo del contenedor */
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: white;
+            /* Fondo blanco */
         }
 
         select:hover {
-            border-color: #3b82f6; 
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
         select:focus {
@@ -119,19 +127,22 @@
 
         /* Estilos para los inputs de fecha */
         input[type="date"].date-input {
-            width: 50%; /* Ocupa el ancho completo del contenedor */
-            border-radius: 9999px; 
-            padding: 0.5rem 1rem; 
-            border: 1px solid #d1d5db; 
-            transition: all 0.3s ease; 
-            outline: none; 
-            background-color: white; /* Fondo blanco */
-            appearance: none; /* Elimina los estilos nativos del navegador */
+            width: 50%;
+            /* Ocupa el ancho completo del contenedor */
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: white;
+            /* Fondo blanco */
+            appearance: none;
+            /* Elimina los estilos nativos del navegador */
         }
 
         input[type="date"].date-input:hover {
-            border-color: #3b82f6; 
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
         input[type="date"].date-input:focus {
@@ -141,31 +152,41 @@
 
         /* Estilos para el ícono del calendario en inputs de fecha */
         input[type="date"].date-input::-webkit-calendar-picker-indicator {
-            filter: invert(0.5); /* Cambia el color del ícono */
-            cursor: pointer; /* Cambia el cursor al pasar sobre el ícono */
+            filter: invert(0.5);
+            /* Cambia el color del ícono */
+            cursor: pointer;
+            /* Cambia el cursor al pasar sobre el ícono */
         }
 
         /* Estilos para los inputs de texto */
-        input[type="text"], input[type="number"], input[type="date"] {
-            width: 50%; /* Ocupa el ancho completo del contenedor */
-            border-radius: 9999px; 
-            padding: 0.5rem 1rem; 
-            border: 1px solid #d1d5db; 
-            transition: all 0.3s ease; 
-            outline: none; 
-            background-color: white; /* Fondo blanco */
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            width: 50%;
+            /* Ocupa el ancho completo del contenedor */
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: white;
+            /* Fondo blanco */
         }
 
-        input[type="text"]:hover, input[type="number"]:hover, input[type="date"]:hover {
-            border-color: #3b82f6; 
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
-        }
-
-        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+        input[type="text"]:hover,
+        input[type="number"]:hover,
+        input[type="date"]:hover {
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
     </style>
 </body>
+
 </html>

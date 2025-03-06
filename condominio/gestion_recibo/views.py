@@ -37,6 +37,8 @@ def gestion_fondos(request):
         
         if fecha_inicio and fecha_fin:
             fondos = fondos.filter(fecha_fondo__range=[fecha_inicio, fecha_fin])
+    
+    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)
 
     return render(request, 'gestion-fondos.html', {
         'form_registro': form_registro,
