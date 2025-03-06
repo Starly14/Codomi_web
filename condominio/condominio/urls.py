@@ -11,7 +11,17 @@ urlpatterns = [
     path('', include("homepage.urls")),
     path("iniciarSesion/", include("iniciarSesion.urls")),
     path('gestion_propietario/', include('gestion_propietario.urls')),
-    path('gestion_capital/', include('gestion_capital.urls'))
+    path('gestion_capital/', include('gestion_capital.urls')),
+
+    path('gestion_recibo/', include('gestion_recibo.urls')),
+
+
+    path('editar_edificio/', include('editar_edificio.urls')),
+
     ] + static(settings.STATIC_URL)
 
+#Para el manejo de imágenes
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
