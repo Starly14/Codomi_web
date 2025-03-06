@@ -25,5 +25,5 @@ class Edif(models.Model):
     id_usuario = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='id_usuario', blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'edif'
