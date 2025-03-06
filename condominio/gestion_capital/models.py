@@ -87,4 +87,3 @@ class Asignacion(models.Model):
         fecha_fin_str = f" Fecha fin: {self.fecha_fin}" if self.fecha_fin else ""
         return f"Propietario: {self.id_prop.nombre_prop} - Dpto: {self.nro_dpto.nro_dpto} Fecha inicio:{self.fecha_inicio}{fecha_fin_str}."
     
-
