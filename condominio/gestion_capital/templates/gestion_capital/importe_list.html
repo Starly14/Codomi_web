@@ -1,87 +1,80 @@
 {% load tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Importe</title>
-{% tailwind_css %}
+    {% tailwind_css %}
 </head>
+<body class="bg-gray-200 font-sans">
 
-<body >
-    {% include 'layout/navbar.html'%}
+    <!-- Navbar -->
+    {% include 'layout/navbar.html' %}
 
-    <div class="font-poppins flex flex-col min-h-screen p-4">
-
-        <form method="get" class="flex flex-col items-start w-full p-4 bg-white shadow-md rounded-lg mb-6">
-            <!-- Contenedor flexible para los labels -->
-            <div class="flex space-x-[30vw] mb-2">
-                <div>
-                    <label>Mes</label>
-                </div>
-                <div>
-                    <label>Año</label>
-                </div>
-                <div>
-                    <label>Departamento</label>
-                </div>
-
-            </div>
-        
-            <!-- Contenedor flexible para los campos del formulario y el botón -->
-            <div class="flex items-center w-full">
-                <!-- Contenedor flexible para los campos del formulario -->
-                <div class="flex space-x-4 w-full">
+    <!-- Contenedor principal -->
+    <div class="container mx-auto p-6">
+        <!-- Sección de Filtrado -->
+        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtrar Importes</h2>
+            <form method="get" class="space-y-4">
+                <div class="space-y-4 w-[50%]">
                     {% for field in filtro.form %}
-                        <div class="flex-1">
-                            {{ field }}
-                        </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
                     {% endfor %}
                 </div>
-        
-                <!-- Botón alineado a la derecha -->
-                <div class="ml-4">
-                    <button type="submit" class="bg-blue-800 w-[10vw] text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-                        Filtrar
-                    </button>
-                </div>
+                <button type="submit" class="w-[50%] bg-indigo-900 text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition duration-300">
+                    Aplicar Filtros
+                </button>
+            </form>
+        </div>
+
+        <!-- Sección de Listado -->
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Importes</h2>
+            {% if queryset %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Departamento</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Fecha</th>
+                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Pago (Dl)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in queryset %}
+                        <tr class="hover:bg-gray-50 transition duration-200">
+                            <td class="border px-4 py-2 text-sm text-gray-700">{{ item.id_dpto.id_dpto }}</td>
+                            <td class="border px-4 py-2 text-sm text-gray-700">{{ item.fecha_importe|date:"d/m/Y H:i" }}</td>
+                            <td class="border px-4 py-2 text-sm text-gray-700">{{ item.pago_dl }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </form>
-
-
-    <div class="flex-1 overflow-x-auto bg-white shadow-sm rounded-lg">
-    <table class="min-w-full border-collapse border border-gray-200">
-        <thead>
-            <tr class="bg-gray-50">
-                <th class="border border-gray-200 px-4 py-2 text-left">Departamento</th>
-                <th class="border border-gray-200 px-4 py-2 text-left">Fecha</th>
-                <th class="border border-gray-200 px-4 py-2 text-left">Pago (Dl)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in queryset %}
-            <tr class="hover:bg-gray-50">
-                <td class="border border-gray-200 px-4 py-2">{{ item.id_dpto }}</td>
-                <td class="border border-gray-200 px-4 py-2">{{ item.fecha_importe }}</td>
-                <td class="border border-gray-200 px-4 py-2">{{ item.pago_dl }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+            {% else %}
+            <p class="text-gray-600">No se encontraron registros con los filtros aplicados.</p>
+            {% endif %}
+        </div>
     </div>
+</body>
+</html>
 
-    </div>
-
+    <!-- Estilos personalizados para los selectores -->
     <style>
-        /* Esta seccion de aqui es para poder editar el css de los filtros*/
+        /* Estilos para los selectores */
         select {
-            width: 15em;
+            width: 100%; /* Ocupa el ancho completo del contenedor */
             border-radius: 9999px; 
             padding: 0.5rem 1rem; 
             border: 1px solid #d1d5db; 
             transition: all 0.3s ease; 
             outline: none; 
+            background-color: white; /* Fondo blanco */
         }
 
         select:hover {
@@ -93,15 +86,27 @@
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
+
+        /* Estilos para los inputs de texto */
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%; /* Ocupa el ancho completo del contenedor */
+            border-radius: 9999px; 
+            padding: 0.5rem 1rem; 
+            border: 1px solid #d1d5db; 
+            transition: all 0.3s ease; 
+            outline: none; 
+            background-color: white; /* Fondo blanco */
+        }
+
+        input[type="text"]:hover, input[type="number"]:hover, input[type="date"]:hover {
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); 
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
     </style>
-
-
-
 </body>
 </html>
-
-
-
-
-
-
