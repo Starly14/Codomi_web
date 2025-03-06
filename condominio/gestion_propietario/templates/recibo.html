@@ -31,7 +31,7 @@
         <h1 class="text-l font-bold mb-5">{{edif.direccion_edif}}</h1>
     </div>
 
-    <div class="mb-4s mt-16 flex flex-row justify-center">
+    <div class="mb-4 mt-10 flex flex-row justify-center">
         <!-- Aquí va el mes del recibo -->
         <h2 class="text-l font-bold mb-5">Fecha del recibo de condominio: {{fecha_escrita}}</h2>
 
@@ -39,7 +39,7 @@
 
     <div class="pb-0 pl-0 border border-gray-500 rounded-lg bg-white">
 
-        <div class="w-full flex flex-row justify-between">
+        <div class="w-full flex flex-row justify-around">
             
             <div class=" flex flex-row justify-center border border-transparent border-r-gray-500 pr-8">
                 <!-- Acá va el nombre del propietario -->
@@ -47,13 +47,13 @@
 
             </div>
 
-            <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-10">
+            <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-14">
                 <!-- Acá va la alícuota -->
                 <h1 class="text-l font-bold my-3 mr-3">Alícuota: {{dpto.alicuota}}%</h1>
 
             </div>
 
-            <div class=" flex flex-row justify-center pr-10">
+            <div class=" flex flex-row justify-center pr-6">
                 <!-- Acá va el departamento -->
                 <h1 class="text-l font-bold my-3 mr-3">Apartamento: {{dpto.id_dpto}}</h1>
 
@@ -62,7 +62,7 @@
         </div>
         
 
-        <div class=" pl-5 border border-gray-800 flex flex-row justify-between bg-gray-400">
+        <div class=" pl-5 border border-gray-800 flex flex-row justify-between bg-gray-300">
 
             <div class=" flex flex-row">
                 <h1 class="text-l font-bold my-3 mr-2"></h1>
@@ -87,7 +87,7 @@
 
         <!-- Aquí empieza la sección de presupuesto -->
          
-        <div class=" pl-5 border border-t-gray-500 border-transparent pr-5 flex flex-row justify-between">
+        <div class=" pl-5 border border-b-500 border-transparent pr-5 flex flex-row justify-between bg-gray-200">
 
             <!-- Aquí va el mes siguiente al recibo -->
             <h1 class="text-l font-bold my-3">Subtotal presupuesto:</h1>
@@ -98,7 +98,7 @@
 
         </div>
 
-        <div class="flex flex-row justify-between px-5">
+        <div class="flex flex-row justify-between px-5 bg-gray-200">
 
             <h1 class="text-l font-bold my-3">Fondo de reserva 50%:</h1>
 
@@ -108,7 +108,7 @@
 
         </div>
 
-        <div class=" px-5 border-transparent flex flex-row justify-between">
+        <div class=" px-5 border-transparent flex flex-row justify-between bg-gray-200">
 
             <h1 class="text-l font-bold my-3">Fondo para gastos imprevistos:</h1>
 
@@ -146,7 +146,7 @@
 
         <!-- Aquí empieza la sección de gastos directos -->
 
-        <div class="border border-b-gray-500 flex flex-row justify-between pl-5">
+        <div class="border border-b-gray-500 flex flex-row justify-between pl-5 bg-gray-300">
 
             <h1 class="text-l font-bold my-3">Gatos directos de su apartamento</h1>
 
@@ -174,7 +174,7 @@
 
         <div class="border-2 border-gray-800 px-5 flex flex-row justify-between items-center">
 
-            <h1 class="text-l font-bold my-3 max-w-xs">Total alícuota más gastos directos de su apartamento correspondiente al mes de: {{mes_siguiente}}, {{ano_siguiente}}</h1>
+            <h1 class="text-l font-bold my-3 max-w-xl">Total alícuota más gastos directos de su apartamento correspondiente al mes de: {{mes_siguiente}}, {{ano_siguiente}}</h1>
 
             <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
             <h1 class="text-l font-bold my-3">{{totales}}$</h1>
@@ -199,9 +199,9 @@
 
         </div>
         {% for comentario in comentarios %}
-            <div class=" pl-5 border border-b-gray-500 pr-5 flex flex-col items-center">
+            <div class=" pl-5 border border-b-gray-500 pr-5 flex flex-col items-center text-center">
 
-                <h1 class="text-l font-bold my-3">{{comentario.desc_comentario}}</h1>
+                <h1 class="text-l font-bold my-3 max-w-2xl">{{comentario.desc_comentario}}</h1>
 
             </div>
         {% endfor %}
