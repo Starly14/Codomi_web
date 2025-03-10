@@ -10,11 +10,11 @@
 <section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
 
   
-  <div class="w-fit bg-white rounded-lg shadow-md mb-10 ">  
-
-    <div class="flex flex-wrap flex-column">
-
-    <div class="p-20 pb-5 pr-10 pl-10">
+    <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
+  
+      <div class="flex flex-wrap flex-column w-full">
+  
+      <div class="p-20 pb-10 pr-10 pl-10 w-full">
 
     <div class="mb-4 flex-row flex justify-between">
 
@@ -211,5 +211,111 @@
 
   </div> 
 </section>
+
+<!-- Aquí va la segunda parte del recibo -->
+
+
+<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
+
+  
+    <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
+  
+      <div class="flex flex-wrap flex-column w-full">
+  
+      <div class="p-20 pb-10 pr-10 pl-10 w-full">
+  
+      <div class="mb-4 flex-row flex justify-between">
+  
+          <!-- Aquí va el nombre de la residencia -->
+          <h2 class="text-xl font-bold mb-5 pr-64">{{edif.nombre_edif}}</h2>
+  
+          <!-- Aquí va el RIF de la residencia -->
+          <h1 class="text-l font-bold mb-5"> Rif: J-{{edif.rif}}</h1>
+      </div>
+  
+      <div class="mb-4">
+          
+          <!-- Aquí va la dirección de la residencia -->
+          <h1 class="text-l font-bold mb-5">{{edif.direccion_edif}}</h1>
+      </div>
+  
+      <div class="mb-4 mt-10 flex flex-row justify-center">
+          <!-- Aquí va el mes del recibo -->
+          <h2 class="text-l font-bold mb-5">Fecha del recibo de condominio: {{fecha_escrita}}</h2>
+  
+      </div>
+  
+      <div class="pb-0 pl-0 border border-gray-500 rounded-lg bg-white">
+  
+          <div class="w-full flex flex-row justify-around">
+              
+              <div class=" flex flex-row justify-center border border-transparent border-r-gray-500 pr-8">
+                  <!-- Acá va el nombre del propietario -->
+                  <h1 class="text-l font-bold my-3 mr-3">Propietario: {{prop.nombre_prop}}</h1>
+  
+              </div>
+  
+              <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-14">
+                  <!-- Acá va la alícuota -->
+                  <h1 class="text-l font-bold my-3 mr-3">Alícuota: {{dpto.alicuota}}%</h1>
+  
+              </div>
+  
+              <div class=" flex flex-row justify-center pr-6">
+                  <!-- Acá va el departamento -->
+                  <h1 class="text-l font-bold my-3 mr-3">Apartamento: {{dpto.id_dpto}}</h1>
+  
+              </div>
+  
+          </div>
+          
+  
+          <div class=" pl-5 border border-gray-800 flex flex-row bg-gray-300">
+  
+              <div class=" flex flex-row">
+              
+                  <!-- Acá va el mes del recibo -->
+                  <h1 class="text-l font-bold my-3">Gastos aplicados</h1>
+  
+              </div>
+  
+          </div>
+
+          <div class="border-2 border-gray-800 flex flex-row justify-between px-5 items-center">
+
+            <h1 class="text-l font-bold my-3">Descripción de gastos aplicados en mes</h1>
+            
+            <!-- Acá primero va la moneda en la que está el gasto y después va el monto como tal -->
+            <h1 class="text-l font-bold my-3">monto</h1>
+
+          </div>
+  
+          <!-- Aquí va cada campo de gasto aplicado, siguiendo la siguiente estructura: -->
+  
+          {% for monto in monto_presupuestos %}
+              <div class="px-5 flex flex-row justify-between">
+  
+                  <h1 class="text-l font-bold my-3">{{monto.titulo}}</h1>
+                  <h1 class="text-l font-bold my-3">{{monto.monto}}</h1>
+  
+              </div>
+          {% endfor %}
+  
+          
+  
+          <div class="border-2 border-gray-800 px-5 flex flex-row justify-end" style="background-color: #ffff00;">
+  
+              <h1 class="text-l font-bold my-3 mr-5">Total de débitos en cuentas:</h1>
+  
+              <!-- Aquí va el monto (que sería la suma de todos los montos anteriores) -->
+              <h1 class="text-l font-bold my-3">monto</h1>
+  
+          </div>
+
+  
+        </div> 
+        
+    </div> 
+  </section>
 
 {% endblock %}
