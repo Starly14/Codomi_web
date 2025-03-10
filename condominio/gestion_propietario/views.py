@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Propietario, Correo, Dpto, Asignacion, Recibo, ReciboP, Presupuesto, Comentario, ComentarioFrec
+from .models import Propietario, Correo, Dpto, Asignacion, Recibo, Deuda, Presupuesto, Comentario, Importe
 from .forms import PropietarioForm, CorreoForm, DptoForm, FechaForm
 from django.db import IntegrityError
 
@@ -149,6 +149,10 @@ def plantillaBase(request):
 
 
 def reciboBase(request, year, month, day, nro_dpto):
+    ano = year
+    mes = month
+    dia = day
+
     dpto = get_object_or_404(Dpto, id_dpto=nro_dpto)
 
     # Filtrar asignaciones por el departamento y con fecha menor a `year`
@@ -168,12 +172,14 @@ def reciboBase(request, year, month, day, nro_dpto):
     recibo = get_object_or_404(Recibo, fecha_recibo__year=year, fecha_recibo__month=month)
     
     fechas = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-    fecha_escrita = f'{day} de {fechas[month]}, {year}'
+
+    fecha_escrita = f'{day} de {fechas[month-1]}, {year}'
+
     if month < 12:
-        mes_siguiente = fechas[month+1]
+        mes_siguiente = fechas[month]
         ano_siguiente = year
     else:
-        mes_siguiente = fechas[1]
+        mes_siguiente = fechas[0]
         ano_siguiente = year+1
 
     presupuestos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='previsto')
@@ -224,6 +230,37 @@ def reciboBase(request, year, month, day, nro_dpto):
         com = comentario.id_comentario
         comentarios.append(com)
 
+    importesObjects = Importe.objects.filter(id_dpto=nro_dpto, fecha_importe__lt=recibo.fecha_recibo)
+    importes = []
+    for i in importesObjects:
+        importes.append(i.pago_dl)
+    
+    deudasObjects = Deuda.objects.filter(id_dpto=nro_dpto, fecha_cta__lt=recibo.fecha_recibo)
+    deudas = []
+    for i in deudasObjects:
+        deudaPersonal = i.deuda
+        deudas.append(deudaPersonal)
+    
+    totalImportes = sum(importes)
+    totalDeudas = sum(deudas)
+
+    print(totalImportes)
+    print(totalDeudas)
+    for i in importes:
+        print(i)
+
+    print('\n\n\nespacio\n\n\n')
+
+    for i in deudas:
+        print(i)
+
+    print('\n\n\nespacio\n\n\n')
+
+    print(totalImportes-totalDeudas)
+
+    deudaFinal = totalDeudas-totalImportes
+
+    totalPagar = totales + deudaFinal
 
     return render(request, 'recibo.html', {
         'edif': edif,
@@ -244,4 +281,6 @@ def reciboBase(request, year, month, day, nro_dpto):
         'suma_directos': suma_directos,
         'totales': totales,
         'comentarios': comentarios,
+        'deudaFinal': deudaFinal,
+        'totalPagar': totalPagar,
     })

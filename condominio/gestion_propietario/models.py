@@ -70,6 +70,9 @@ class Fondo(models.Model):
         managed = False
         db_table = 'fondo'
 
+    def __str__(self):
+        return f"id_fondo: {self.id_fondo}. {self.fecha_fondo}   {self.moneda_fondo}"
+
 
 class Recibo(models.Model):
     id_recibo = models.AutoField(primary_key=True)
@@ -91,6 +94,9 @@ class ReciboP(models.Model):
     class Meta:
         managed = False
         db_table = 'recibo_p'
+
+    def __str__(self):
+        return f"dpto: {self.id_dpto.id_dpto}. monto: {self.monto_dl}. {self.id_recibo.fecha_recibo}"
 
 
 class AuthUser(models.Model):
@@ -154,6 +160,9 @@ class Deuda(models.Model):
         managed = False
         db_table = 'deuda'
 
+    def __str__(self):
+        return f"dpto: {self.id_dpto.id_dpto}. Deuda: {self.deuda}. {self.fecha_cta}"
+
 
 class Gasto(models.Model):
     id_gasto = models.AutoField(primary_key=True)
@@ -178,12 +187,15 @@ class Importe(models.Model):
     fecha_importe = models.DateTimeField()
     pago_bs = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
     pago_dl = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
-    moneda_gasto = models.CharField(blank=True, null=True)
+    moneda_importe = models.CharField(blank=True, null=True)
     detalle_importe = models.CharField(max_length=300, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'importe'
+
+    def __str__(self):
+        return f"dpto: {self.id_dpto.id_dpto}. Importe$: {self.pago_dl}. {self.fecha_importe}"
 
 
 class Presupuesto(models.Model):

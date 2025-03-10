@@ -121,7 +121,7 @@
         
         <div class=" px-5 border border-b-gray-500 border-transparent flex flex-row justify-between bg-amber-200">
 
-            <h1 class="text-l font-bold my-3">Total presupuesto para diciembre</h1>
+            <h1 class="text-l font-bold my-3">Total presupuesto para {{mes_siguiente}}</h1>
 
             <!-- Aquí va el presupuesto total del mes siguiente al recibo -->
             <h1 class="text-l font-bold my-3">{{total}}$</h1>
@@ -186,7 +186,7 @@
             <h1 class="text-l font-bold my-3 text-red-600">Atrasos (monto contable de recibos no pagados al cierre del mes)</h1>
 
             <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
-            <h1 class="text-l font-bold my-3 text-red-600">$ 20 POR EDITAR</h1>
+            <h1 class="text-l font-bold my-3 text-red-600">{{deudaFinal}}$</h1>
 
         </div>
 
@@ -195,7 +195,7 @@
             <h1 class="text-l font-bold my-3">Total a pagar (Alícuota más acumulado por pagar de su apartamento):</h1>
 
             <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
-            <h1 class="text-l font-bold my-3">$ 286,17 DEPENDE DE LO ANTERIOR</h1>
+            <h1 class="text-l font-bold my-3">{{totalPagar}}$</h1>
 
         </div>
         {% for comentario in comentarios %}
