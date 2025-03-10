@@ -187,7 +187,7 @@ class Importe(models.Model):
     fecha_importe = models.DateTimeField()
     pago_bs = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
     pago_dl = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
-    moneda_gasto = models.CharField(blank=True, null=True)
+    moneda_importe = models.CharField(blank=True, null=True)
     detalle_importe = models.CharField(max_length=300, blank=True, null=True)
 
     class Meta:
