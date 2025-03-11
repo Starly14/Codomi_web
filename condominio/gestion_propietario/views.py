@@ -265,15 +265,27 @@ def reciboBase(request, year, month, day, nro_dpto):
 
     monto_gastos = []
 
+    sumaGastosdl = []
+    sumaGastosbs = []
     for gasto in gastos:
         if gasto.monto_gasto_bs == None and gasto.moneda_gasto == '$':
             monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_dl}$'})
+            sumaGastosdl.append(gasto.monto_gasto_dl)
         elif gasto.monto_gasto_dl == None and gasto.moneda_gasto == 'bs':
             monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_bs} Bs.'})
+            sumaGastosbs.append(gasto.monto_gasto_bs)
         else:
             monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_bs} Bs. ({gasto.monto_gasto_dl}$)'})
+            sumaGastosbs.append(gasto.monto_gasto_bs)
 
-    
+    gastoFinalbs = f'{sum(sumaGastosbs)}Bs.'
+
+    if len(sumaGastosdl) == 0:
+        gastoFinaldl = ''
+    else:
+        gastoFinaldl = f'   ({sum(sumaGastosdl)}$)'
+
+
 
     return render(request, 'recibo.html', {
         'edif': edif,
@@ -297,4 +309,6 @@ def reciboBase(request, year, month, day, nro_dpto):
         'deudaFinal': deudaFinal,
         'totalPagar': totalPagar,
         'monto_gastos': monto_gastos,
+        'gastoFinaldl': gastoFinaldl,
+        'gastoFinalbs': gastoFinalbs,
     })
