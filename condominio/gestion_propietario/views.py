@@ -1,24 +1,25 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Propietario, Correo, Dpto, Asignacion, Recibo, Deuda, Presupuesto, Comentario, Importe
+from .models import Propietario, Correo, Dpto, Asignacion, Recibo, Deuda, Presupuesto, Comentario, Importe, Gasto
 from .forms import PropietarioForm, CorreoForm, DptoForm, FechaForm
 from django.db import IntegrityError
 
 def propietario_detail(request, id):
+    # se definen las variables iniciales
     propietario = get_object_or_404(Propietario, id_prop=id)
     correos = Correo.objects.filter(id_prop=propietario)
     propietarios = Propietario.objects.all()
-
     propietario_form = PropietarioForm(instance=propietario)
     correo_form = CorreoForm()
+
     if request.method == 'POST':
-        if 'edit_nombre' in request.POST:
+        if 'edit_nombre' in request.POST: # guarda un form con el nombre insertado
             propietario_form = PropietarioForm(request.POST, instance=propietario)
             if propietario_form.is_valid():
                 propietario_form.save()
                 return redirect('propietario-detail', id=id)
 
-        elif 'add_correo' in request.POST:
+        elif 'add_correo' in request.POST: # guarda un form con el correo insertado, agregandolo a la lista de correos
             correo_form = CorreoForm(request.POST)
             if correo_form.is_valid():
                 nuevo_correo = correo_form.save(commit=False)
@@ -26,19 +27,19 @@ def propietario_detail(request, id):
                 nuevo_correo.save()
                 return redirect('propietario-detail', id=id)
 
-        elif 'delete_correo' in request.POST:
+        elif 'delete_correo' in request.POST: # envia un post con el id del correo a eliminar
             correo_id = request.POST.get('correo_id')
             Correo.objects.filter(correo=correo_id).delete()
             return redirect('propietario-detail', id=id)
         
-        elif 'delete_propietario' in request.POST:
+        elif 'delete_propietario' in request.POST: # NO ESTA SIENDO USADO, UTIL EN OTRA CIRCUNSTANCIA
             propietario_id = request.POST.get('propietario_id')
             Propietario.objects.filter(id_prop=propietario_id).delete()
             return redirect('propietario-detail', id=id)
         
-        elif 'redirect_propietario' in request.POST:
+        elif 'redirect_propietario' in request.POST: #redirige al editar propietario del propietario seleccionado
             propietario_id = request.POST.get('propietario_id')
-            return redirect('propietario-detail', id=propietario_id)  # Redirige al detalle del propietario con el id seleccionado
+            return redirect('propietario-detail', id=propietario_id) 
 
     else:
         propietario_form = PropietarioForm(instance=propietario)
@@ -149,9 +150,6 @@ def plantillaBase(request):
 
 
 def reciboBase(request, year, month, day, nro_dpto):
-    ano = year
-    mes = month
-    dia = day
 
     dpto = get_object_or_404(Dpto, id_dpto=nro_dpto)
 
@@ -191,16 +189,18 @@ def reciboBase(request, year, month, day, nro_dpto):
     monto_fondo = fondo.monto_pres_dl
 
     for presupuesto in presupuestos:
-        if presupuesto.monto_pres_dl != None:
-            monto_presupuestos.append({'titulo': presupuesto.titulo_pres, 'monto': f'{presupuesto.monto_pres_dl}{presupuesto.moneda_pres}'})
-        if presupuesto.monto_pres_bs != None:
-            monto_presupuestos.append({'titulo': presupuesto.titulo_pres, 'monto': f'{presupuesto.monto_pres_bs}{presupuesto.moneda_pres}'})
+        if presupuesto.monto_pres_bs == None:
+            monto_presupuestos.append({'titulo': presupuesto.titulo_pres, 'monto': f'{presupuesto.monto_pres_dl}$'})
+        if presupuesto.monto_pres_dl == None:
+            monto_presupuestos.append({'titulo': presupuesto.titulo_pres, 'monto': f'{presupuesto.monto_pres_bs}Bs.'})
 
     for directo in directos:
-        if directo.monto_pres_dl != None:
-            monto_directos.append({'titulo': directo.titulo_pres, 'monto': f'{directo.monto_pres_dl}{directo.moneda_pres}'})
-        if directo.monto_pres_bs != None:
-            monto_directos.append({'titulo': directo.titulo_pres, 'monto': f'{directo.monto_pres_bs}{directo.moneda_pres}'})
+        if directo.monto_pres_bs == None:
+            monto_directos.append({'titulo': directo.titulo_pres, 'monto': f'{directo.monto_pres_dl}$'})
+        if directo.monto_pres_dl == None:
+            monto_directos.append({'titulo': directo.titulo_pres, 'monto': f'{directo.monto_pres_bs}Bs.'})
+
+    #a futuro, por cuestiones de otros condominios, esto debe ser cambiado a como esta con gastos
         
     subtotal = 0
     for i,v in enumerate(presupuestos):
@@ -259,8 +259,21 @@ def reciboBase(request, year, month, day, nro_dpto):
     print(totalImportes-totalDeudas)
 
     deudaFinal = totalDeudas-totalImportes
-
     totalPagar = totales + deudaFinal
+
+    gastos = Gasto.objects.filter(fecha_gasto__year=year, fecha_gasto__month=month)
+
+    monto_gastos = []
+
+    for gasto in gastos:
+        if gasto.monto_gasto_bs == None and gasto.moneda_gasto == '$':
+            monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_dl}$'})
+        elif gasto.monto_gasto_dl == None and gasto.moneda_gasto == 'bs':
+            monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_bs} Bs.'})
+        else:
+            monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_bs} Bs. ({gasto.monto_gasto_dl}$)'})
+
+    
 
     return render(request, 'recibo.html', {
         'edif': edif,
@@ -283,4 +296,5 @@ def reciboBase(request, year, month, day, nro_dpto):
         'comentarios': comentarios,
         'deudaFinal': deudaFinal,
         'totalPagar': totalPagar,
+        'monto_gastos': monto_gastos,
     })
