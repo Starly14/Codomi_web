@@ -12,13 +12,16 @@ def editar_edificio(request, id_edif):
     if request.method == 'POST':
         form = EdifForm(request.POST, request.FILES, instance=edificio)
         if form.is_valid():
+            archivo = request.FILES.get('archivo')
+            if archivo:
+                edificio.foto_edif = archivo.read()
             form.save()
             return redirect('editar_edificio', id_edif=edificio.id_edif)
     else:
         form = EdifForm(instance=edificio)
 
     if edificio.foto_edif:
-        foto_bytes = bytes(edificio.foto_edif)  # Convertir memoryview a bytes
+        foto_bytes = bytes(edificio.foto_edif)
         foto_base64 = base64.b64encode(foto_bytes).decode('utf-8')
         from imghdr import what
         image_type = what(None, foto_bytes)
