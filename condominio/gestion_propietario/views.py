@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Propietario, Correo, Dpto, Asignacion, Recibo, Deuda, Presupuesto, Comentario, Importe, Gasto
 from .forms import PropietarioForm, CorreoForm, DptoForm, FechaForm
-from django.db import IntegrityError
 
 def propietario_detail(request, id):
     # se definen las variables iniciales
