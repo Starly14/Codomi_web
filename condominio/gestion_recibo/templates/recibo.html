@@ -381,7 +381,7 @@
           <div class="border-2 border-gray-800 flex flex-row justify-between px-5 items-center " style="background-color: #ffff00;">
 
             <!-- Acá va el el monto del total de condominios por cobrar -->
-            <h1 class="text-l font-bold my-3">Total condominios vencidos por cobrar: monto</h1>
+            <h1 class="text-l font-bold my-3">Total condominios vencidos por cobrar: {{montoDeudasTotales}}$</h1>
 
             <div class="flex flex-row justify-between">
 
@@ -412,10 +412,10 @@
           <div class="border border-t-gray-800 border-transparent flex flex-row px-5 items-center">
 
             <!-- Acá va el el monto del total del fondo de reserva estimado -->
-            <h1 class="text-l font-bold my-3">Total estimado (monto),</h1>
+            <h1 class="text-l font-bold my-3">Total estimado ({{sumaHipotetica}}$),</h1>
 
             <!-- Acá va el el monto del total del fondo de reserva estimado -->
-            <h1 class="text-l font-bold my-3 mx-2">menos condominios por cobrar (monto):</h1>
+            <h1 class="text-l font-bold my-3 mx-2">menos condominios por cobrar ({{fondoActualdl.saldo_fondo}}):</h1>
 
 
           </div>

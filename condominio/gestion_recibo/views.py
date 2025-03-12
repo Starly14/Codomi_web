@@ -230,10 +230,12 @@ def reciboBase(request, year, month, day, nro_dpto):
             deudasTotales.append(aptosPagos)
         else:
             continue
-    
+
     montoDeudasTotales = sum(deudasTotales)
 
-
+    fondoActualdl = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='$')
+    fondoActualbs = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='bs')
+    sumaHipotetica = fondoActualdl.saldo_fondo + montoDeudasTotales
 
     return render(request, 'recibo.html', {
         'edif': edif,
@@ -261,5 +263,8 @@ def reciboBase(request, year, month, day, nro_dpto):
         'gastoFinalbs': gastoFinalbs,
         'dptosDeudores': dptosDeudores,
         'montoDeudasTotales': montoDeudasTotales,
+        'fondoActualdl': fondoActualdl,
+        'fondoActualbs': fondoActualbs,
+        'sumaHipotetica': sumaHipotetica,
     })
 
