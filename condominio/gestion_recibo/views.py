@@ -106,6 +106,7 @@ def reciboBase(request, year, month, day, nro_dpto):
         mes_siguiente = fechas[0]
         ano_siguiente = year+1
 
+
     presupuestos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='previsto')
     directos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='directo')
     fondo = Presupuesto.objects.get(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='fondo')
@@ -237,6 +238,16 @@ def reciboBase(request, year, month, day, nro_dpto):
     fondoActualbs = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='bs')
     sumaHipotetica = fondoActualdl.saldo_fondo + montoDeudasTotales
 
+    if month > 1:
+        mes_pasado_nro = month-1
+        ano_pasado_nro = year
+    else:
+        mes_pasado_nro = 12
+        ano_pasado_nro = year-1
+
+    fondoAnteriordl = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='$')
+    fondoAnteriorbs = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='bs')
+
     return render(request, 'recibo.html', {
         'edif': edif,
         'prop': propietario,
@@ -266,5 +277,7 @@ def reciboBase(request, year, month, day, nro_dpto):
         'fondoActualdl': fondoActualdl,
         'fondoActualbs': fondoActualbs,
         'sumaHipotetica': sumaHipotetica,
+        'fondoAnteriordl': fondoAnteriordl,
+        'fondoAnteriorbs': fondoAnteriorbs,
     })
 

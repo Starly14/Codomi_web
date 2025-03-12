@@ -412,10 +412,10 @@
           <div class="border border-t-gray-800 border-transparent flex flex-row px-5 items-center">
 
             <!-- Acá va el el monto del total del fondo de reserva estimado -->
-            <h1 class="text-l font-bold my-3">Total estimado ({{sumaHipotetica}}$),</h1>
+            <h1 class="text-l font-bold my-3">Total estimado: {{sumaHipotetica}}$.</h1>
 
             <!-- Acá va el el monto del total del fondo de reserva estimado -->
-            <h1 class="text-l font-bold my-3 mx-2">menos condominios por cobrar ({{fondoActualdl.saldo_fondo}}):</h1>
+            <h1 class="text-l font-bold my-3 mx-2">Menos condominios por cobrar: {{montoDeudasTotales}}$.</h1>
 
 
           </div>
@@ -423,14 +423,14 @@
           <div class="border border-t-gray-800 border-transparent flex flex-row px-5 items-center justify-center">
 
             <!-- Acá va el el monto del total del fondo de reserva estimado -->
-            <h1 class="text-l font-bold my-3">Saldo fondo de reserva hasta la fecha: monto</h1>
+            <h1 class="text-l font-bold my-3">Saldo fondo de reserva hasta la fecha: {{fondoActualdl.saldo_fondo}}$</h1>
 
           </div>
 
 
           <div class="border-2 border-gray-800 border-b-transparent flex flex-row px-5  bg-amber-200">
 
-            <h1 class="text-l font-bold my-3">Caja y bancos BANPLUS:</h1>
+            <h1 class="text-l font-bold my-3">Cuenta en dólares ($):</h1>
 
           </div>
 
@@ -443,7 +443,7 @@
                 <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
   
                     <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Saldo mes anterior:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
+                    <h1 class="text-l font-bold my-3">{{fondoAnteriordl.saldo_fondo}}$</h1>
 
                 </div>
 
@@ -451,39 +451,16 @@
                 <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent">
   
                     <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Ingresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
+                    <h1 class="text-l font-bold my-3">{{fondoActualdl.ingresos}}$</h1>
 
                 </div>
 
                 <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
   
                     <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Egresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
+                    <h1 class="text-l font-bold my-3">{{fondoActualdl.egresos}}$</h1>
 
                 </div>
-
-                <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent">
-  
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Otros ajustes:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
-
-                </div>
-
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-r-gray-800 border-transparent">
-  
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">N/D + comisiones:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
-
-                </div>
-
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
-  
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Otros egresos:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
-
-                </div>
-
-
     
             </div>
 
@@ -491,15 +468,15 @@
 
           <div class="border-2 border-gray-800 border-b-transparent flex flex-row px-5 justify-end">
 
-            <h1 class="text-l font-bold my-3">BANPLUS saldo en caja y banco a la fecha:</h1>
-            <h1 class="text-l font-bold m-3">monto</h1>
+            <h1 class="text-l font-bold my-3">Cuenta en dólares a la fecha:</h1>
+            <h1 class="text-l font-bold m-3">{{fondoActualdl.saldo_fondo}}$</h1>
 
           </div>
 
 
           <div class="border-2 border-gray-800 border-b-transparent flex flex-row px-5  bg-amber-200">
 
-            <h1 class="text-l font-bold my-3">Caja y bancos MERCANTIL:</h1>
+            <h1 class="text-l font-bold my-3">Cuenta en bolívares (Bs.):</h1>
 
           </div>
 
@@ -512,7 +489,7 @@
                 <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
   
                     <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Saldo mes anterior:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
+                    <h1 class="text-l font-bold my-3">{{fondoAnteriorbs.saldo_fondo}} Bs.</h1>
 
                 </div>
 
@@ -520,39 +497,16 @@
                 <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent">
   
                     <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Ingresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
+                    <h1 class="text-l font-bold my-3">{{fondoActualbs.ingresos}} Bs.</h1>
 
                 </div>
 
                 <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
   
                     <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Egresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
+                    <h1 class="text-l font-bold my-3">{{fondoActualbs.egresos}} Bs.</h1>
 
                 </div>
-
-                <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent">
-  
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Otros ajustes:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
-
-                </div>
-
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-r-gray-800 border-transparent">
-  
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">N/D + comisiones:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
-
-                </div>
-
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
-  
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Otros egresos:</h1>
-                    <h1 class="text-l font-bold my-3">monto</h1>
-
-                </div>
-
-
     
             </div>
 
@@ -560,8 +514,8 @@
 
           <div class="border-2 border-gray-800 border-t-transparent flex flex-row px-5 justify-end rounded-b-lg">
 
-            <h1 class="text-l font-bold my-3">Banco MERCANTIL saldo en caja y banco a la fecha:</h1>
-            <h1 class="text-l font-bold m-3">monto</h1>
+            <h1 class="text-l font-bold my-3">Cuenta en bolívares a la fecha:</h1>
+            <h1 class="text-l font-bold m-3">{{fondoActualbs.saldo_fondo}} Bs.</h1>
 
           </div>
 
