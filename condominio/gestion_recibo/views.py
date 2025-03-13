@@ -248,6 +248,83 @@ def reciboBase(request, year, month, day, nro_dpto):
     fondoAnteriordl = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='$')
     fondoAnteriorbs = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='bs')
 
+    #aqui empieza lo de fondos
+    fechaPasada = datetime.strptime(f'{year-1}-{month}-{day} 00:00:00', "%Y-%m-%d %H:%M:%S")
+
+
+    ultimasDeudas = Deuda.objects.filter(id_dpto=nro_dpto, fecha_cta__lt=recibo.fecha_recibo).order_by('fecha_cta')
+    ultimosImportes = Importe.objects.filter(id_dpto=nro_dpto, fecha_importe__lt=recibo.fecha_recibo).order_by('fecha_importe')
+    ultimosImportesSeleccionados = Importe.objects.filter(id_dpto=nro_dpto, fecha_importe__lt=recibo.fecha_recibo, fecha_importe__gt=fechaPasada).order_by('fecha_importe')
+
+
+    sumaSaldo = 0
+
+    listaAdeudado = []
+
+    iteradorGeneral = len(ultimasDeudas)
+    iteradorDeudas = 0
+    iteradorImportes = 0
+    iteradorImportesViejo = 0
+
+    while iteradorGeneral > 0:
+
+        deuda_actual = ultimasDeudas[iteradorDeudas]
+        
+        # Procesar solo las deudas que no tengan detalle_deuda y sean mayores que fechaPasada
+        if deuda_actual.detalle_deuda is None:
+            if deuda_actual.fecha_cta > fechaPasada:
+                if iteradorImportes < len(ultimosImportesSeleccionados):
+                # Verificamos que la fecha de deuda coincida con la de los importes
+                    if deuda_actual.fecha_cta.year == ultimosImportesSeleccionados[iteradorImportes].fecha_importe.year and deuda_actual.fecha_cta.month == ultimosImportesSeleccionados[iteradorImportes].fecha_importe.month:
+                        # si hay mas de un importe en el mismo mes:
+                        if iteradorImportes < len(ultimosImportesSeleccionados)-1:
+                            while ultimosImportesSeleccionados[iteradorImportes].fecha_importe.year == ultimosImportesSeleccionados[iteradorImportes+1].fecha_importe.year and ultimosImportesSeleccionados[iteradorImportes].fecha_importe.month == ultimosImportesSeleccionados[iteradorImportes+1].fecha_importe.month:
+                                iteradorImportes += 1
+                                pago_actual += ultimosImportesSeleccionados[iteradorImportes].pago_dl
+
+                        pago_actual = ultimosImportesSeleccionados[iteradorImportes].pago_dl
+                        sumaSaldo += deuda_actual.deuda
+                        sumaSaldo -= pago_actual
+                        iteradorImportes += 1  # Solo se incrementa si hay coincidencia de fechas
+                    else:
+                        pago_actual = 0  # No hay pago correspondiente a esa deuda
+                        sumaSaldo += deuda_actual.deuda
+                else:
+                    pago_actual = 0  # No hay pago correspondiente a esa deuda
+                    sumaSaldo += deuda_actual.deuda
+
+                listaAdeudado.append({
+                    'fechaAdeudado': f'{fechas[deuda_actual.fecha_cta.month-1]} {deuda_actual.fecha_cta.year}',
+                    'importeAdeudado': f'{pago_actual}$',
+                    'deudaAdeudado': f'{deuda_actual.deuda}$',
+                    'sumaAdeudado': f'{sumaSaldo}$'
+                })
+                iteradorDeudas += 1
+            else: # si los importes son de antes de los 12 meses de interes por mostrar
+                if deuda_actual.fecha_cta.year == ultimosImportes[iteradorImportesViejo].fecha_importe.year and deuda_actual.fecha_cta.month == ultimosImportes[iteradorImportesViejo].fecha_importe.month:
+                    pago_actual = ultimosImportes[iteradorImportesViejo].pago_dl
+                    # si hay mas de un importe en el mismo mes:
+                    if iteradorImportesViejo < len(ultimosImportes)-1:
+                        while ultimosImportes[iteradorImportesViejo].fecha_importe.year == ultimosImportes[iteradorImportesViejo+1].fecha_importe.year and ultimosImportes[iteradorImportesViejo].fecha_importe.month == ultimosImportes[iteradorImportesViejo+1].fecha_importe.month:
+                            iteradorImportesViejo += 1
+                            pago_actual += ultimosImportes[iteradorImportesViejo].pago_dl
+                    sumaSaldo += deuda_actual.deuda
+                    sumaSaldo -= pago_actual
+                    iteradorImportesViejo += 1
+                else:
+                    sumaSaldo += deuda_actual.deuda
+                iteradorDeudas += 1
+
+        else:
+            sumaSaldo += deuda_actual.deuda
+            iteradorDeudas += 1
+
+        iteradorGeneral -= 1
+
+
+
+
+
     return render(request, 'recibo.html', {
         'edif': edif,
         'prop': propietario,
@@ -279,5 +356,6 @@ def reciboBase(request, year, month, day, nro_dpto):
         'sumaHipotetica': sumaHipotetica,
         'fondoAnteriordl': fondoAnteriordl,
         'fondoAnteriorbs': fondoAnteriorbs,
+        'listaAdeudado': listaAdeudado,
     })
 
