@@ -6,7 +6,6 @@
     function validateForm(event) {
         const fileInput = document.getElementById('file-upload');
         if (!fileInput.files.length) {
-            // Eliminar el alert y permitir el avance sin cambiar la imagen existente
             return true;
         }
     }
@@ -18,12 +17,29 @@
     function updateFileName() {
         const fileInput = document.getElementById('file-upload');
         const fileNameDisplay = document.getElementById('file-name');
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
         if (fileInput.files.length > 0) {
-            fileNameDisplay.textContent = fileInput.files[0].name;
+            const file = fileInput.files[0];
+            if (allowedTypes.includes(file.type)) {
+                fileNameDisplay.textContent = file.name;
+                previewImage(file);
+            } else {
+                fileNameDisplay.textContent = 'Ningún archivo seleccionado';
+                alert('Solo se permiten archivos de formato de imagen (JPEG, PNG, GIF).');
+                fileInput.value = ''; // Restablecer el campo de entrada de archivo
+            }
         } else {
             fileNameDisplay.textContent = 'Ningún archivo seleccionado';
         }
+    }
+
+    function previewImage(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
     }
 </script>
 {% endblock %}
@@ -71,9 +87,9 @@
             <label for="id_nombre_edif" class="block text-xl font-medium text-gray-700 mb-4">Imagen del Edificio:</label>
             <div class="flex items-center justify-center w-full h-full">
                 {% if foto_url %}
-                    <img src="{{ foto_url }}" alt="Foto de {{ edificio.nombre_edif }}" class="rounded-lg shadow-md" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    <img id="preview-img" src="{{ foto_url }}" alt="Foto de {{ edificio.nombre_edif }}" class="rounded-lg shadow-md" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 {% else %}
-                    <img src="https://www.shorttermprograms.com/images/other/no-image.png" alt="Imagen por defecto" class="rounded-lg shadow-md" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    <img id="preview-img" src="https://www.shorttermprograms.com/images/other/no-image.png" alt="Imagen por defecto" class="rounded-lg shadow-md" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 {% endif %}
             </div>
         </div>
