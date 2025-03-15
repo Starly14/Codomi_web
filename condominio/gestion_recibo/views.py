@@ -85,26 +85,29 @@ def reciboBase(request, year, month, day, nro_dpto):
         fecha_inicio__lt=f"{year}-{month}-{day}"  # Fecha menor al año dado
     ).order_by('-fecha_inicio').first()  # Ordenar por fecha descendente y tomar el más reciente
 
-    if asignacion:
-        print(f"Asignación encontrada: {asignacion}")
-    else:
-        print("No se encontró ninguna asignación.")
-        
-    propietario = asignacion.id_prop # al hacer esto, obtienes el objeto dpto como tal
-    edif = dpto.id_edif  # igual aca
-
-    recibo = get_object_or_404(Recibo, fecha_recibo__year=year, fecha_recibo__month=month)
-    
     fechas = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
     fecha_escrita = f'{day} de {fechas[month-1]}, {year}'
 
     if month < 12:
         mes_siguiente = fechas[month]
+        mes_siguiente_nro = 1
+        mes_siguiente_nro += month
         ano_siguiente = year
     else:
         mes_siguiente = fechas[0]
+        mes_siguiente_nro = 1
         ano_siguiente = year+1
+
+    asignacionPropietario = Asignacion.objects.filter(
+        id_dpto=dpto,
+        fecha_inicio__lt=f"{ano_siguiente}-{mes_siguiente_nro}-{day}"  # Fecha menor al año dado
+    ).order_by('-fecha_inicio').first()  # Ordenar por fecha descendente y tomar el más reciente
+
+    propietario = asignacionPropietario.id_prop # al hacer esto, obtienes el objeto dpto como tal
+    edif = dpto.id_edif  # igual aca
+
+    recibo = get_object_or_404(Recibo, fecha_recibo__year=year, fecha_recibo__month=month)
 
 
     presupuestos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='previsto')
@@ -237,14 +240,13 @@ def reciboBase(request, year, month, day, nro_dpto):
     fondoActualdl = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='$')
     fondoActualbs = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='bs')
     sumaHipotetica = fondoActualdl.saldo_fondo + montoDeudasTotales
-
+    
     if month > 1:
         mes_pasado_nro = month-1
         ano_pasado_nro = year
     else:
         mes_pasado_nro = 12
         ano_pasado_nro = year-1
-
     fondoAnteriordl = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='$')
     fondoAnteriorbs = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='bs')
 
@@ -277,12 +279,12 @@ def reciboBase(request, year, month, day, nro_dpto):
                 # Verificamos que la fecha de deuda coincida con la de los importes
                     if deuda_actual.fecha_cta.year == ultimosImportesSeleccionados[iteradorImportes].fecha_importe.year and deuda_actual.fecha_cta.month == ultimosImportesSeleccionados[iteradorImportes].fecha_importe.month:
                         # si hay mas de un importe en el mismo mes:
+                        pago_actual = ultimosImportesSeleccionados[iteradorImportes].pago_dl
                         if iteradorImportes < len(ultimosImportesSeleccionados)-1:
                             while ultimosImportesSeleccionados[iteradorImportes].fecha_importe.year == ultimosImportesSeleccionados[iteradorImportes+1].fecha_importe.year and ultimosImportesSeleccionados[iteradorImportes].fecha_importe.month == ultimosImportesSeleccionados[iteradorImportes+1].fecha_importe.month:
                                 iteradorImportes += 1
                                 pago_actual += ultimosImportesSeleccionados[iteradorImportes].pago_dl
 
-                        pago_actual = ultimosImportesSeleccionados[iteradorImportes].pago_dl
                         sumaSaldo += deuda_actual.deuda
                         sumaSaldo -= pago_actual
                         iteradorImportes += 1  # Solo se incrementa si hay coincidencia de fechas
