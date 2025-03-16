@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
+<section class="propietario p-6 rounded-lg relative flex justify-center">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
@@ -217,7 +217,7 @@
 <!-- Aquí va la segunda parte del recibo -->
 
 
-<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
+<section class="propietario p-6 rounded-lg relative flex justify-center">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
@@ -320,10 +320,10 @@
 
 
 
-  <!-- Aquí va la segunda parte del recibo -->
+  <!-- Aquí va la tercera parte del recibo -->
 
 
-<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center ">
+<section class="propietario p-6 rounded-lg relative flex justify-center ">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10" style="width: 60rem;">  
@@ -522,48 +522,41 @@
   
         </div> 
 
-        <div class="flex flex-row px-5 mt-20 justify-center">
+        <div class="flex flex-row px-5 mt-20 mb-6 justify-center">
 
             <h1 class="text-xl font-bold my-3">Relación de pagos pendientes y abonos</h1>
 
         </div>
 
-        <div class="flex justify-center">
+        <div class="flex justify-center mb-3">
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col justify-between border-2 border-gray-800 rounded-lg">
 
-                <div class="border-2 border-gray-800 flex flex-row justify-center px-5 items-center mt-5 w-fit rounded-lg">
+                <div class="flex flex-row justify-center items-center w-fit">
 
-                    <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">Mes adeudado</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-r-gray-800 border-transparent text-center" style="width: 10rem;">Mes adeudado</h1>
 
-                    <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">Monto deuda</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-r-gray-800 border-transparent text-center" style="width: 10rem;">Monto deuda</h1>
 
-                    <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">Abonos</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-r-gray-800 border-transparent text-center" style="width: 10rem;">Abonos</h1>
 
-                    <h1 class="text-l font-bold p-3 border-2 border-b-gray-800 border-transparent">Saldo a la fecha</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-transparent text-center" style="width: 10rem;">Saldo a la fecha</h1>
 
                 </div>
                 {%for Adeudado in listaAdeudado%}
-                    <div class="border-2 border-gray-800 flex flex-row justify-center px-5 items-center mt-5 w-fit rounded-lg">
+                    <div class="flex flex-row justify-between pr-5 w-full border-t-2 border-gray-800">
 
 
-                        <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">{{Adeudado.fechaAdeudado}}</h1>
+                        <h1 class="text-l p-3 border-2 border-r-gray-800 border-transparent" style="width: 10rem;">{{Adeudado.fechaAdeudado}}</h1>
 
 
+                        <h1 class="text-l p-3 border-2 border-r-gray-800 border-transparent" style="width: 10rem;">{{Adeudado.deudaAdeudado}}</h1>
 
 
+                        <h1 class="text-l p-3 border-2 border-r-gray-800 border-transparent" style="width: 10rem;">{{Adeudado.importeAdeudado}}</h1>
 
 
-                        <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">{{Adeudado.deudaAdeudado}}</h1>
-
-
-
-
-
-                        <h1 class="text-l font-bold p-3 border-2 border-b-gray-800 border-transparent">{{Adeudado.importeAdeudado}}</h1>
-
-
-                        <h1 class="text-l font-bold p-3 border-2 border-b-gray-800 border-transparent">{{Adeudado.sumaAdeudado}}</h1>
+                        <h1 class="text-l p-3 border-2 border-transparent" style="width: 10rem;">{{Adeudado.sumaAdeudado}}</h1>
 
 
                     </div>
