@@ -33,8 +33,20 @@
             {{ item.pago }}
           {% endif %}
         </td>
-        <td>{{ item.saldo }}</td>
-        <td>{{ item.deuda_acumulada }}</td>
+        <td>
+          {% if item.saldo == 0 %}
+          0.00
+          {% else %}
+            {{ item.saldo }}
+          {% endif %}
+        </td>
+        <td>
+          {% if item.deuda_acumulada == 0 %}
+            0.00
+          {% else %}
+            {{ item.deuda_acumulada }}
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

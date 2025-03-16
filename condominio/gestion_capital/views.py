@@ -117,134 +117,15 @@ def consultar_fondo(request):
     return render(request, 'gestion_capital/consultar_fondo.html', contexto)
 
 
-'''
 def estado_cuenta(request):
     # LLAMAMOS AL FORMULARIO PARA PREPARARLO PARA LA ENTRADA DEL USUARIO, SI LO DESEA
     form = EstadoCuentaFiltroForm(request.GET or None)
     # LISTA DE REPORTES PARA CADA DEPARTAMENTO
     reportes = []
-    # LISTA DE DEPARTAMENTOS  
+    # LISTA DE DEPARTAMENTOS
     departamentos = []
 
-    # DADO QUE NINGUN CAMPO ES REQUERIDO, AL PRINCIPIO SE MOSTRARAN TODOS LOS RESULTADOS
-    if form.is_valid():
-
-        # SE OBTIENEN MES, AÑO O DEPARTAMENTO SI SE DESEA
-        filter_departamento = form.cleaned_data.get('departamento')
-        filter_mes = form.cleaned_data.get('mes')
-        filter_anio = form.cleaned_data.get('anio')
-
-        # CLEANED DATA DEVUELVE UN DICCIONARIO CLAVE - VALOR
-        # {"Departamento" : "DPT18"}
-        # {"Mes" : "ABRIL"} AUNQUE A NIVEL DE BASE DE DATOS TOMA {"MES" : 4}
-
-        # Si no se selecciona un departamento, usamos todos
-        if filter_departamento:
-            departamentos = [filter_departamento]
-        
-        else:
-            departamentos = list(Dpto.objects.all())
-
-        # Convertir filtros de mes y año a enteros si se especifican
-        if filter_mes:
-            filter_mes = int(filter_mes)
-
-        if filter_anio:
-            filter_anio = int(filter_anio)
-
-        # CREACION DE CADA REPORTE POR APT
-        for dpto in departamentos:
-            # Total global de monto_dl de recibos agrupados por mes y año.
-            recibos = (
-                Recibo.objects
-                .annotate(mes=ExtractMonth('fecha_recibo'), anio=ExtractYear('fecha_recibo'))
-                .values('mes', 'anio')
-                .annotate(total_recibo=Sum('monto_dl'))
-                .order_by('anio', 'mes')
-            )
-            # Pagos realizados por el departamento en la tabla Importe agrupados por mes y año.
-            importes_qs = (
-                Importe.objects.filter(id_dpto=dpto)
-                .annotate(mes=ExtractMonth('fecha_importe'), anio=ExtractYear('fecha_importe'))
-                .values('mes', 'anio')
-                .annotate(total_pago=Sum('pago_dl'), fecha_pago=Max('fecha_importe'))
-                .order_by('anio', 'mes')
-            )
-            pago_dict = {
-                (item['anio'], item['mes']): (item['total_pago'], item['fecha_pago'])
-                for item in importes_qs
-            }
-            deuda_dict = {(item['anio'], item['mes']): item['total_recibo'] for item in recibos}
-            keys = set(deuda_dict.keys()) | set(pago_dict.keys())
-
-            # Filtrar por mes y año si se especificaron
-            if filter_mes:
-                keys = {(anio, mes) for (anio, mes) in keys if mes == filter_mes}
-            
-            if filter_anio:
-                keys = {(anio, mes) for (anio, mes) in keys if anio == filter_anio}
-
-            deuda_acumulada = 0
-            reporte_dpto = []  # Reporte específico para este departamento
-
-            for anio, mes in sorted(keys):
-                deuda = deuda_dict.get((anio, mes), 0) * (dpto.alicuota / 100)
-                pago, fecha_pago = pago_dict.get((anio, mes), (0, None))
-                saldo = deuda - pago
-
-                if saldo < 0:
-                    overpayment = abs(saldo)
-                    if fecha_pago:
-                        # SI NO PONGO ESTO HAY PROBLEMAS
-                        if timezone.is_naive(fecha_pago):
-                            fecha_pago = timezone.make_aware(fecha_pago, timezone.get_current_timezone())
-                        deuda_existente = Deuda.objects.filter(
-                            id_dpto=dpto,
-                            fecha_cta=fecha_pago,
-                            deuda=overpayment,
-                            detalle_deuda='ajuste'
-                        ).exists()
-                        if not deuda_existente:
-                            Deuda.objects.create(
-                                id_dpto=dpto,
-                                fecha_cta=fecha_pago,
-                                deuda=overpayment,
-                                detalle_deuda='ajuste'
-                            )
-                    display_saldo = 0
-                    deuda_acumulada -= overpayment
-                else:
-                    display_saldo = saldo
-                    deuda_acumulada += display_saldo
-
-                reporte_dpto.append({
-                    'anio': anio,
-                    'mes': mes,
-                    'alicuota': dpto.alicuota,
-                    'deuda': deuda,
-                    'pago': pago,
-                    'saldo': display_saldo,
-                    'deuda_acumulada': deuda_acumulada,
-                })
-            reportes.append({
-                'departamento': dpto,
-                'reporte': reporte_dpto
-            })
-
-    return render(request, 'gestion_capital/estado_cuenta.html', {
-        'form': form,
-        'reportes': reportes
-    })
-'''
-def estado_cuenta(request):
-    # LLAMAMOS AL FORMULARIO PARA PREPARARLO PARA LA ENTRADA DEL USUARIO, SI LO DESEA
-    form = EstadoCuentaFiltroForm(request.GET or None)
-    # LISTA DE REPORTES PARA CADA DEPARTAMENTO
-    reportes = []
-    # LISTA DE DEPARTAMENTOS  
-    departamentos = []
-
-    # DADO QUE NINGUN CAMPO ES REQUERIDO, AL PRINCIPIO SE MOSTRARAN TODOS LOS RESULTADOS
+    # DADO QUE NINGÚN CAMPO ES REQUERIDO, AL PRINCIPIO SE MOSTRARÁN TODOS LOS RESULTADOS
     if form.is_valid():
         # SE OBTIENEN MES, AÑO O DEPARTAMENTO SI SE DESEA
         filter_departamento = form.cleaned_data.get('departamento')
@@ -257,16 +138,14 @@ def estado_cuenta(request):
         else:
             departamentos = list(Dpto.objects.all())
 
-        # Convertir filtros de mes y año a enteros si se especifican, no es muy necesario
         if filter_mes:
             filter_mes = int(filter_mes)
-
         if filter_anio:
             filter_anio = int(filter_anio)
 
-        # CREACION DE CADA REPORTE POR APT
+        # CREACIÓN DE CADA REPORTE POR DEPARTAMENTO
         for dpto in departamentos:
-            # Pagos realizados por el departamento en la tabla Importe agrupados por mes y año.
+            # Obtener pagos agrupados por mes y año
             importes_qs = (
                 Importe.objects.filter(id_dpto=dpto)
                 .annotate(mes=ExtractMonth('fecha_importe'), anio=ExtractYear('fecha_importe'))
@@ -275,83 +154,74 @@ def estado_cuenta(request):
                 .order_by('anio', 'mes')
             )
 
-            print("IMPORTES POR DPTO")
-            print(importes_qs)
-            print("\n")
-            
             pago_dict = {
                 (item['anio'], item['mes']): (item['total_pago'], item['fecha_pago'])
                 for item in importes_qs
             }
 
-            print("ESTRUCTURA PAGO DICT, PAGOS POR FECHA Y MONTO")
-            print(pago_dict)
-
-            # Consultar deudas por departamento agrupadas por mes y año.
+            # Obtener deudas (excluyendo ajustes) agrupadas por mes y año
             deudas_qs = (
                 Deuda.objects.filter(id_dpto=dpto)
-                .exclude(detalle_deuda='ajuste') 
+                .exclude(detalle_deuda='ajuste')
                 .annotate(mes=ExtractMonth('fecha_cta'), anio=ExtractYear('fecha_cta'))
                 .values('mes', 'anio')
                 .annotate(total_deuda=Sum('deuda'))
                 .order_by('anio', 'mes')
             )
-            
-            print("DEUDAS DEL APARTAMENTO")
-            print(deudas_qs)
 
             deuda_dict = {
                 (item['anio'], item['mes']): item['total_deuda']
                 for item in deudas_qs
             }
 
+            # Unir llaves de deuda y pago
             keys = set(deuda_dict.keys()) | set(pago_dict.keys())
-
-            # Filtrar por mes y año si se especificaron
             if filter_mes:
                 keys = {(anio, mes) for (anio, mes) in keys if mes == filter_mes}
-            
             if filter_anio:
                 keys = {(anio, mes) for (anio, mes) in keys if anio == filter_anio}
 
             deuda_acumulada = 0
-            reporte_dpto = []  # Reporte específico para este departamento
+            reporte_dpto = []
 
             for anio, mes in sorted(keys):
                 deuda = deuda_dict.get((anio, mes), 0)
-
                 pago, fecha_pago = pago_dict.get((anio, mes), (0, None))
-                saldo = deuda - pago
 
-                # PAGUE DE MAS
-                if saldo < 0:
-                    
+                print("COMIENZO DEL BUCBLEEEE")
+                saldo = deuda + deuda_acumulada - pago
+
+                if saldo < 0:  # Pago mayor que la deuda total (actual + acumulada)
                     overpayment = abs(saldo)
-                    
+                    deuda_acumulada = 0
+                    saldo = 0
+
+                    print("SALDO NEGATIVO, PAGO DE MAS")
+                    print("DEUDA ACUMULADA: ", deuda_acumulada)
                     if fecha_pago:
+                        # PARA QUE NO LLORE POR EL NAIVE
                         if timezone.is_naive(fecha_pago):
                             fecha_pago = timezone.make_aware(fecha_pago, timezone.get_current_timezone())
-                        
+
                         deuda_existente = Deuda.objects.filter(
                             id_dpto=dpto,
                             fecha_cta=fecha_pago,
                             deuda=overpayment,
-                            detalle_deuda='ajuste',
+                            detalle_deuda='ajuste'
                         ).exists()
 
                         if not deuda_existente:
+
+                            print("CREANDO DEUDA")
                             Deuda.objects.create(
                                 id_dpto=dpto,
                                 fecha_cta=fecha_pago,
                                 deuda=overpayment,
                                 detalle_deuda='ajuste'
                             )
-
-                    display_saldo = 0
-                    deuda_acumulada -= overpayment
                 else:
-                    display_saldo = saldo
-                    deuda_acumulada += display_saldo
+                    print("SALDO POSITIVO, QUEDO PELANDO")
+                    deuda_acumulada = saldo
 
                 reporte_dpto.append({
                     'anio': anio,
@@ -359,9 +229,10 @@ def estado_cuenta(request):
                     'alicuota': dpto.alicuota,
                     'deuda': deuda,
                     'pago': pago,
-                    'saldo': display_saldo,
+                    'saldo': saldo,
                     'deuda_acumulada': deuda_acumulada,
                 })
+
             reportes.append({
                 'departamento': dpto,
                 'reporte': reporte_dpto
