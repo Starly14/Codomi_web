@@ -4,10 +4,9 @@
 {% block scripts %}
 <script>
     function validateForm(event) {
-        const fileInput = document.getElementById('id_foto_edif')
+        const fileInput = document.getElementById('file-upload');
         if (!fileInput.files.length) {
-            event.preventDefault()
-            alert('Por favor, seleccione un archivo antes de guardar los cambios.')
+            return true;
         }
     }
 
@@ -18,60 +17,80 @@
     function updateFileName() {
         const fileInput = document.getElementById('file-upload');
         const fileNameDisplay = document.getElementById('file-name');
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
         if (fileInput.files.length > 0) {
-            fileNameDisplay.textContent = fileInput.files[0].name;
+            const file = fileInput.files[0];
+            if (allowedTypes.includes(file.type)) {
+                fileNameDisplay.textContent = file.name;
+                previewImage(file);
+            } else {
+                fileNameDisplay.textContent = 'Ningún archivo seleccionado';
+                alert('Solo se permiten archivos de formato de imagen (JPEG, PNG, GIF).');
+                fileInput.value = ''; // Restablecer el campo de entrada de archivo
+            }
         } else {
             fileNameDisplay.textContent = 'Ningún archivo seleccionado';
         }
+    }
+
+    function previewImage(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
     }
 </script>
 {% endblock %}
 
 {% block content %}
 <section class="propietario p-6 rounded-lg relative flex justify-center">
-    <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md">  
-        <div class="flex flex-wrap">
-            <div class="p-20 pb-20 pr-32 pl-32">
-                <h1 class="text-2xl font-bold mb-5">Editar Edificio: {{ edificio.nombre_edif }}</h1>
-                
-                {% if foto_url %}
-                    <div class="mb-4">
-                        <label for="id_nombre_edif" class="block text-sm font-medium text-gray-700">Imagen del Edificio:</label>
-                        <img src="{{ foto_url }}" alt="Foto de {{ edificio.nombre_edif }}" class="rounded-lg shadow-md" />
-                    </div>
-                {% endif %}
+    <div class="flex w-full justify-center space-x-8">
+        <!-- Cuadro del Formulario -->
+        <div class="bg-gray-300 rounded-lg shadow-md p-10 flex flex-col justify-between" style="width: 1000px; height: 700px; margin-left: 24px;">
+            <h1 class="text-2xl font-bold mb-5">Editar Edificio: {{ edificio.nombre_edif }}</h1>
             
+            <form method="POST" enctype="multipart/form-data" class="flex flex-col justify-evenly h-full" onsubmit="validateForm(event)">
+                {% csrf_token %}
                 
-                <form method="POST" enctype="multipart/form-data" onsubmit="validateForm(event)">
-                    {% csrf_token %}
-                    
-                    <div class="mb-4">
-                        <label for="id_nombre_edif" class="block text-sm font-medium text-gray-700">Nombre del Edificio:</label>
-                        <input type="text" id="id_nombre_edif" name="nombre_edif" value="{{ edificio.nombre_edif }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                    </div>
+                <div class="mb-4">
+                    <label for="id_nombre_edif" class="block text-xl font-medium text-gray-700">Nombre del Edificio:</label>
+                    <input type="text" id="id_nombre_edif" name="nombre_edif" value="{{ edificio.nombre_edif }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg" required>
+                </div>
 
-                    <div class="mb-4">
-                        <label for="id_rif" class="block text-sm font-medium text-gray-700">RIF:</label>
-                        <input type="text" id="id_rif" name="rif" value="{{ edificio.rif }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                    </div>
+                <div class="mb-4">
+                    <label for="id_rif" class="block text-xl font-medium text-gray-700">RIF:</label>
+                    <input type="text" id="id_rif" name="rif" value="{{ edificio.rif }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg" required>
+                </div>
 
-                    <div class="mb-4">
-                        <label for="id_direccion_edif" class="block text-sm font-medium text-gray-700">Dirección:</label>
-                        <input type="text" id="id_direccion_edif" name="direccion_edif" value="{{ edificio.direccion_edif }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                    </div>
+                <div class="mb-4">
+                    <label for="id_direccion_edif" class="block text-xl font-medium text-gray-700">Dirección del Edificio:</label>
+                    <input type="text" id="id_direccion_edif" name="direccion_edif" value="{{ edificio.direccion_edif }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg" required>
+                </div>
 
-                    <div class="mb-4">
-                        <label for="id_foto_edif" class="block text-sm font-medium text-gray-700">Foto del Edificio:</label>
-                        <button type="button" id="upload-button" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded" onclick="triggerFileUpload()">Seleccionar archivo</button>
-                        <input id="file-upload" type="file" style="display: none;" onchange="updateFileName()" name="foto_edif">
-                        <span id="file-name">Ningún archivo seleccionado</span>
-                    </div>
+                <div class="mb-4">
+                    <label for="id_foto_edif" class="block text-xl font-medium text-gray-700 mb-2">Seleccionar foto del Edificio:</label>
+                    <button type="button" id="upload-button" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded text-lg" style="margin-top: 8px; margin-left: 8px" onclick="triggerFileUpload()">Seleccionar archivo</button>
+                    <input id="file-upload" type="file" style="display: none;" onchange="updateFileName()" name="archivo">
+                    <span id="file-name" class="text-lg">Ningún archivo seleccionado</span>
+                </div>
 
-                    <div class="flex justify-end mt-4">
-                        <button type="submit" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">Guardar Cambios</button>
-                    </div>
-                </form>
+                <div class="flex justify-end mt-4">
+                    <button type="submit" class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded text-lg">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Cuadro de Imagen -->
+        <div class="bg-gray-300 rounded-lg shadow-md p-10 flex flex-col items-center justify-center" style="width: 1000px; height: 700px; margin-right: 24px;">
+            <label for="id_nombre_edif" class="block text-xl font-medium text-gray-700 mb-4">Imagen del Edificio:</label>
+            <div class="flex items-center justify-center w-full h-full">
+                {% if foto_url %}
+                    <img id="preview-img" src="{{ foto_url }}" alt="Foto de {{ edificio.nombre_edif }}" class="rounded-lg shadow-md" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                {% else %}
+                    <img id="preview-img" src="https://www.shorttermprograms.com/images/other/no-image.png" alt="Imagen por defecto" class="rounded-lg shadow-md" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                {% endif %}
             </div>
         </div>
     </div>

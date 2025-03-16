@@ -21,7 +21,7 @@ class Edif(models.Model):
     nombre_edif = models.CharField(max_length=255, blank=True, null=True)
     rif = models.CharField(max_length=10, blank=True, null=True)
     direccion_edif = models.CharField(max_length=255, blank=True, null=True)
-    foto_edif = models.ImageField(upload_to='edificios/', blank=True, null=True)
+    foto_edif = models.BinaryField(blank=True, null=True)
     id_usuario = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='id_usuario', blank=True, null=True)
 
     class Meta:
