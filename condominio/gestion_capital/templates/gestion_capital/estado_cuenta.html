@@ -1,0 +1,43 @@
+<!-- templates/gestion_capital/estado_cuenta.html -->
+
+{% block content %}
+<h2>Estado de Cuenta</h2>
+<form method="get">
+    {{ form.as_p }}
+    <button type="submit">Filtrar</button>
+</form>
+
+{% for r in reportes %}
+  <h3>Departamento: {{ r.departamento }}</h3>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th>Mes/Año</th>
+        <th>Alicuota</th>
+        <th>Deuda</th>
+        <th>Pago</th>
+        <th>Saldo (Deuda - Pago)</th>
+        <th>Deuda Acumulada</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in r.reporte %}
+      <tr>
+        <td>{{ item.mes }}/{{ item.anio }}</td>
+        <td>{{ item.alicuota }}</td>
+        <td>{{ item.deuda }}</td>
+        <td>
+          {% if item.pago == 0 %}  <!-- Cambio aquí -->
+            Sin Pago
+          {% else %}
+            {{ item.pago }}
+          {% endif %}
+        </td>
+        <td>{{ item.saldo }}</td>
+        <td>{{ item.deuda_acumulada }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endfor %}
+{% endblock %}

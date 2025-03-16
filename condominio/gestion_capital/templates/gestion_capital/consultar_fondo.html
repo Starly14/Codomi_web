@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>Consulta de Fondos del Condominio</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+    <div>
+        <h1>Estado de los Fondos del Condominio</h1>
+        
+        <form method="GET" action="{% url 'consultar_fondo' %}">
+            <label for="mes">Mes:</label>
+            <select name="mes" id="mes">
+                <option value="">----</option>
+                {% for numero, nombre in meses %}
+                    <option value="{{ numero }}" {% if form.cleaned_data.mes == numero %}selected{% endif %}>{{ nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="anio">Año:</label>
+            <select name="anio" id="anio">
+                <option value="">----</option>
+                {% for anio, anio_label in anios %}
+                    <option value="{{ anio }}" {% if form.cleaned_data.anio == anio %}selected{% endif %}>{{ anio_label }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Filtrar</button>
+        </form>
+
+        {% if saldo_actual_dl or saldo_actual_bs or ingresos_actual_dl or ingresos_actual_bs or egresos_actual_dl or egresos_actual_bs %}
+            <h2>Saldo Actual</h2>
+            <p>Dólares ($): {{ saldo_actual_dl }}</p>
+            <p>Bolívares (Bs): {{ saldo_actual_bs }}</p>
+
+            <h2>Saldo del Mes Anterior</h2>
+            <p>Dólares ($): {{ saldo_anterior_dl }}</p>
+            <p>Bolívares (Bs): {{ saldo_anterior_bs }}</p>
+
+            <h2>Ingresos del Mes</h2>
+            <p>Dólares ($): {{ ingresos_actual_dl }}</p>
+            <p>Bolívares (Bs): {{ ingresos_actual_bs }}</p>
+
+            <h2>Egresos del Mes</h2>
+            <p>Dólares ($): {{ egresos_actual_dl }}</p>
+            <p>Bolívares (Bs): {{ egresos_actual_bs }}</p>
+
+            <h2>Ingresos del Mes Anterior</h2>
+            <p>Dólares ($): {{ ingresos_anterior_dl }}</p>
+            <p>Bolívares (Bs): {{ ingresos_anterior_bs }}</p>
+
+            <h2>Egresos del Mes Anterior</h2>
+            <p>Dólares ($): {{ egresos_anterior_dl }}</p>
+            <p>Bolívares (Bs): {{ egresos_anterior_bs }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
