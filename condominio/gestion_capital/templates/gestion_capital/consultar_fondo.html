@@ -1,60 +1,103 @@
+{% load tailwind_tags %}
+
 <!DOCTYPE html>
 <html>
 <head>
-    {% load static %}
-    <title>Consulta de Fondos del Condominio</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de fondos</title>
+    {% tailwind_css %}
 </head>
-<body>
+<body class="bg-gray-200 font-sans">
+    {% include 'layout/navbar.html' %}
 
-    <div>
-        <h1>Estado de los Fondos del Condominio</h1>
-        
-        <form method="GET" action="{% url 'consultar_fondo' %}">
-            <label for="mes">Mes:</label>
-            <select name="mes" id="mes">
-                <option value="">----</option>
-                {% for numero, nombre in meses %}
-                    <option value="{{ numero }}" {% if form.cleaned_data.mes == numero %}selected{% endif %}>{{ nombre }}</option>
-                {% endfor %}
-            </select>
+    <section class="p-6 rounded-lg w-screen flex justify-center">
+        <div class="flex flex-col w-full max-w-6xl">
+            <!-- Caja del formulario de filtrado -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h1 class="text-2xl font-semibold text-gray-800 mb-4">Estado de los Fondos del Condominio</h1>
+                <form method="GET" action="{% url 'consultar_fondo' %}" class="space-y-4">
+                    <div class="flex flex-wrap -mx-4">
+                        <div class="w-full md:w-1/2 px-4 mb-4">
+                            <label for="mes" class="block text-sm font-medium text-gray-700 mb-1">Mes:</label>
+                            <select name="mes" id="mes" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">----</option>
+                                {% for numero, nombre in meses %}
+                                    <option value="{{ numero }}" {% if form.cleaned_data.mes == numero %}selected{% endif %}>{{ nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-            <label for="anio">Año:</label>
-            <select name="anio" id="anio">
-                <option value="">----</option>
-                {% for anio, anio_label in anios %}
-                    <option value="{{ anio }}" {% if form.cleaned_data.anio == anio %}selected{% endif %}>{{ anio_label }}</option>
-                {% endfor %}
-            </select>
+                        <div class="w-full md:w-1/2 px-4 mb-4">
+                            <label for="anio" class="block text-sm font-medium text-gray-700 mb-1">Año:</label>
+                            <select name="anio" id="anio" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">----</option>
+                                {% for anio, anio_label in anios %}
+                                    <option value="{{ anio }}" {% if form.cleaned_data.anio == anio %}selected{% endif %}>{{ anio_label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 
-            <button type="submit">Filtrar</button>
-        </form>
+                    <div class="w-full px-4">
+                        <button type="submit" class="w-1/2 bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 -mx-4 rounded-full">
+                            Filtrar
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-        {% if saldo_actual_dl or saldo_actual_bs or ingresos_actual_dl or ingresos_actual_bs or egresos_actual_dl or egresos_actual_bs %}
-            <h2>Saldo Actual</h2>
-            <p>Dólares ($): {{ saldo_actual_dl }}</p>
-            <p>Bolívares (Bs): {{ saldo_actual_bs }}</p>
+            <!-- Caja de los resultados -->
+            {% if saldo_actual_dl or saldo_actual_bs or ingresos_actual_dl or ingresos_actual_bs or egresos_actual_dl or egresos_actual_bs %}
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Resultados</h2>
 
-            <h2>Saldo del Mes Anterior</h2>
-            <p>Dólares ($): {{ saldo_anterior_dl }}</p>
-            <p>Bolívares (Bs): {{ saldo_anterior_bs }}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Saldo Actual -->
+                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                            <h3 class="text-xl font-bold mb-2">Saldo Actual</h3>
+                            <p class="text-gray-700">Dólares ($): {{ saldo_actual_dl }}</p>
+                            <p class="text-gray-700">Bolívares (Bs): {{ saldo_actual_bs }}</p>
+                        </div>
 
-            <h2>Ingresos del Mes</h2>
-            <p>Dólares ($): {{ ingresos_actual_dl }}</p>
-            <p>Bolívares (Bs): {{ ingresos_actual_bs }}</p>
+                        <!-- Saldo del Mes Anterior -->
+                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                            <h3 class="text-xl font-bold mb-2">Saldo del Mes Anterior</h3>
+                            <p class="text-gray-700">Dólares ($): {{ saldo_anterior_dl }}</p>
+                            <p class="text-gray-700">Bolívares (Bs): {{ saldo_anterior_bs }}</p>
+                        </div>
 
-            <h2>Egresos del Mes</h2>
-            <p>Dólares ($): {{ egresos_actual_dl }}</p>
-            <p>Bolívares (Bs): {{ egresos_actual_bs }}</p>
+                        <!-- Ingresos del Mes -->
+                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                            <h3 class="text-xl font-bold mb-2">Ingresos del Mes</h3>
+                            <p class="text-gray-700">Dólares ($): {{ ingresos_actual_dl }}</p>
+                            <p class="text-gray-700">Bolívares (Bs): {{ ingresos_actual_bs }}</p>
+                        </div>
 
-            <h2>Ingresos del Mes Anterior</h2>
-            <p>Dólares ($): {{ ingresos_anterior_dl }}</p>
-            <p>Bolívares (Bs): {{ ingresos_anterior_bs }}</p>
+                        <!-- Egresos del Mes -->
+                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                            <h3 class="text-xl font-bold mb-2">Egresos del Mes</h3>
+                            <p class="text-gray-700">Dólares ($): {{ egresos_actual_dl }}</p>
+                            <p class="text-gray-700">Bolívares (Bs): {{ egresos_actual_bs }}</p>
+                        </div>
 
-            <h2>Egresos del Mes Anterior</h2>
-            <p>Dólares ($): {{ egresos_anterior_dl }}</p>
-            <p>Bolívares (Bs): {{ egresos_anterior_bs }}</p>
-        {% endif %}
-    </div>
+                        <!-- Ingresos del Mes Anterior -->
+                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                            <h3 class="text-xl font-bold mb-2">Ingresos del Mes Anterior</h3>
+                            <p class="text-gray-700">Dólares ($): {{ ingresos_anterior_dl }}</p>
+                            <p class="text-gray-700">Bolívares (Bs): {{ ingresos_anterior_bs }}</p>
+                        </div>
+
+                        <!-- Egresos del Mes Anterior -->
+                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
+                            <h3 class="text-xl font-bold mb-2">Egresos del Mes Anterior</h3>
+                            <p class="text-gray-700">Dólares ($): {{ egresos_anterior_dl }}</p>
+                            <p class="text-gray-700">Bolívares (Bs): {{ egresos_anterior_bs }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 </body>
 </html>
