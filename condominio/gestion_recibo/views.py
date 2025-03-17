@@ -361,3 +361,5 @@ def reciboBase(request, year, month, day, nro_dpto):
         'listaAdeudado': listaAdeudado,
     })
 
+def generarRecibo(request):
+    return render(request, "generarRecibo.html")
