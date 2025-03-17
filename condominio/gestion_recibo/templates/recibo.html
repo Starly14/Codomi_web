@@ -84,7 +84,7 @@
         <!-- Aquí va cada campo de presupuesto, siguiendo la siguiente estructura: -->
 
         {% for monto in monto_presupuestos %}
-            <div class="px-5 flex flex-row justify-between border border-b-gray-800">
+            <div class="px-5 flex flex-row justify-between border border-b-gray-800 hover:bg-gray-50 transition duration-200">
 
                 <h1 class="text-sm my-2">{{monto.titulo}}</h1>
                 <h1 class="text-sm my-2">{{monto.monto}}</h1>
@@ -169,7 +169,7 @@
         <!-- Aquí va cada campo de gastos directos, siguiendo la siguiente estructura: -->
 
         {% for monto in monto_directos %}
-            <div class="px-5 flex flex-row justify-between border border-b-gray-800">
+            <div class="px-5 flex flex-row justify-between border border-b-gray-800 hover:bg-gray-50 transition duration-200">
 
                 <h1 class="text-sm my-2">{{monto.titulo}}</h1>
                 <h1 class="text-sm my-2">{{monto.monto}}</h1>
@@ -307,7 +307,7 @@
           <!-- Aquí va cada campo de gasto aplicado, siguiendo la siguiente estructura: -->
   
           {% for monto in monto_gastos %}
-              <div class="px-5 flex flex-row justify-between border border-transparent border-t-gray-400">
+              <div class="px-5 flex flex-row justify-between border border-transparent border-t-gray-400 hover:bg-gray-50 transition duration-200">
   
                   <h1 class="text-sm my-2">{{monto.titulo}}</h1>
                   <h1 class="text-sm my-2">{{monto.monto}}</h1>
@@ -559,7 +559,7 @@
 
                 </div>
                 {%for Adeudado in listaAdeudado%}
-                    <div class="flex flex-row justify-between pr-5 w-full border-t-2 border-gray-800">
+                    <div class="flex flex-row justify-between pr-5 w-full border-t-2 border-gray-800 hover:bg-gray-50 transition duration-200">
 
 
                         <h1 class="text-l font-bold text-center p-3 border-2 border-r-gray-800 border-transparent" style="width: 10rem;">{{Adeudado.fechaAdeudado}}</h1>

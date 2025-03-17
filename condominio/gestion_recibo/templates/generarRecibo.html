@@ -15,45 +15,56 @@
 <section class="propietario p-6 rounded-lg relative flex justify-center">
 
   
-  <div class="flex-row flex-wrap w-fit bg-gray-300 rounded-lg shadow-md mb-10 ">  
+  <div class="flex-row flex-wrap w-fit bg-white rounded-lg shadow-md mb-10 p-10" style="width: 60rem;">
 
-    <div class="flex flex-wrap ">
+    <!--  -->
 
-    <div class="p-20 pb-5 pr-8 pl-32">
-
-    <div class="mb-4">
-        <h2 class="text-xl font-bold mb-5">Label:</h2>
-    </div>
-
-    <div class="p-20 pb-0 pl-0 pr-48 pt-7">
+    <div class="mb-5">
 
         <div class="mb-4">
-            <h2 class="text-xl font-bold mb-5">Correos:</h2>
-            <button class="bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
-                Correos registrados
+
+            <h2 class="text-xl mb-5 font-bold">Presupuesto para el mes siguiente</h2>
+
+            <h2 class="text-xl mb-5">Acá debería ir el field para agregar presupuesto</h2>
+
+            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded">
+                Agregar presupuesto
             </button>
 
         </div>
+    
+    </div>
 
-        <div class="p-20 pt-2 pb-10 pl-0">
-            <h3 class="text-xl font-bold my-5">Agregar Correo:</h3>
+    <div class="bg-white shadow-md rounded-lg p-6 w-full">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Presupuesto</h2>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Descripción</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Sis</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">NOn</td>
+                    </tr>
+
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Non</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">SIs</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
                 
-        </div>
-    
-    </div>
 
 
-    <div class="flex flex-wrap">
-
-        <div class="p-20 pb-10 pl-0 pr-32">
-
-            <h2 class="text-xl font-bold mb-5">Editar nombre</h2>
-    
-        </div>
-
-    </div>
-
-  </div> 
+    </div> 
 </section>
 
 {% endblock %}
