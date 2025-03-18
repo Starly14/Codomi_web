@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block scripts %}
+<script>
+    async function consultarTodasLasTasas() {
+        try {
+            const response = await fetch("/analisis_datos/todas_tasas/");
+            const data = await response.json();
+            document.getElementById("output-todas-las-tasas").value = JSON.stringify(data, null, 2);
+        } catch (error) {
+            console.error("Error al consultar todas las tasas:", error);
+        }
+    }
+
+    async function consultarTasaPorFecha() {
+        const fecha = document.getElementById("fecha-solicitud").value;
+        if (!fecha) {
+            alert("Por favor, selecciona una fecha.");
+            return;
+        }
+        try {
+            const response = await fetch(`/analisis_datos/tasa_por_fecha/?fecha=${fecha}`);
+            const data = await response.json();
+            document.getElementById("output-tasa-por-fecha").value = data.tasa || "No encontrada";
+        } catch (error) {
+            console.error("Error al consultar la tasa por fecha:", error);
+        }
+    }
+
+    function getCSRFToken() {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith('csrftoken=')) {
+                return cookie.substring('csrftoken='.length);
+            }
+        }
+        return null;
+    }
+
+    async function subirNuevaTasa() {
+        const fecha = document.getElementById("fecha-nueva-tasa").value;
+        const tasa = document.getElementById("nueva-tasa").value;
+        const csrfToken = getCSRFToken(); // Obtener el token CSRF
+
+        if (!fecha || !tasa) {
+            alert("Por favor, completa ambos campos.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/analisis_datos/subir_tasa/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": csrfToken, // Agregar el token CSRF en el encabezado
+                },
+                body: new URLSearchParams({ fecha, tasa }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la solicitud al servidor.");
+            }
+
+            const data = await response.json();
+            alert(data.mensaje);
+        } catch (error) {
+            console.error("Error al subir la nueva tasa:", error);
+        }
+    }
+
+    async function obtenerUltimaTasa() {
+        try {
+            const response = await fetch("/analisis_datos/ultima_tasa/");
+            const data = await response.json();
+            document.getElementById("output-ultima-tasa").value = data.tasa;
+        } catch (error) {
+            console.error("Error al obtener la última tasa:", error);
+        }
+    }
+
+    async function consultarRangoTasas() {
+        const fechaInicio = document.getElementById("fecha-inicio-rango").value;
+        const fechaFin = document.getElementById("fecha-fin-rango").value;
+        if (!fechaInicio || !fechaFin) {
+            alert("Por favor, selecciona ambas fechas.");
+            return;
+        }
+        try {
+            const response = await fetch(`/analisis_datos/rango_tasas/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`);
+            const data = await response.json();
+            document.getElementById("output-rango-tasas").value = JSON.stringify(data, null, 2);
+        } catch (error) {
+            console.error("Error al consultar el rango de tasas:", error);
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+    <h1 style="text-align: center; margin-bottom: 20px;">Análisis de Datos</h1>
+
+    <!-- Consultar todas las tasas -->
+    <div style="margin-bottom: 20px;">
+        <button onclick="consultarTodasLasTasas()" style="background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Consultar Todas las Tasas</button>
+        <textarea id="output-todas-las-tasas" rows="10" style="resize: none; overflow: auto; margin-top: 10px; width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+    </div>
+
+    <!-- Consultar tasa por fecha -->
+    <div style="margin-bottom: 20px; display: flex; align-items: center;">
+        <input type="date" id="fecha-solicitud" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+        <button onclick="consultarTasaPorFecha()" style="background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Consultar Por Fecha</button>
+        <input id="output-tasa-por-fecha" readonly style="margin-left: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 200px; font-size: 14px;">
+    </div>
+
+    <!-- Subir nueva tasa -->
+    <div style="margin-bottom: 20px; display: flex; align-items: center;">
+        <input type="date" id="fecha-nueva-tasa" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+        <input type="text" id="nueva-tasa" placeholder="Ej: 66.2707" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; width: 150px; font-size: 14px;">
+        <button onclick="subirNuevaTasa()" style="background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Subir Tasa</button>
+    </div>
+
+    <!-- Obtener última tasa -->
+    <div style="margin-bottom: 20px; display: flex; align-items: center;">
+        <button onclick="obtenerUltimaTasa()" style="background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Obtener Última Tasa</button>
+        <input id="output-ultima-tasa" readonly style="margin-left: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 200px; font-size: 14px;">
+    </div>
+
+    <!-- Consultar rango de tasas -->
+    <div style="margin-bottom: 20px;">
+        <input type="date" id="fecha-inicio-rango" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+        <input type="date" id="fecha-fin-rango" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px;">
+        <button onclick="consultarRangoTasas()" style="background-color: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Consultar Rango de Tasas</button>
+        <textarea id="output-rango-tasas" rows="10" style="resize: none; overflow: auto; margin-top: 10px; width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+    </div>
+</div>
+{% endblock %}
