@@ -17,17 +17,17 @@
   
   <div class="flex-row flex-wrap w-fit bg-white rounded-lg shadow-md mb-10 p-10" style="width: 60rem;">
 
-    <!--  -->
+    <!-- Sección de presupuesto -->
 
     <div class="mb-5">
 
         <div class="mb-4">
 
-            <h2 class="text-xl mb-5 font-bold">Presupuesto para el mes siguiente</h2>
+            <h2 class="text-2xl mb-5 font-bold">Presupuesto para el mes siguiente</h2>
 
-            <h2 class="text-xl mb-5">Acá debería ir el field para agregar presupuesto</h2>
+            <h2 class="text-lg mb-5">Acá debería ir el field para agregar presupuesto</h2>
 
-            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded">
+            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold" style="width: 16rem;">
                 Agregar presupuesto
             </button>
 
@@ -35,124 +35,95 @@
     
     </div>
 
-</section>
+    <div class="bg-white shadow-md rounded-lg p-6 w-full mb-10">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Presupuesto</h2>
 
-<section class="propietario p-6 rounded-lg relative flex justify-center">
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Descripción</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-  
-    <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
-  
-      <div class="flex flex-wrap flex-column w-full">
-  
-      <div class="p-20 pb-12 pr-10 pl-10 w-full">
+                    <!-- Aquí va cada fila, hay 2 ejemplos de filas -->
 
-    <div class="mb-4 flex-row flex justify-between">
+                    <!-- Primer ejemplo -->
 
-        <!-- Aquí va el nombre de la residencia -->
-        <h2 class="text-xl font-bold mb-5 pr-64">{{edif.nombre_edif}}</h2>
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Sis</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">NOn</td>
+                    </tr>
 
-        <!-- Aquí va el RIF de la residencia -->
-        <h1 class="text-l font-bold mb-5"> Rif: J-{{edif.rif}}</h1>
+                    <!-- Segundo ejemplo -->
+
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Non</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">SIs</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+                
+
+
+    </div> 
+
+
+    <!-- Sección de gastos directos -->
+
+    <div class="mb-5">
+
+        <div class="mb-4">
+
+            <h2 class="text-2xl mb-5 font-bold">Gastos directos de cada departamento en el mes de *mes*</h2>
+
+            <h2 class="text-lg mb-5">Acá debería ir el field para agregar el gasto</h2>
+
+            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold" style="width: 16rem;">
+                Agregar gasto directo
+            </button>
+
+        </div>
+    
     </div>
 
-    <div class="mb-4">
-        
-        <!-- Aquí va la dirección de la residencia -->
-        <h1 class="text-l font-bold mb-5">{{edif.direccion_edif}}</h1>
-    </div>
+    <div class="bg-white shadow-md rounded-lg p-6 w-full mb-10">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Gastos directos</h2>
 
-    <div class="mb-4 mt-10 flex flex-row justify-center">
-        <!-- Aquí va el mes del recibo -->
-        <h2 class="text-l font-bold mb-5">Recibo de condominio para el mes de {{fecha_escrita}}</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Descripción</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-    </div>
+                    <!-- Aquí va cada fila, hay 2 ejemplos de filas -->
 
-    <div class="pb-0 pl-0 border-2 border-gray-800 rounded-lg bg-white">
+                    <!-- Primer ejemplo -->
 
-        <div class="w-full flex flex-row justify-around">
-            
-            <div class=" flex flex-row justify-center border-2 border-transparent border-r-gray-500 pr-8">
-                <!-- Acá va el nombre del propietario -->
-                <h1 class="text-l font-bold my-3 mr-3">Propietario: {{prop.nombre_prop}}</h1>
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Sis</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">NOn</td>
+                    </tr>
 
-            </div>
+                    <!-- Segundo ejemplo -->
 
-            <div class="flex flex-row justify-center border-2 border-transparent border-r-gray-500 pr-14">
-                <!-- Acá va la alícuota -->
-                <h1 class="text-l font-bold my-3 mr-3">Alícuota: {{dpto.alicuota}}%</h1>
-
-            </div>
-
-            <div class=" flex flex-row justify-center pr-6">
-                <!-- Acá va el departamento -->
-                <h1 class="text-l font-bold my-3 mr-3">Apartamento: {{dpto.id_dpto}}</h1>
-
-            </div>
-
-        </div>
-        
-
-        <div class=" pl-5 border-y-2 border-gray-800 flex flex-row justify-between bg-gray-300">
-
-            <div class=" flex flex-row">
-                <h1 class="text-l font-bold my-3 mr-2"></h1>
-            
-                <!-- Acá va el mes siguiente del recibo -->
-                <h1 class="text-l font-bold my-3">Presupuesto para el mes de {{mes_siguiente}}, {{ano_siguiente}}</h1>
-
-            </div>
-
-        </div>
-
-        <div class="border-2 border-b-gray-800 flex flex-row justify-between px-5 items-center">
-
-            <h1 class="text-l font-bold my-3">Descripción de presupuesto</h1>
-            <h1 class="text-l my-3 font-bold">Monto</h1>
-  
-        </div>
-
-        <!-- Aquí va cada campo de presupuesto, siguiendo la siguiente estructura: -->
-
-        {% for monto in monto_presupuestos %}
-            <div class="px-5 flex flex-row justify-between border border-b-gray-800 hover:bg-gray-50 transition duration-200">
-
-                <h1 class="text-sm my-2">{{monto.titulo}}</h1>
-                <h1 class="text-sm my-2">{{monto.monto}}</h1>
-
-            </div>
-        {% endfor %}
-
-        <!-- Aquí empieza la sección de presupuesto -->
-         
-        <div class="pl-5 border border-b-500 border-transparent pr-5 flex flex-row justify-between">
-
-            <!-- Aquí va el mes siguiente al recibo -->
-            <h1 class="text-l font-bold my-2">Subtotal presupuesto:</h1>
-
-            <!-- Aquí va el subtotal del presupuesto para el mes -->
-            <h1 class="text-l my-2">{{subtotal}}$</h1>
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Non</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">SIs</td>
+                    </tr>
 
 
-        </div>
-
-        <div class="flex flex-row justify-between px-5">
-
-            <h1 class="text-l font-bold my-2">Fondo de reserva 50%:</h1>
-
-            <!-- Aquí va el fondo de reserva 50% -->
-            <h1 class="text-l my-2">{{reserva}}$</h1>
-
-
-        </div>
-
-        <div class=" px-5 border-2 border-transparent border-b-gray-800 flex flex-row justify-between">
-
-            <h1 class="text-l font-bold my-2">Fondo para gastos imprevistos:</h1>
-
-            <!-- Aquí van los fondos para gastos imprevistos -->
-            <h1 class="text-l my-2">{{fondo}}$</h1>
-
-
+                </tbody>
+            </table>
         </div>
 
         
@@ -610,6 +581,173 @@
         </div>
         
     </div> 
-  </section>
+
+
+    <!-- Sección de gastos aplicados -->
+
+    <div class="mb-5">
+
+        <div class="mb-4">
+
+            <h2 class="text-2xl mb-5 font-bold">Gastos aplicados en el mes de *mes*</h2>
+
+            <h2 class="text-lg mb-5">Acá debería ir el field para agregar el gasto</h2>
+
+            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold" style="width: 16rem;">
+                Agregar gasto aplicado
+            </button>
+
+        </div>
+    
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6 w-full mb-10">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Gastos aplicados</h2>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Descripción</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Aquí va cada fila, hay 2 ejemplos de filas -->
+
+                    <!-- Primer ejemplo -->
+
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Sis</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">NOn</td>
+                    </tr>
+
+                    <!-- Segundo ejemplo -->
+
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Non</td>
+                        <td class="border px-4 py-2 text-sm text-gray-700">SIs</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+                
+
+
+    </div>
+
+
+    <!-- Sección de fondo para gastos imprevistos -->
+
+    <div class="mb-5">
+
+        <div class="mb-4">
+
+            <h2 class="text-2xl mb-5 font-bold">Fondo para gastos imprevistos en el mes de *mes*</h2>
+
+            <h2 class="text-lg mb-5">Acá debería ir el field para agregar el fondo</h2>
+
+            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold" style="width: 16rem;">
+                Establecer fondo
+            </button>
+
+        </div>
+    
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6 w-full mb-10">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Fondo para gastos imprevistos</h2>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Monto</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Aquí va la única fila -->
+
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">monto</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+                
+
+
+    </div>
+
+
+
+    <!-- Sección de comentarios -->
+
+    <div class="mb-5">
+
+        <div class="mb-4">
+
+            <h2 class="text-2xl mb-5 font-bold">Comentarios del recibo</h2>
+
+            <h2 class="text-lg mb-5">Acá debería ir el field para agregar el comentario</h2>
+
+            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold" style="width: 16rem;">
+                Agregar comentario
+            </button>
+
+        </div>
+    
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6 w-full mb-10">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Comentarios</h2>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Aquí va cada fila, hay 2 ejemplos de filas -->
+
+                    <!-- Primer ejemplo -->
+
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Sis</td>
+                    </tr>
+
+                    <!-- Segundo ejemplo -->
+
+                    <tr class="hover:bg-gray-50 transition duration-200">
+                        <td class="border px-4 py-2 text-sm text-gray-700">Non</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+                
+
+
+    </div>
+
+
+
+    <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold w-full mt-5">
+        Generar recibo
+    </button>
+
+
+
+</section>
 
 {% endblock %}
