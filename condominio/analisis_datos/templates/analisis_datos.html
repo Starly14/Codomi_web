@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block scripts %}
+<script>
+    const API_URL = "https://web-production-77488.up.railway.app";
+
+    // A Q U Í  T O D A S  L A S  F U N C I O N E S  R E L A C I O N A D A S  C O N  C O N S U L T A S  D E  L A   API
+
+    // Función: Consultar todas las tasas
+    async function consultarTodasLasTasas() {
+        try {
+            const response = await fetch(`${API_URL}/tasa/`);
+            const data = await response.json();
+            return JSON.stringify(data, null, 2); // Devuelve las tasas como un string JSON
+        } catch (error) {
+            console.error("Error al consultar todas las tasas:", error);
+            return "Error al consultar todas las tasas.";
+        }
+    }
+
+    // Función: Consultar tasa por fecha
+    async function consultarTasaPorFecha(fecha) {
+        if (!fecha) {
+            throw new Error("Por favor, proporciona una fecha.");
+        }
+        try {
+            const response = await fetch(`${API_URL}/tasa/${fecha}`);
+            if (!response.ok) {
+                throw new Error("No se encontró una tasa para la fecha proporcionada.");
+            }
+            const data = await response.json();
+            return data.tasa; // Devuelve únicamente el valor de la tasa como número
+        } catch (error) {
+            console.error("Error al consultar la tasa por fecha:", error);
+            throw error;
+        }
+    }
+
+
+    // Función: Subir nueva tasa
+    async function subirNuevaTasa(fecha, tasa) {
+        if (!fecha || !tasa) {
+            return "Fecha y tasa son obligatorias.";
+        }
+        try {
+            const response = await fetch(`${API_URL}/tasa/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ fecha, tasa: parseFloat(tasa) }),
+            });
+            const data = await response.json();
+            return data.mensaje || "Tasa subida con éxito.";
+        } catch (error) {
+            console.error("Error al subir la nueva tasa:", error);
+            return "Error al subir la nueva tasa.";
+        }
+    }
+
+    // Función: Obtener última tasa
+    async function obtenerUltimaTasa() {
+        try {
+            const response = await fetch(`${API_URL}/tasa/ultima/`);
+            const data = await response.json();
+            return data.tasa; // Devuelve únicamente el valor de la tasa como número
+        } catch (error) {
+            console.error("Error al obtener la última tasa:", error);
+            throw error;
+        }
+    }
+
+
+    // Función: Consultar rango de tasas
+    async function consultarRangoTasas(fechaInicio, fechaFin) {
+        if (!fechaInicio || !fechaFin) {
+            return "Por favor, proporciona ambas fechas.";
+        }
+        try {
+            const response = await fetch(`${API_URL}/tasa/rango/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`);
+            const data = await response.json();
+            return JSON.stringify(data, null, 2); // Devuelve las tasas en el rango como un string JSON
+        } catch (error) {
+            console.error("Error al consultar el rango de tasas:", error);
+            return "Error al consultar el rango de tasas.";
+        }
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+
+
+    <!-- B L O Q U E D E H T M L P R O V I S I O N A L P A R A P R U E B A S D E L A S F U N C I O N E S -->
+
+
+<div style="max-width: 900px; margin: 0 auto; padding: 20px;">
+    <h1 style="text-align: center; margin-bottom: 20px;">Análisis de Datos</h1>
+
+    <!-- Consultar todas las tasas -->
+    <div style="margin-bottom: 20px;">
+        <button onclick="consultarTodasLasTasas().then(resultado => document.getElementById('output-todas-las-tasas').value = resultado)" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Consultar Todas las Tasas</button>
+        <textarea id="output-todas-las-tasas" rows="10" cols="50" readonly style="resize: none; overflow: auto; margin-top: 10px; width: 100%;"></textarea>
+    </div>
+
+    <!-- Consultar tasa por fecha -->
+    <div style="margin-bottom: 20px;">
+        <input type="date" id="fecha-solicitud" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <button onclick="consultarTasaPorFecha(document.getElementById('fecha-solicitud').value).then(resultado => document.getElementById('output-tasa-por-fecha').value = resultado)" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Hacer Solicitud</button>
+        <input type="text" id="output-tasa-por-fecha" readonly style="margin-left: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 200px;">
+    </div>
+
+    <!-- Subir nueva tasa -->
+    <div style="margin-bottom: 20px;">
+        <input type="date" id="fecha-nueva-tasa" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <input type="text" id="nueva-tasa" placeholder="Ej: 66.2707" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; width: 150px;">
+        <button onclick="subirNuevaTasa(document.getElementById('fecha-nueva-tasa').value, document.getElementById('nueva-tasa').value).then(alert)" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Subir Tasa</button>
+    </div>
+
+    <!-- Obtener última tasa -->
+    <div style="margin-bottom: 20px;">
+        <button onclick="obtenerUltimaTasa().then(resultado => document.getElementById('output-ultima-tasa').value = resultado)" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Obtener Última Tasa</button>
+        <input type="text" id="output-ultima-tasa" readonly style="margin-left: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 200px;">
+    </div>
+
+    <!-- Consultar rango de tasas -->
+    <div>
+        <input type="date" id="fecha-inicio-rango" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <input type="date" id="fecha-fin-rango" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <button onclick="consultarRangoTasas(document.getElementById('fecha-inicio-rango').value, document.getElementById('fecha-fin-rango').value).then(resultado => document.getElementById('output-rango-tasas').value = resultado)" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Obtener Rango de Tasas</button>
+        <textarea id="output-rango-tasas" rows="10" cols="50" readonly style="resize: none; overflow: auto; margin-top: 10px; width: 100%;"></textarea>
+    </div>
+</div>
+{% endblock %}

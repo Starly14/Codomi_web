@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'gestion_recibo',
 
     'editar_edificio.apps.editarEdificioConfig',
+    'analisis_datos'
 
 ]
 
