@@ -87,7 +87,7 @@ def reciboBase(request, year, month, day, nro_dpto):
 
     fechas = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
-    fecha_escrita = f'{day} de {fechas[month-1]}, {year}'
+    fecha_escrita = f'{fechas[month-1]}, {year}'
 
     if month < 12:
         mes_siguiente = fechas[month]
@@ -213,7 +213,7 @@ def reciboBase(request, year, month, day, nro_dpto):
     if len(sumaGastosdl) == 0:
         gastoFinaldl = ''
     else:
-        gastoFinaldl = f'   ({sum(sumaGastosdl)}$)'
+        gastoFinaldl = f'{sum(sumaGastosdl)}$'
 
     apartamentos = Dpto.objects.all()
     dptosDeudores = []
@@ -289,10 +289,10 @@ def reciboBase(request, year, month, day, nro_dpto):
                         sumaSaldo -= pago_actual
                         iteradorImportes += 1  # Solo se incrementa si hay coincidencia de fechas
                     else:
-                        pago_actual = 0  # No hay pago correspondiente a esa deuda
+                        pago_actual = 0.00  # No hay pago correspondiente a esa deuda
                         sumaSaldo += deuda_actual.deuda
                 else:
-                    pago_actual = 0  # No hay pago correspondiente a esa deuda
+                    pago_actual = 0.00  # No hay pago correspondiente a esa deuda
                     sumaSaldo += deuda_actual.deuda
 
                 listaAdeudado.append({
@@ -361,3 +361,5 @@ def reciboBase(request, year, month, day, nro_dpto):
         'listaAdeudado': listaAdeudado,
     })
 
+def generarRecibo(request):
+    return render(request, "generarRecibo.html")

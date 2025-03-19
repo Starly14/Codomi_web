@@ -70,3 +70,38 @@ class MesAnioFiltroForm(forms.Form):
         
         # Actualizamos las opciones del campo año
         self.fields['anio'].choices = [(str(year), str(year)) for year in all_years]
+
+class PresupuestoForm(forms.ModelForm):
+    monto_pres_bs = forms.DecimalField(
+        min_value=0,
+        widget=forms.NumberInput(attrs={'min': '0', 'step': '0.01'})
+    )
+    
+    monto_pres_dl = forms.DecimalField(
+        min_value=0,
+        widget=forms.NumberInput(attrs={'min': '0', 'step': '0.01'})
+    )
+
+    class Meta:
+        model = Presupuesto
+        fields = ['titulo_pres', 'detalle_pres', 'monto_pres_bs', 'monto_pres_dl', 'moneda_pres', 'fecha_pres', 'clasificacion_pres', 'tipo_pres']
+        widgets = {
+            'fecha_pres': forms.DateTimeInput(attrs={
+                'type': 'datetime-local',
+                'class': 'fecha-input'
+            }),
+            'moneda_pres': forms.TextInput(attrs={
+                'placeholder': 'Ingrese la moneda (ejemplo: USD, EUR, VES)',
+                'class': 'moneda-input'
+            }),
+            'clasificacion_pres': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Ingrese la clasificación del presupuesto',
+                'class': 'clasificacion-textarea'
+            }),
+            'tipo_pres': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Ingrese el tipo de presupuesto',
+                'class': 'tipo-textarea'
+            }),
+        }

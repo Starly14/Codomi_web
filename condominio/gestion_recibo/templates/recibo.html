@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
+<section class="propietario p-6 rounded-lg relative flex justify-center">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
@@ -33,21 +33,21 @@
 
     <div class="mb-4 mt-10 flex flex-row justify-center">
         <!-- Aquí va el mes del recibo -->
-        <h2 class="text-l font-bold mb-5">Fecha del recibo de condominio: {{fecha_escrita}}</h2>
+        <h2 class="text-l font-bold mb-5">Recibo de condominio para el mes de {{fecha_escrita}}</h2>
 
     </div>
 
-    <div class="pb-0 pl-0 border border-gray-500 rounded-lg bg-white">
+    <div class="pb-0 pl-0 border-2 border-gray-800 rounded-lg bg-white">
 
         <div class="w-full flex flex-row justify-around">
             
-            <div class=" flex flex-row justify-center border border-transparent border-r-gray-500 pr-8">
+            <div class=" flex flex-row justify-center border-2 border-transparent border-r-gray-500 pr-8">
                 <!-- Acá va el nombre del propietario -->
                 <h1 class="text-l font-bold my-3 mr-3">Propietario: {{prop.nombre_prop}}</h1>
 
             </div>
 
-            <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-14">
+            <div class="flex flex-row justify-center border-2 border-transparent border-r-gray-500 pr-14">
                 <!-- Acá va la alícuota -->
                 <h1 class="text-l font-bold my-3 mr-3">Alícuota: {{dpto.alicuota}}%</h1>
 
@@ -62,7 +62,7 @@
         </div>
         
 
-        <div class=" pl-5 border border-gray-800 flex flex-row justify-between bg-gray-300">
+        <div class=" pl-5 border-y-2 border-gray-800 flex flex-row justify-between bg-gray-300">
 
             <div class=" flex flex-row">
                 <h1 class="text-l font-bold my-3 mr-2"></h1>
@@ -74,52 +74,59 @@
 
         </div>
 
+        <div class="border-2 border-b-gray-800 flex flex-row justify-between px-5 items-center">
+
+            <h1 class="text-l font-bold my-3">Descripción de presupuesto</h1>
+            <h1 class="text-l my-3 font-bold">Monto</h1>
+  
+        </div>
+
         <!-- Aquí va cada campo de presupuesto, siguiendo la siguiente estructura: -->
 
         {% for monto in monto_presupuestos %}
-            <div class="px-5 flex flex-row justify-between">
+            <div class="px-5 flex flex-row justify-between border border-b-gray-800 hover:bg-gray-50 transition duration-200">
 
-                <h1 class="text-l font-bold my-3">{{monto.titulo}}</h1>
-                <h1 class="text-l font-bold my-3">{{monto.monto}}</h1>
+                <h1 class="text-sm my-2">{{monto.titulo}}</h1>
+                <h1 class="text-sm my-2">{{monto.monto}}</h1>
 
             </div>
         {% endfor %}
 
         <!-- Aquí empieza la sección de presupuesto -->
          
-        <div class=" pl-5 border border-b-500 border-transparent pr-5 flex flex-row justify-between bg-gray-200">
+        <div class="pl-5 border border-b-500 border-transparent pr-5 flex flex-row justify-between">
 
             <!-- Aquí va el mes siguiente al recibo -->
-            <h1 class="text-l font-bold my-3">Subtotal presupuesto:</h1>
+            <h1 class="text-l font-bold my-2">Subtotal presupuesto:</h1>
 
             <!-- Aquí va el subtotal del presupuesto para el mes -->
-            <h1 class="text-l font-bold my-3">{{subtotal}}$</h1>
+            <h1 class="text-l my-2">{{subtotal}}$</h1>
 
 
         </div>
 
-        <div class="flex flex-row justify-between px-5 bg-gray-200">
+        <div class="flex flex-row justify-between px-5">
 
-            <h1 class="text-l font-bold my-3">Fondo de reserva 50%:</h1>
+            <h1 class="text-l font-bold my-2">Fondo de reserva 50%:</h1>
 
             <!-- Aquí va el fondo de reserva 50% -->
-            <h1 class="text-l font-bold my-3">{{reserva}}$</h1>
+            <h1 class="text-l my-2">{{reserva}}$</h1>
 
 
         </div>
 
-        <div class=" px-5 border-transparent flex flex-row justify-between bg-gray-200">
+        <div class=" px-5 border-2 border-transparent border-b-gray-800 flex flex-row justify-between">
 
-            <h1 class="text-l font-bold my-3">Fondo para gastos imprevistos:</h1>
+            <h1 class="text-l font-bold my-2">Fondo para gastos imprevistos:</h1>
 
             <!-- Aquí van los fondos para gastos imprevistos -->
-            <h1 class="text-l font-bold my-3">{{fondo}}$</h1>
+            <h1 class="text-l my-2">{{fondo}}$</h1>
 
 
         </div>
 
         
-        <div class=" px-5 border border-b-gray-500 border-transparent flex flex-row justify-between bg-amber-200">
+        <div class=" px-5  flex flex-row justify-between" style="background-color: #ffff00;">
 
             <h1 class="text-l font-bold my-3">Total presupuesto para {{mes_siguiente}}</h1>
 
@@ -130,7 +137,7 @@
         </div>
 
 
-        <div class="border-2 border-gray-800 flex flex-row justify-between px-5">
+        <div class="border-y-2 border-gray-800 flex flex-row justify-between px-5">
 
             <h1 class="text-l font-bold my-3">Alícuota de su apartamento (correspondiente a los gastos comunes): </h1>
 
@@ -146,19 +153,26 @@
 
         <!-- Aquí empieza la sección de gastos directos -->
 
-        <div class="border border-b-gray-500 flex flex-row justify-between pl-5 bg-gray-300">
+        <div class="border-y-2 border-b-gray-800 flex flex-row justify-between pl-5 bg-gray-300">
 
             <h1 class="text-l font-bold my-3">Gatos directos de su apartamento</h1>
 
         </div>
 
+        <div class="border-2 border-b-gray-800 flex flex-row justify-between px-5 items-center">
+
+            <h1 class="text-l font-bold my-3">Descripción de gasto directo</h1>
+            <h1 class="text-l my-3 font-bold">Monto</h1>
+  
+        </div>
+
         <!-- Aquí va cada campo de gastos directos, siguiendo la siguiente estructura: -->
 
         {% for monto in monto_directos %}
-            <div class="px-5 flex flex-row justify-between">
+            <div class="px-5 flex flex-row justify-between border border-b-gray-800 hover:bg-gray-50 transition duration-200">
 
-                <h1 class="text-l font-bold my-3">{{monto.titulo}}</h1>
-                <h1 class="text-l font-bold my-3">{{monto.monto}}</h1>
+                <h1 class="text-sm my-2">{{monto.titulo}}</h1>
+                <h1 class="text-sm my-2">{{monto.monto}}</h1>
 
             </div>
         {% endfor %}
@@ -181,16 +195,16 @@
 
         </div>
 
-        <div class="border border-b-gray-500 px-5 flex flex-row justify-between">
+        <div class="border border-y-gray-800 px-5 flex flex-row justify-between">
 
-            <h1 class="text-l font-bold my-3 text-red-600">Atrasos (monto contable de recibos no pagados al cierre del mes)</h1>
+            <h1 class="text-l font-bold my-3">Atrasos (monto contable de recibos no pagados al cierre del mes)</h1>
 
             <!-- Aquí va primero la moneda en la que está el monto y luego el monto en sí (que sería la suma de todos los montos de los gastos directos incluyendo la alícuota) -->
             <h1 class="text-l font-bold my-3 text-red-600">{{deudaFinal}}$</h1>
 
         </div>
 
-        <div class="border border-b-gray-500 px-5 flex flex-row justify-between" style="background-color: #ffff00;">
+        <div class="border-2 border-gray-800 px-5 flex flex-row justify-between" style="background-color: #ffff00;">
 
             <h1 class="text-l font-bold my-3">Total a pagar (Alícuota más acumulado por pagar de su apartamento):</h1>
 
@@ -199,7 +213,7 @@
 
         </div>
         {% for comentario in comentarios %}
-            <div class=" pl-5 border border-b-gray-500 pr-5 flex flex-col items-center text-center">
+            <div class=" pl-5 border border-b-gray-800 pr-5 flex flex-col items-center text-center">
 
                 <h1 class="text-l font-bold my-3 max-w-2xl">{{comentario.desc_comentario}}</h1>
 
@@ -217,7 +231,7 @@
 <!-- Aquí va la segunda parte del recibo -->
 
 
-<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center">
+<section class="propietario p-6 rounded-lg relative flex justify-center">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
@@ -247,17 +261,17 @@
   
       </div>
   
-      <div class="pb-0 pl-0 border border-gray-500 rounded-lg bg-white">
+      <div class="pb-0 pl-0 border-2 border-gray-800 rounded-lg bg-white">
   
           <div class="w-full flex flex-row justify-around">
               
-              <div class=" flex flex-row justify-center border border-transparent border-r-gray-500 pr-8">
+              <div class=" flex flex-row justify-center border-2 border-transparent border-r-gray-800 pr-8">
                   <!-- Acá va el nombre del propietario -->
                   <h1 class="text-l font-bold my-3 mr-3">Propietario: {{prop.nombre_prop}}</h1>
   
               </div>
   
-              <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-14">
+              <div class="flex flex-row justify-center border-2 border-transparent border-r-gray-800 pr-14">
                   <!-- Acá va la alícuota -->
                   <h1 class="text-l font-bold my-3 mr-3">Alícuota: {{dpto.alicuota}}%</h1>
   
@@ -272,7 +286,7 @@
           </div>
           
   
-          <div class=" pl-5 border border-gray-800 flex flex-row bg-gray-300">
+          <div class=" pl-5 border-t-2 border-gray-800 flex flex-row bg-gray-300">
   
               <div class=" flex flex-row">
               
@@ -283,31 +297,32 @@
   
           </div>
 
-          <div class="border-2 border-gray-800 flex flex-row justify-between px-5 items-center">
+          <div class="border-2 border-y-gray-800 flex flex-row justify-between px-5 items-center">
 
-            <h1 class="text-l font-bold my-3">Descripción de gastos aplicados en mes</h1>
-            
-          </div>
+            <h1 class="text-l font-bold my-3">Descripción de gastos aplicados</h1>
+            <h1 class="text-l my-3 font-bold">Monto</h1>
+  
+        </div>
   
           <!-- Aquí va cada campo de gasto aplicado, siguiendo la siguiente estructura: -->
   
           {% for monto in monto_gastos %}
-              <div class="px-5 flex flex-row justify-between border border-transparent border-t-gray-300">
+              <div class="px-5 flex flex-row justify-between border border-transparent border-t-gray-400 hover:bg-gray-50 transition duration-200">
   
-                  <h1 class="text-l font-bold my-3">{{monto.titulo}}</h1>
-                  <h1 class="text-l font-bold my-3">{{monto.monto}}</h1>
+                  <h1 class="text-sm my-2">{{monto.titulo}}</h1>
+                  <h1 class="text-sm my-2">{{monto.monto}}</h1>
   
               </div>
           {% endfor %}
   
           
   
-          <div class="border-2 border-gray-800 px-5 flex flex-row justify-end" style="background-color: #ffff00;">
+          <div class="border-2 border-gray-800 px-5 flex flex-row justify-end rounded-b-lg" style="background-color: #ffff00;">
   
               <h1 class="text-l font-bold my-3 mr-5">Total de débitos en cuentas:</h1>
   
               <!-- Aquí va el monto (que sería la suma de todos los montos anteriores) -->
-              <h1 class="text-l font-bold my-3">{{gastoFinalbs}}{{gastoFinaldl}}</h1>
+              <h1 class="text-l font-bold my-3">{{gastoFinalbs}}   -   {{gastoFinaldl}}</h1>
   
           </div>
 
@@ -320,10 +335,10 @@
 
 
 
-  <!-- Aquí va la segunda parte del recibo -->
+  <!-- Aquí va la tercera parte del recibo -->
 
 
-<section class="propietario p-6 rounded-lg shadow-md relative flex justify-center ">
+<section class="propietario p-6 rounded-lg relative flex justify-center ">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10" style="width: 60rem;">  
@@ -353,17 +368,17 @@
   
       </div>
   
-      <div class="pb-0 pl-0 border border-gray-500 rounded-lg bg-white">
+      <div class="pb-0 pl-0 border-2 border-gray-800 rounded-lg bg-white">
   
           <div class="w-full flex flex-row justify-around">
               
-              <div class=" flex flex-row justify-center border border-transparent border-r-gray-500 pr-8">
+              <div class=" flex flex-row justify-center border-2 border-transparent border-r-gray-800 pr-8">
                   <!-- Acá va el nombre del propietario -->
                   <h1 class="text-l font-bold my-3 mr-3">Propietario: {{prop.nombre_prop}}</h1>
   
               </div>
   
-              <div class="flex flex-row justify-center border border-transparent border-r-gray-500 pr-14">
+              <div class="flex flex-row justify-center border-2 border-transparent border-r-gray-800 pr-14">
                   <!-- Acá va la alícuota -->
                   <h1 class="text-l font-bold my-3 mr-3">Alícuota: {{dpto.alicuota}}%</h1>
   
@@ -378,7 +393,7 @@
           </div>
 
 
-          <div class="border-2 border-gray-800 flex flex-row justify-between px-5 items-center " style="background-color: #ffff00;">
+          <div class="border-2 border-transparent border-y-gray-800 flex flex-row justify-between px-5 items-center " style="background-color: #ffff00;">
 
             <!-- Acá va el el monto del total de condominios por cobrar -->
             <h1 class="text-l font-bold my-3">Total condominios vencidos por cobrar: {{montoDeudasTotales}}$</h1>
@@ -402,14 +417,14 @@
           </div>
 
 
-          <div class="border-2 border-gray-800 border-t-transparent px-5 flex flex-row bg-gray-300">
+          <div class="px-5 flex flex-row bg-gray-300">
   
             <h1 class="text-l font-bold my-3 mr-5">Fondo de reserva:</h1>
 
           </div>
 
 
-          <div class="border border-t-gray-800 border-transparent flex flex-row px-5 items-center">
+          <div class="border-2 border-t-gray-800 border-transparent flex flex-row px-5 items-center">
 
             <!-- Acá va el el monto del total del fondo de reserva estimado -->
             <h1 class="text-l font-bold my-3">Total estimado: {{sumaHipotetica}}$.</h1>
@@ -420,7 +435,7 @@
 
           </div>
 
-          <div class="border border-t-gray-800 border-transparent flex flex-row px-5 items-center justify-center">
+          <div class="border-2 border-t-gray-800 border-transparent flex flex-row px-5 items-center justify-center">
 
             <!-- Acá va el el monto del total del fondo de reserva estimado -->
             <h1 class="text-l font-bold my-3">Saldo fondo de reserva hasta la fecha: {{fondoActualdl.saldo_fondo}}$</h1>
@@ -428,37 +443,37 @@
           </div>
 
 
-          <div class="border-2 border-gray-800 border-b-transparent flex flex-row px-5  bg-amber-200">
+          <div class="border-2 border-gray-800 border-b-transparent border-x-transparent flex flex-row px-5  bg-amber-200">
 
             <h1 class="text-l font-bold my-3">Cuenta en dólares ($):</h1>
 
           </div>
 
 
-          <div class="border-2 border-gray-800 flex flex-col border-b-transparent">
+          <div class="border-2 border-gray-800 flex flex-col border-b-transparent border-x-transparent">
   
 
             <div class="flex flex-row justify-center">
   
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
+                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent w-full">
   
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Saldo mes anterior:</h1>
-                    <h1 class="text-l font-bold my-3">{{fondoAnteriordl.saldo_fondo}}$</h1>
+                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5 w-full py-2 text-center">Saldo mes anterior:</h1>
+                    <h1 class="text-l mb-2">{{fondoAnteriordl.saldo_fondo}}$</h1>
 
                 </div>
 
 
-                <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent">
+                <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent w-full">
   
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Ingresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">{{fondoActualdl.ingresos}}$</h1>
+                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5 w-full py-2 text-center">Ingresos del mes:</h1>
+                    <h1 class="text-l mb-2">{{fondoActualdl.ingresos}}$</h1>
 
                 </div>
 
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
+                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent w-full">
   
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Egresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">{{fondoActualdl.egresos}}$</h1>
+                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5 w-full py-2 text-center">Egresos del mes:</h1>
+                    <h1 class="text-l mb-2">{{fondoActualdl.egresos}}$</h1>
 
                 </div>
     
@@ -466,7 +481,7 @@
 
           </div>
 
-          <div class="border-2 border-gray-800 border-b-transparent flex flex-row px-5 justify-end">
+          <div class="border-2 border-gray-800 border-b-transparent border-x-transparent flex flex-row px-5 justify-end">
 
             <h1 class="text-l font-bold my-3">Cuenta en dólares a la fecha:</h1>
             <h1 class="text-l font-bold m-3">{{fondoActualdl.saldo_fondo}}$</h1>
@@ -474,37 +489,37 @@
           </div>
 
 
-          <div class="border-2 border-gray-800 border-b-transparent flex flex-row px-5  bg-amber-200">
+          <div class="border-2 border-gray-800 border-b-transparent flex flex-row px-5  bg-amber-200 border-x-transparent">
 
             <h1 class="text-l font-bold my-3">Cuenta en bolívares (Bs.):</h1>
 
           </div>
 
 
-          <div class="border-2 border-gray-800 flex flex-col">
+          <div class="border-2 border-gray-800 flex flex-col border-x-transparent">
   
 
             <div class="flex flex-row justify-center">
   
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
+                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent w-full">
   
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Saldo mes anterior:</h1>
-                    <h1 class="text-l font-bold my-3">{{fondoAnteriorbs.saldo_fondo}} Bs.</h1>
+                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5 w-full py-2 text-center">Saldo mes anterior:</h1>
+                    <h1 class="text-l mb-2">{{fondoAnteriorbs.saldo_fondo}} Bs.</h1>
 
                 </div>
 
 
-                <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent">
+                <div class="flex flex-col items-center border-2 border-gray-800 border-b-transparent w-full">
   
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Ingresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">{{fondoActualbs.ingresos}} Bs.</h1>
+                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5 w-full py-2 text-center">Ingresos del mes:</h1>
+                    <h1 class="text-l mb-2">{{fondoActualbs.ingresos}} Bs.</h1>
 
                 </div>
 
-                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent">
+                <div class="flex flex-col items-center border-2 border-t-gray-800 border-transparent w-full">
   
-                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5">Egresos del mes:</h1>
-                    <h1 class="text-l font-bold my-3">{{fondoActualbs.egresos}} Bs.</h1>
+                    <h1 class="text-l font-bold mb-3 border-2 border-b-gray-800 border-transparent px-5 w-full py-2 text-center">Egresos del mes:</h1>
+                    <h1 class="text-l mb-2">{{fondoActualbs.egresos}} Bs.</h1>
 
                 </div>
     
@@ -512,7 +527,7 @@
 
           </div>
 
-          <div class="border-2 border-gray-800 border-t-transparent flex flex-row px-5 justify-end rounded-b-lg">
+          <div class="border-2 border-gray-800 border-transparent flex flex-row px-5 justify-end rounded-b-lg">
 
             <h1 class="text-l font-bold my-3">Cuenta en bolívares a la fecha:</h1>
             <h1 class="text-l font-bold m-3">{{fondoActualbs.saldo_fondo}} Bs.</h1>
@@ -522,48 +537,41 @@
   
         </div> 
 
-        <div class="flex flex-row px-5 mt-20 justify-center">
+        <div class="flex flex-row px-5 mt-20 mb-6 justify-center">
 
             <h1 class="text-xl font-bold my-3">Relación de pagos pendientes y abonos</h1>
 
         </div>
 
-        <div class="flex justify-center">
+        <div class="flex justify-center mb-3">
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col justify-between border-2 border-gray-800 rounded-lg">
 
-                <div class="border-2 border-gray-800 flex flex-row justify-center px-5 items-center mt-5 w-fit rounded-lg">
+                <div class="flex flex-row justify-center items-center w-fit">
 
-                    <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">Mes adeudado</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-r-gray-800 border-transparent text-center" style="width: 10rem;">Mes adeudado</h1>
 
-                    <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">Monto deuda</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-r-gray-800 border-transparent text-center" style="width: 10rem;">Monto deuda</h1>
 
-                    <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">Abonos</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-r-gray-800 border-transparent text-center" style="width: 10rem;">Abonos</h1>
 
-                    <h1 class="text-l font-bold p-3 border-2 border-b-gray-800 border-transparent">Saldo a la fecha</h1>
+                    <h1 class="text-l font-bold p-3 border-b-transparent border-2 border-transparent text-center" style="width: 10rem;">Saldo a la fecha</h1>
 
                 </div>
                 {%for Adeudado in listaAdeudado%}
-                    <div class="border-2 border-gray-800 flex flex-row justify-center px-5 items-center mt-5 w-fit rounded-lg">
+                    <div class="flex flex-row justify-between pr-5 w-full border-t-2 border-gray-800 hover:bg-gray-50 transition duration-200">
 
 
-                        <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">{{Adeudado.fechaAdeudado}}</h1>
+                        <h1 class="text-l font-bold text-center p-3 border-2 border-r-gray-800 border-transparent" style="width: 10rem;">{{Adeudado.fechaAdeudado}}</h1>
 
 
+                        <h1 class="text-l text-end p-3 border-2 border-r-gray-800 border-transparent" style="width: 10rem;">{{Adeudado.deudaAdeudado}}</h1>
 
 
+                        <h1 class="text-l text-end p-3 border-2 border-r-gray-800 border-transparent" style="width: 10rem;">{{Adeudado.importeAdeudado}}</h1>
 
 
-                        <h1 class="text-l font-bold p-3 border-2 border-r-gray-800 border-b-gray-800 border-transparent">{{Adeudado.deudaAdeudado}}</h1>
-
-
-
-
-
-                        <h1 class="text-l font-bold p-3 border-2 border-b-gray-800 border-transparent">{{Adeudado.importeAdeudado}}</h1>
-
-
-                        <h1 class="text-l font-bold p-3 border-2 border-b-gray-800 border-transparent">{{Adeudado.sumaAdeudado}}</h1>
+                        <h1 class="text-l text-end p-3 border-2 border-transparent" style="width: 10rem;">{{Adeudado.sumaAdeudado}}</h1>
 
 
                     </div>

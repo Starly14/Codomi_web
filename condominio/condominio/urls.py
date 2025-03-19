@@ -13,6 +13,7 @@ urlpatterns = [
     path('gestion_capital/', include('gestion_capital.urls')),
     path('gestion_recibo/', include('gestion_recibo.urls')),
     path('editar_edificio/', include('editar_edificio.urls')),
+    path('analisis_datos/', include('analisis_datos.urls')),
 
     ] + static(settings.STATIC_URL)
 

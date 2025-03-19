@@ -44,26 +44,26 @@
     </script>
     {% tailwind_css %}
 </head>
-<body>
+<body class="bg-gray-200">
     {% include 'layout/navbar.html' %}
 
     <section class="propietario p-6 rounded-lg w-screen flex justify-center">
-        <div class="flex flex-col w-full max-w-4xl bg-gray-300 rounded-lg shadow-md p-6">
+        <div class="flex flex-col w-full max-w-4xl bg-white rounded-lg shadow-md p-6 px-8" style="width: 40rem;">
             <!-- Fila 1: Propietario y Editar Nombre -->
-            <div class="flex flex-wrap -mx-4">
+            <div class="flex flex-wrap flex-col pt-10">
                 <!-- Propietario -->
-                <div class="w-full md:w-1/2 px-4 mb-6">
-                    <h2 class="text-xl font-bold mb-4">Propietario:</h2>
-                    <button onclick="toggleDropdown1()" class="w-full bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+                <div class="w-full px-4 mb-8">
+                    <h2 class="text-xl mb-4">Propietario:</h2>
+                    <button onclick="toggleDropdown1()" class="w-full bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold">
                         Seleccionar propietario
                     </button>
                     <div id="propDropdown" class="hidden mt-2 w-full">
-                        <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48">
+                        <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute">
                             {% for prop in propietarios %}
                             <li class="hover:bg-gray-100 p-2">
                                 <form method="post" class="flex items-center">
                                     <input type="hidden" name="propietario_id" value="{{ prop.id_prop }}">
-                                    <button type="submit" name="redirect_propietario" class="w-full text-left">{{ prop.nombre_prop }}</button>
+                                    <button type="submit" name="redirect_propietario" class="w-full text-left hover:font-semibold">{{ prop.nombre_prop }}</button>
                                     {% csrf_token %}
                                 </form>
                             </li>
@@ -73,12 +73,12 @@
                 </div>
 
                 <!-- Editar Nombre -->
-                <div class="w-full md:w-1/2 px-4 mb-6">
-                    <h2 class="text-xl font-bold mb-4">Editar nombre</h2>
+                <div class="w-full px-4 mb-8">
+                    <h2 class="text-xl mb-4">Editar nombre</h2>
                     <form method="post">
                         {% csrf_token %}
                         {{ propietario_form.as_p }}
-                        <button type="submit" name="edit_nombre" class="my-2 w-full bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+                        <button type="submit" name="edit_nombre" class="my-2 w-full bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold">
                             Guardar Nombre
                         </button>
                     </form>
@@ -86,15 +86,15 @@
             </div>
 
             <!-- Fila 2: Correos y Agregar Correo -->
-            <div class="flex flex-wrap -mx-4">
+            <div class="flex flex-wrap flex-col">
                 <!-- Correos Registrados -->
-                <div class="w-full md:w-1/2 px-4 mb-6">
-                    <h2 class="text-xl font-bold mb-4">Correos:</h2>
-                    <button onclick="toggleDropdown2()" class="w-full bg-indigo-900 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+                <div class="w-full px-4 mb-8">
+                    <h2 class="text-xl mb-4">Correos:</h2>
+                    <button onclick="toggleDropdown2()" class="w-full bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold">
                         Correos registrados
                     </button>
                     <div id="correoDropdown" class="hidden mt-2 w-full">
-                        <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48">
+                        <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 absolute w-96">
                             {% for correo in correos %}
                             <li class="hover:bg-gray-100 p-2 flex items-center justify-between">
                                 <span>{{ correo.correo }}</span>
@@ -116,12 +116,12 @@
                 </div>
 
                 <!-- Agregar Correo -->
-                <div class="w-full md:w-1/2 px-4 mb-6">
-                    <h3 class="text-xl font-bold mb-4">Agregar Correo:</h3>
+                <div class="w-full px-4 mb-6">
+                    <h3 class="text-xl mb-4">Agregar Correo:</h3>
                     <form method="post">
                         {% csrf_token %}
                         {{ correo_form.as_p }}
-                        <button type="submit" name="add_correo" class="w-full bg-indigo-900 hover:bg-blue-900 text-white font-bold my-2 py-2 px-4 rounded">
+                        <button type="submit" name="add_correo" class="w-full bg-indigo-900 hover:bg-blue-900 text-white my-2 py-2 px-4 rounded hover:font-semibold">
                             Agregar
                         </button>
                     </form>

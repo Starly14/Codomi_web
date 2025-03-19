@@ -61,7 +61,7 @@
 </script>
 
 
-<section class="sticky top-0 z-10 shadow-md">
+<section class="sticky top-0 z-10 shadow-md w-screen">
   <header class="bg-white p-5 flex justify-between items-center">
       <div class="logo text-xl font-bold">CODOMI</div>
       <div class="user-info flex items-center">
@@ -70,7 +70,7 @@
       </div>
   </header>
 
-  <nav class="bg-slate-500 text-white">
+  <nav class="bg-slate-500 text-white w-screen">
       <ul class="list-none m-0 p-0 flex justify-around items-center"> 
        
         <li class=" ml-10 ">
@@ -88,7 +88,7 @@
           </div>
         </li>
 
-        <li class=" mr-5">
+        <li class="mr-5">
           <div class="relative"> 
               <button onclick="toggleDropdown('gestCapDropdown')" class="text-white no-underline p-5 flex items-center group">
                   Gestión de Capital
@@ -115,7 +115,8 @@
               <div id="gestRecDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
                   <a href="/gestion_recibo/reporte_mensual/" class="block px-4 py-2 hover:bg-gray-100">Reporte mensual</a>
                   <a href="/gestion_recibo/gestion_fondos/" class="block px-4 py-2 hover:bg-gray-100">Gestión de fondos</a>
-                  <a href="/gestion_propietario/recibo/2024/04/01/12/" class="block px-4 py-2 hover:bg-gray-100">Recibo muestra</a>
+                  <a href="/gestion_recibo/recibo/2024/04/01/12/" class="block px-4 py-2 hover:bg-gray-100">Recibo muestra</a>
+                  <a href="/gestion_recibo/generar_recibo/" class="block px-4 py-2 hover:bg-gray-100">Generar recibo</a>
               </div>
           </div>
         </li>
