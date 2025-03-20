@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'gestion_recibo',
 
     'editar_edificio.apps.editarEdificioConfig',
+    'analisis_datos'
 
 ]
 
@@ -116,8 +117,6 @@ DATABASES = {
         'PORT': config['DB_PORT'],
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
