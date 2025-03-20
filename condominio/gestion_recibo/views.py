@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404
 from django.db import connection
 from django.urls import reverse
-from .forms import FondoForm, MesAnioFiltroForm, FechaFiltroForm, PresupuestoForm
+from .forms import FondoForm, MesAnioFiltroForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm
 from .models import Fondo, Gasto, Presupuesto, Dpto, Asignacion, Recibo, Deuda, Comentario, Importe
 from django.db.models import Sum
 from datetime import datetime, date
@@ -366,13 +366,50 @@ def generarRecibo(request, year, month, day):
     fecha_recibida = date(year, month, day)
     fecha_actual = date.today()
     form_presupuesto = PresupuestoForm(allowed_year=year, allowed_month=month)
+    form_GastoDirecto = GastoDirectoForm(allowed_year=year, allowed_month=month)
+    form_GastoAplicado = GastoAplicadoForm(allowed_year=year, allowed_month=month)
+    form_fondo = FondoImprevistoForm()
+
+    presupuestos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='previsto')
+    monto_presupuestos = []
+    for presupuesto in presupuestos:
+        monto_presupuestos.append({'titulo': presupuesto.titulo_pres, 'monto': f'{presupuesto.monto_pres_dl}$'})
     
+    gastosDirectos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='directo')
+    monto_gastosDirectos = []
+    for gastoDirecto in gastosDirectos:
+        monto_gastosDirectos.append({'titulo': gastoDirecto.titulo_pres, 'monto': f'{gastoDirecto.monto_pres_dl}$'})
+
+    gastos = Gasto.objects.filter(fecha_gasto__year=year, fecha_gasto__month=month)
+
+    monto_gastos = []
+
+    for gasto in gastos:
+        if gasto.monto_gasto_bs == None and gasto.moneda_gasto == '$':
+            monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_dl}$'})
+        elif gasto.monto_gasto_dl == None and gasto.moneda_gasto == 'bs':
+            monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_bs} Bs.'})
+        else:
+            monto_gastos.append({'titulo': gasto.titulo_gasto, 'monto': f'{gasto.monto_gasto_bs} Bs. ({gasto.monto_gasto_dl}$)'})
+
+    fondosImprevistos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='fondo')
+    monto_fondo = []
+    for fondo in fondosImprevistos:
+        monto_fondo.append(f'{fondo.monto_pres_dl}$')
+
+    try:
+        fondoImprevisto = Presupuesto.objects.get(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='fondo')
+    except Presupuesto.DoesNotExist:
+        fondoImprevisto = None
+
     if month > 1:
         mes_pasado_nro = month-1
         ano_pasado_nro = year
     else:
         mes_pasado_nro = 12
         ano_pasado_nro = year-1
+
+# FALTA A LAS FECHAS MENORES
 
     if fecha_recibida > fecha_actual:
         raise Http404("La fecha ingresada es mayor a la fecha actual")
@@ -447,13 +484,74 @@ def generarRecibo(request, year, month, day):
                     presupuestoFinal = form_presupuesto.save(commit=False)
                     presupuestoFinal.id_recibo = recibo
                     presupuestoFinal.tipo_pres = 'previsto'
+                    presupuestoFinal.moneda_pres = '$'
 
                     presupuestoFinal.save()
+
+                    #
+                    #SE DEBERIA PODER AGREGAR DEUDAS, ESTO PARA SPRINT4
+                    #
                     url = reverse('generar_recibo', args=[2025, 3, 1])
                     return redirect(url)
-            # Si no es POST, crear formulario vacío
-            else:
-                form_presupuesto = PresupuestoForm(allowed_year=year, allowed_month=month)
+                
+            elif 'agregarGastoDirecto' in request.POST:
+                form_GastoDirecto = GastoDirectoForm(request.POST, allowed_year=year, allowed_month=month)
+                if form_GastoDirecto.is_valid():
+                    gastoDirectoFinal = form_GastoDirecto.save(commit=False)
+                    gastoDirectoFinal.id_recibo = recibo
+                    gastoDirectoFinal.tipo_pres = 'directo'
+                    gastoDirectoFinal.moneda_pres = '$'
+
+                    gastoDirectoFinal.save()
+
+                    url = reverse('generar_recibo', args=[2025, 3, 1])
+                    return redirect(url)
+                
+            elif 'agregarGastoAplicado' in request.POST:
+                form_GastoAplicado = GastoAplicadoForm(request.POST, allowed_year=year, allowed_month=month)
+                if form_GastoAplicado.is_valid():
+                    gastoAplicadoFinal = form_GastoAplicado.save(commit=False)
+                    if gastoAplicadoFinal.moneda_gasto == '$':
+                        gastoAplicadoFinal.id_fondo = fondodl
+                    else:
+                        gastoAplicadoFinal.id_fondo = fondobs
+
+                    gastoAplicadoFinal.save()
+
+                    url = reverse('generar_recibo', args=[2025, 3, 1])
+                    return redirect(url)
+
+            elif 'agregarFondoImprevisto' in request.POST:  # Validar el formulario correcto
+                if fondoImprevisto != None:
+                    fondoImprevisto.delete()
+                form_fondo = FondoImprevistoForm(request.POST)  # Crear instancia del formulario
+                fondoFinal = form_fondo.save(commit=False)
+                fondoFinal.id_recibo = recibo  # Asegúrate de que 'recibo' esté definido
+                fondoFinal.titulo_pres = 'FONDO PARA GASTOS IMPREVISTOS'
+                fondoFinal.moneda_pres = '$'
+
+                # Crear la fecha sin hora
+                fecha = date(year, month, 1)
+
+                # Convertir a datetime con hora 00:00:00
+                fecha_con_hora = datetime.combine(fecha, datetime.min.time())
+
+                # Asignar al campo del modelo
+                fondoFinal.fecha_pres = fecha_con_hora  # Usar datetime, no timestamp
+
+                # Asignar clasificación y tipo
+                fondoFinal.clasificacion_pres = 'fondo_imprevisto'
+                fondoFinal.tipo_pres = 'fondo'
+
+                # Guardar en la base de datos
+                fondoFinal.save()
+
+                fondoImprevisto = fondoFinal
+
+                # Redireccionar dinámicamente
+                url = reverse('generar_recibo', args=[year, month, day])
+                return redirect(url)
+                # Si no es POST, crear formulario vacío
 
     return render(request, "generarRecibo.html", {
 #        'form_registro': form_registro,
@@ -462,5 +560,13 @@ def generarRecibo(request, year, month, day):
         'recibo': recibo,
         'fondodl': fondodl,
         'form_presupuesto': form_presupuesto,
+        'monto_presupuestos': monto_presupuestos,
+        'form_GastoDirecto': form_GastoDirecto,
+        'monto_gastosDirectos': monto_gastosDirectos,
+        'form_GastoAplicado': form_GastoAplicado,
+        'monto_gastos': monto_gastos,
+        'form_fondo': form_fondo,
+        'monto_fondo': monto_fondo,
+        'fondoImprevisto': fondoImprevisto,
     })
     
