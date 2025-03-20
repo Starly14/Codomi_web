@@ -9,6 +9,6 @@ urlpatterns = [
 
     path('recibo/<int:year>/<int:month>/<int:day>/<str:nro_dpto>/', views.reciboBase, name='reciboBase'),
 
-    path('generar_recibo/', views.generarRecibo, name='generar_recibo'),
+    path('generar_recibo/<int:year>/<int:month>/<int:day>/', views.generarRecibo, name='generar_recibo'),
 
 ]

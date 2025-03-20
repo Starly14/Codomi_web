@@ -151,13 +151,17 @@ class Deuda(models.Model):
 
 
 class Gasto(models.Model):
+    MONEDA_CHOICES = [
+        ('$', 'Dólares ($)'),
+        ('bs', 'Bolivares (Bs.)'),
+    ]
     id_gasto = models.AutoField(primary_key=True)
     id_fondo = models.ForeignKey(Fondo, models.DO_NOTHING, db_column='id_fondo')
     titulo_gasto = models.CharField(max_length=100, blank=True, null=True)
     detalle_gasto = models.CharField(max_length=255, blank=True, null=True)
     monto_gasto_bs = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
     monto_gasto_dl = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
-    moneda_gasto = models.CharField(blank=True, null=True)
+    moneda_gasto = models.CharField(blank=True, null=True, choices=MONEDA_CHOICES)
     fecha_gasto = models.DateTimeField(blank=True, null=True)
     clasificacion_gasto = models.TextField(blank=True, null=True)
 
@@ -185,16 +189,24 @@ class Importe(models.Model):
 
 
 class Presupuesto(models.Model):
+    MONEDA_CHOICES = [
+        ('$', 'Dólares ($)'),
+        ('bs', 'Bolivares (Bs.)'),
+    ]
+    TIPO_CHOICES = [
+        ('previsto', 'Previsto'),
+        ('directo', 'Directo'),
+    ]
     id_pres = models.AutoField(primary_key=True)
     id_recibo = models.ForeignKey('Recibo', models.DO_NOTHING, db_column='id_recibo')
     titulo_pres = models.CharField(max_length=100, blank=True, null=True)
     detalle_pres = models.CharField(max_length=255, blank=True, null=True)
     monto_pres_bs = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
     monto_pres_dl = models.DecimalField(max_digits=30, decimal_places=2, blank=True, null=True)
-    moneda_pres = models.CharField(blank=True, null=True)
+    moneda_pres = models.CharField(blank=True, null=True, choices=MONEDA_CHOICES)
     fecha_pres = models.DateTimeField(blank=True, null=True)
     clasificacion_pres = models.TextField(blank=True, null=True)
-    tipo_pres = models.TextField(blank=True, null=True)
+    tipo_pres = models.TextField(blank=True, null=True, choices=TIPO_CHOICES)
 
     class Meta:
         managed = False

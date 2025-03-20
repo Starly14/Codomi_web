@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, Http404
 from django.db import connection
-
-from .forms import FondoForm, MesAnioFiltroForm, FechaFiltroForm
+from django.urls import reverse
+from .forms import FondoForm, MesAnioFiltroForm, FechaFiltroForm, PresupuestoForm
 from .models import Fondo, Gasto, Presupuesto, Dpto, Asignacion, Recibo, Deuda, Comentario, Importe
 from django.db.models import Sum
-from datetime import datetime
+from datetime import datetime, date
 
 
 # Para ser guardado en la BD se genera la prox PK disponible en la tabla
@@ -361,5 +362,105 @@ def reciboBase(request, year, month, day, nro_dpto):
         'listaAdeudado': listaAdeudado,
     })
 
-def generarRecibo(request):
-    return render(request, "generarRecibo.html")
+def generarRecibo(request, year, month, day):
+    fecha_recibida = date(year, month, day)
+    fecha_actual = date.today()
+    form_presupuesto = PresupuestoForm(allowed_year=year, allowed_month=month)
+    
+    if month > 1:
+        mes_pasado_nro = month-1
+        ano_pasado_nro = year
+    else:
+        mes_pasado_nro = 12
+        ano_pasado_nro = year-1
+
+    if fecha_recibida > fecha_actual:
+        raise Http404("La fecha ingresada es mayor a la fecha actual")
+    try:
+        fondodl = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='$')
+        fondobs = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='bs')
+    except Fondo.DoesNotExist:
+        fondodl = fondobs = None
+    try:
+        recibo = Recibo.objects.get(fecha_recibo__year=year, fecha_recibo__month=month)
+    except Recibo.DoesNotExist:
+        recibo = None
+    try:
+        fondoPasadodl = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='$')
+        fondoPasadobs = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='bs')
+    except Fondo.DoesNotExist:
+        fondoPasadodl = fondoPasadobs = None
+    
+    if recibo == None:
+        if request.method == 'POST':
+            if 'CrearReciboYFondo' or 'CrearReciboYFondo0' in request.POST:
+                print('peperoni mozarella')
+                if 'CrearReciboYFondo' in request.POST:
+                    montodl = fondoPasadodl.saldo_fondo
+                    montobs = fondoPasadobs.saldo_fondo
+                else:
+                    montodl = 0
+                    montobs = 0
+                nuevoFondodl = Fondo(
+                    moneda_fondo='$',
+                    ingresos=0.00,
+                    egresos=0.00,
+                    saldo_fondo=montodl,
+                    fecha_fondo=date(year, month, 1),
+                    detalles_fondo=None  # Se guardará como NULL en la base de datos
+                )
+                nuevoFondobs = Fondo(
+                    moneda_fondo='bs',
+                    ingresos=0.00,
+                    egresos=0.00,
+                    saldo_fondo=montobs,
+                    fecha_fondo=date(year, month, 1),
+                    detalles_fondo=None  # Se guardará como NULL en la base de datos
+                )
+                nuevoFondodl.save()
+                nuevoFondobs.save()
+                nuevo_recibo = Recibo(
+                    fecha_recibo=date(year, month, 1),  
+                    id_fondo=nuevoFondodl,
+                    monto_dl=0  
+                )
+                nuevo_recibo.save()
+                url = reverse('generar_recibo', args=[2025, 3, 1])
+                return redirect(url)
+
+            elif 'CrearRecibo' in request.POST:
+                nuevo_recibo = Recibo(
+                    fecha_recibo=date(year, month, 1),  
+                    id_fondo=fondodl,
+                    monto_dl=0  
+                )
+                nuevo_recibo.save()
+                url = reverse('generar_recibo', args=[2025, 3, 1])
+                return redirect(url)
+
+    if fondodl != None and recibo != None:
+        # Procesar formulario de REGISTRO (POST)
+        if request.method == 'POST':
+            if 'agregarPresupuesto' in request.POST:
+                form_presupuesto = PresupuestoForm(request.POST, allowed_year=year, allowed_month=month)
+                if form_presupuesto.is_valid():
+                    presupuestoFinal = form_presupuesto.save(commit=False)
+                    presupuestoFinal.id_recibo = recibo
+                    presupuestoFinal.tipo_pres = 'previsto'
+
+                    presupuestoFinal.save()
+                    url = reverse('generar_recibo', args=[2025, 3, 1])
+                    return redirect(url)
+            # Si no es POST, crear formulario vacío
+            else:
+                form_presupuesto = PresupuestoForm(allowed_year=year, allowed_month=month)
+
+    return render(request, "generarRecibo.html", {
+#        'form_registro': form_registro,
+#        'form_filtro': form_filtro,
+#        'fondos': fondos,
+        'recibo': recibo,
+        'fondodl': fondodl,
+        'form_presupuesto': form_presupuesto,
+    })
+    
