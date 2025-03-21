@@ -327,7 +327,7 @@
                 <h2 class="text-2xl mb-5 text-gray-800">Fondo para gastos imprevistos en el mes de *mes*</h2>
                 {% csrf_token %}
         
-                        {% if form_fondo.non_field_errors %}
+                    {% if form_fondo.non_field_errors %}
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                             {% for error in form_fondo.non_field_errors %}
                                 <p>{{ error }}</p>
@@ -396,22 +396,50 @@
 
 
     <!-- Sección de comentarios -->
+    <form method="POST">
 
-    <div class="mb-5">
+        <div class="mb-5">
 
-        <div class="mb-4">
+            <div class="mb-4">
 
-            <h2 class="text-2xl mb-5 text-gray-800">Comentarios del recibo</h2>
+                <h2 class="text-2xl mb-5 text-gray-800">Comentarios del recibo</h2>
+                {% csrf_token %}
+            
+                {% if form_comentario.non_field_errors %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {% for error in form_comentario.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-            <h2 class="text-lg mb-5">Acá debería ir el field para agregar el comentario</h2>
+                <!-- Iterar sobre los campos del formulario -->
+                {% for field in form_comentario %}
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                        
+                            {{ field }}
 
-            <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold" style="width: 16rem;">
-                Agregar comentario
-            </button>
+                        <!-- Mostrar errores específicos del campo -->
+                        {% if field.errors %}
+                            <div class="text-red-600 text-sm mt-1">
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
+                        <!-- Mostrar texto de ayuda (help_text) -->
+                    </div>
+                {% endfor %}
+                <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold" style="width: 16rem;" name='agregarComentario'>
+                    Agregar comentario
+                </button>
+
+            </div>
+        
         </div>
-    
-    </div>
+    </form>
 
     <div class="bg-white shadow-md rounded-lg p-6 w-full mb-10">
         <h2 class="text-2xl text-gray-800 mb-4">Comentarios</h2>
@@ -426,19 +454,11 @@
                 <tbody>
 
                     <!-- Aquí va cada fila, hay 2 ejemplos de filas -->
-
-                    <!-- Primer ejemplo -->
-
-                    <tr class="hover:bg-gray-50 transition duration-200">
-                        <td class="border px-4 py-2 text-sm text-gray-700">Sis</td>
-                    </tr>
-
-                    <!-- Segundo ejemplo -->
-
-                    <tr class="hover:bg-gray-50 transition duration-200">
-                        <td class="border px-4 py-2 text-sm text-gray-700">Non</td>
-                    </tr>
-
+                     {% for comentario in comentarios %}
+                        <tr class="hover:bg-gray-50 transition duration-200">
+                            <td class="border px-4 py-2 text-sm text-gray-700">{{comentario.desc_comentario}}</td>
+                        </tr>
+                    {%endfor%}
 
                 </tbody>
             </table>
@@ -449,10 +469,12 @@
     </div>
 
 
-
-    <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold w-full mt-5">
-        Ver recibo
-    </button>
+    <form method="POST">
+        {% csrf_token %}
+        <button class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold w-full mt-5" name='redirectVerRecibo' value='1'>
+            Ver recibo
+        </button>
+    </form>
 
     {% endif %}
 

@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404
 from django.db import connection
 from django.urls import reverse
-from .forms import FondoForm, MesAnioFiltroForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm
-from .models import Fondo, Gasto, Presupuesto, Dpto, Asignacion, Recibo, Deuda, Comentario, Importe
+from .forms import FondoForm, MesAnioFiltroForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm, ComentarioForm
+from .models import Fondo, Gasto, Presupuesto, Dpto, Asignacion, Recibo, Deuda, Comentario, Importe, ComentarioFrec
 from django.db.models import Sum
 from datetime import datetime, date
 
@@ -248,9 +248,15 @@ def reciboBase(request, year, month, day, nro_dpto):
     else:
         mes_pasado_nro = 12
         ano_pasado_nro = year-1
-    fondoAnteriordl = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='$')
-    fondoAnteriorbs = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='bs')
 
+    try:
+        fondoAnteriordl = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='$')
+        fondoAnteriorbs = Fondo.objects.get(fecha_fondo__year=ano_pasado_nro, fecha_fondo__month=mes_pasado_nro, moneda_fondo='bs')
+        montoAnteriordl = f'{fondoAnteriordl.saldo_fondo}$'
+        montoAnteriorbs = f'{fondoAnteriorbs.saldo_fondo} Bs.'
+    except Fondo.DoesNotExist:
+        montoAnteriordl = '-'
+        montoAnteriorbs = '-'
     #aqui empieza lo de fondos
     fechaPasada = datetime.strptime(f'{year-1}-{month}-{day} 00:00:00', "%Y-%m-%d %H:%M:%S")
 
@@ -357,8 +363,8 @@ def reciboBase(request, year, month, day, nro_dpto):
         'fondoActualdl': fondoActualdl,
         'fondoActualbs': fondoActualbs,
         'sumaHipotetica': sumaHipotetica,
-        'fondoAnteriordl': fondoAnteriordl,
-        'fondoAnteriorbs': fondoAnteriorbs,
+        'montoAnteriordl': montoAnteriordl,
+        'montoAnteriorbs': montoAnteriorbs,
         'listaAdeudado': listaAdeudado,
     })
 
@@ -369,6 +375,7 @@ def generarRecibo(request, year, month, day):
     form_GastoDirecto = GastoDirectoForm(allowed_year=year, allowed_month=month)
     form_GastoAplicado = GastoAplicadoForm(allowed_year=year, allowed_month=month)
     form_fondo = FondoImprevistoForm()
+    form_comentario = ComentarioForm()
 
     presupuestos = Presupuesto.objects.filter(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='previsto')
     monto_presupuestos = []
@@ -397,6 +404,8 @@ def generarRecibo(request, year, month, day):
     for fondo in fondosImprevistos:
         monto_fondo.append(f'{fondo.monto_pres_dl}$')
 
+
+
     try:
         fondoImprevisto = Presupuesto.objects.get(fecha_pres__year=year, fecha_pres__month=month, tipo_pres='fondo')
     except Presupuesto.DoesNotExist:
@@ -411,6 +420,7 @@ def generarRecibo(request, year, month, day):
 
 # FALTA A LAS FECHAS MENORES
 
+
     if fecha_recibida > fecha_actual:
         raise Http404("La fecha ingresada es mayor a la fecha actual")
     try:
@@ -418,8 +428,12 @@ def generarRecibo(request, year, month, day):
         fondobs = Fondo.objects.get(fecha_fondo__year=year, fecha_fondo__month=month, moneda_fondo='bs')
     except Fondo.DoesNotExist:
         fondodl = fondobs = None
+    comentarios = []
     try:
         recibo = Recibo.objects.get(fecha_recibo__year=year, fecha_recibo__month=month)
+        comentariosFeos = Comentario.objects.filter(id_recibo=recibo)
+        comentarios = ComentarioFrec.objects.filter(comentario__in=comentariosFeos)
+
     except Recibo.DoesNotExist:
         recibo = None
     try:
@@ -462,7 +476,7 @@ def generarRecibo(request, year, month, day):
                     monto_dl=0  
                 )
                 nuevo_recibo.save()
-                url = reverse('generar_recibo', args=[2025, 3, 1])
+                url = reverse('generar_recibo', args=[year, month, 1])
                 return redirect(url)
 
             elif 'CrearRecibo' in request.POST:
@@ -472,7 +486,7 @@ def generarRecibo(request, year, month, day):
                     monto_dl=0  
                 )
                 nuevo_recibo.save()
-                url = reverse('generar_recibo', args=[2025, 3, 1])
+                url = reverse('generar_recibo', args=[year, month, 1])
                 return redirect(url)
 
     if fondodl != None and recibo != None:
@@ -491,7 +505,7 @@ def generarRecibo(request, year, month, day):
                     #
                     #SE DEBERIA PODER AGREGAR DEUDAS, ESTO PARA SPRINT4
                     #
-                    url = reverse('generar_recibo', args=[2025, 3, 1])
+                    url = reverse('generar_recibo', args=[year, month, 1])
                     return redirect(url)
                 
             elif 'agregarGastoDirecto' in request.POST:
@@ -504,7 +518,7 @@ def generarRecibo(request, year, month, day):
 
                     gastoDirectoFinal.save()
 
-                    url = reverse('generar_recibo', args=[2025, 3, 1])
+                    url = reverse('generar_recibo', args=[year, month, 1])
                     return redirect(url)
                 
             elif 'agregarGastoAplicado' in request.POST:
@@ -518,7 +532,7 @@ def generarRecibo(request, year, month, day):
 
                     gastoAplicadoFinal.save()
 
-                    url = reverse('generar_recibo', args=[2025, 3, 1])
+                    url = reverse('generar_recibo', args=[year, month, 1])
                     return redirect(url)
 
             elif 'agregarFondoImprevisto' in request.POST:  # Validar el formulario correcto
@@ -530,29 +544,41 @@ def generarRecibo(request, year, month, day):
                 fondoFinal.titulo_pres = 'FONDO PARA GASTOS IMPREVISTOS'
                 fondoFinal.moneda_pres = '$'
 
-                # Crear la fecha sin hora
                 fecha = date(year, month, 1)
-
-                # Convertir a datetime con hora 00:00:00
                 fecha_con_hora = datetime.combine(fecha, datetime.min.time())
-
-                # Asignar al campo del modelo
                 fondoFinal.fecha_pres = fecha_con_hora  # Usar datetime, no timestamp
-
-                # Asignar clasificación y tipo
                 fondoFinal.clasificacion_pres = 'fondo_imprevisto'
                 fondoFinal.tipo_pres = 'fondo'
-
-                # Guardar en la base de datos
                 fondoFinal.save()
 
                 fondoImprevisto = fondoFinal
-
-                # Redireccionar dinámicamente
                 url = reverse('generar_recibo', args=[year, month, day])
                 return redirect(url)
                 # Si no es POST, crear formulario vacío
 
+            elif 'agregarComentario' in request.POST:
+                form_comentario = ComentarioForm(request.POST)
+                if form_comentario.is_valid():  # Corregido: Validar form_comentario
+                    # Guardar el comentario en ComentarioFrec
+                    comentarioFinal = form_comentario.save(commit=False)
+                    comentarioFinal.titulo_comentario = 'Titulo, por definir luego'
+                    comentarioFinal.save()  # Guardar el comentario en la base de datos
+
+                    # Crear el conector en Comentario
+                    comentarioConector = Comentario(
+                        id_comentario=comentarioFinal,  # Asignar el objeto ComentarioFrec
+                        id_recibo=recibo  # Asegúrate de que 'recibo' esté definido
+                    )
+                    comentarioConector.save()  # Guardar el conector en la base de datos
+
+                    # Redireccionar dinámicamente
+                    url = reverse('generar_recibo', args=[year, month, day])  # Usar variables dinámicas
+                    return redirect(url)
+            elif 'redirectVerRecibo' in request.POST:
+                # Usar el nombre correcto de la URL y pasar los argumentos en el orden correcto
+                url = reverse('reciboBase', args=[year, month, day, 11])  # 'reciboBase' es el nombre de la URL
+                return redirect(url)
+                
     return render(request, "generarRecibo.html", {
 #        'form_registro': form_registro,
 #        'form_filtro': form_filtro,
@@ -568,5 +594,7 @@ def generarRecibo(request, year, month, day):
         'form_fondo': form_fondo,
         'monto_fondo': monto_fondo,
         'fondoImprevisto': fondoImprevisto,
+        'form_comentario': form_comentario,
+        'comentarios': comentarios,
     })
     

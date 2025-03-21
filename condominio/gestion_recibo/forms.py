@@ -1,7 +1,7 @@
 # forms.py
 from django import forms
 from django.forms import inlineformset_factory # Formularios en relacion a un modelo padre Presupuesto y Recibo
-from .models import Recibo, Presupuesto, Fondo, Gasto
+from .models import Recibo, Presupuesto, Fondo, Gasto, ComentarioFrec
 from django.utils.dates import MONTHS
 from django.db.models.functions import ExtractYear
 from django.core.exceptions import ValidationError
@@ -75,7 +75,8 @@ class MesAnioFiltroForm(forms.Form):
 
 class GastoDirectoForm(forms.ModelForm):
     titulo_pres = forms.CharField(
-        required=True,  
+        required=True,
+        max_length=100,
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese el título',
             'oninvalid': "this.setCustomValidity('Este campo es obligatorio.')",
@@ -85,7 +86,8 @@ class GastoDirectoForm(forms.ModelForm):
     )
 
     detalle_pres = forms.CharField(
-        required=False,  
+        required=False,
+        max_length=255,
         widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)'})
     )
 
@@ -107,6 +109,7 @@ class GastoDirectoForm(forms.ModelForm):
     monto_pres_dl = forms.DecimalField(
         required=False,
         min_value=0.01,
+        max_digits=30,
         widget=forms.NumberInput(attrs={
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
@@ -169,7 +172,8 @@ class GastoDirectoForm(forms.ModelForm):
     
 class PresupuestoForm(forms.ModelForm):
     titulo_pres = forms.CharField(
-        required=True,  
+        required=True,
+        max_length=100,
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese el título',
             'oninvalid': "this.setCustomValidity('Este campo es obligatorio.')",
@@ -179,7 +183,8 @@ class PresupuestoForm(forms.ModelForm):
     )
 
     detalle_pres = forms.CharField(
-        required=False,  
+        required=False,
+        max_length=255,
         widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)'})
     )
 
@@ -201,6 +206,7 @@ class PresupuestoForm(forms.ModelForm):
     monto_pres_dl = forms.DecimalField(
         required=False,
         min_value=0.01,
+        max_digits=30,
         widget=forms.NumberInput(attrs={
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
@@ -263,7 +269,8 @@ class PresupuestoForm(forms.ModelForm):
 
 class GastoAplicadoForm(forms.ModelForm):
     titulo_gasto = forms.CharField(
-        required=True,  
+        required=True,
+        max_length=100,
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese el título',
             'oninvalid': "this.setCustomValidity('Este campo es obligatorio.')",
@@ -273,7 +280,8 @@ class GastoAplicadoForm(forms.ModelForm):
     )
 
     detalle_gasto = forms.CharField(
-        required=False,  
+        required=False,
+        max_length=255,
         widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)'})
     )
 
@@ -306,6 +314,7 @@ class GastoAplicadoForm(forms.ModelForm):
     monto_gasto_dl = forms.DecimalField(
         required=False,
         min_value=0.01,
+        max_digits=30,
         widget=forms.NumberInput(attrs={
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
@@ -321,6 +330,7 @@ class GastoAplicadoForm(forms.ModelForm):
     monto_gasto_bs = forms.DecimalField(
         required=False,
         min_value=0.01,
+        max_digits=30,
         widget=forms.NumberInput(attrs={
             'step': '0.01',
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
@@ -403,6 +413,7 @@ class FondoImprevistoForm(forms.ModelForm):
     monto_pres_dl = forms.DecimalField(
         required=False,
         min_value=0.01,
+        max_digits=30,
         widget=forms.NumberInput(attrs={
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
@@ -432,3 +443,21 @@ class FondoImprevistoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FondoImprevistoForm, self).__init__(*args, **kwargs)  # Corregido
         self.fields['monto_pres_dl'].label = 'Monto para fondo de imprevistos en Dólares'
+
+
+
+
+class ComentarioForm(forms.ModelForm):
+    desc_comentario = forms.CharField(
+        required=True,
+        max_length=300,
+    )
+    
+    class Meta:
+        model = ComentarioFrec
+        fields = '__all__'
+        exclude = ['id_comentario', 'titulo_comentario']
+
+    def __init__(self, *args, **kwargs):
+        super(ComentarioForm, self).__init__(*args, **kwargs)  # Corregido
+        self.fields['desc_comentario'].label = 'Comentario'
