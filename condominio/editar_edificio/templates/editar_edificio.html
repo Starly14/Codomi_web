@@ -45,41 +45,41 @@
 {% endblock %}
 
 {% block content %}
-<section class="propietario p-6 rounded-lg relative flex justify-center">
-    <div class="flex w-full justify-center space-x-8">
+<section class="propietario p-4 rounded-lg relative flex justify-center">
+    <div class="flex w-full justify-center space-x-6">
         <!-- Cuadro del Formulario -->
-        <div class="bg-white rounded-lg shadow-md p-10 flex flex-col justify-between" style="width: 1000px; height: 700px; margin-left: 24px;">
-            <h1 class="text-2xl font-bold mb-5">Editar Edificio: {{ edificio.nombre_edif }}</h1>
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between" style="width: 700px; height: 470px; margin-left: 16px;">
+            <h1 class="text-2xl font-semibold text-gray-800 mb-4">Editar Edificio: {{ edificio.nombre_edif }}</h1>
             
-            <form method="POST" enctype="multipart/form-data" class="flex flex-col justify-evenly h-full" onsubmit="validateForm(event)">
+            <form method="POST" enctype="multipart/form-data" class="flex flex-col justify-between h-full" onsubmit="validateForm(event)">
                 {% csrf_token %}
-                
-                <div class="mb-4">
-                    <label for="id_nombre_edif" class="block text-xl font-medium text-gray-700">Nombre del Edificio:</label>
-                    <input type="text" id="id_nombre_edif" name="nombre_edif" value="{{ edificio.nombre_edif }}" class="w-full rounded-lg border border-gray-300 py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+
+                <div class="mb-3">
+                    <label for="id_nombre_edif" class="py-2 text-left text-sm font-medium text-gray-700">Nombre del Edificio:</label>
+                    <input type="text" id="id_nombre_edif" name="nombre_edif" value="{{ edificio.nombre_edif }}" class="w-full rounded-md border border-gray-300 py-1 px-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
                 </div>
 
-                <div class="mb-4">
-                    <label for="id_rif" class="block text-xl font-medium text-gray-700">RIF:</label>
-                    <input type="text" id="id_rif" name="rif" value="{{ edificio.rif }}" class="w-full rounded-lg border border-gray-300 py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                <div class="mb-3">
+                    <label for="id_rif" class="py-2 text-left text-sm font-medium text-gray-700">RIF:</label>
+                    <input type="text" id="id_rif" name="rif" value="{{ edificio.rif }}" class="w-full rounded-md border border-gray-300 py-1 px-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
                 </div>
 
-                <div class="mb-4">
-                    <label for="id_direccion_edif" class="block text-xl font-medium text-gray-700">Dirección del Edificio:</label>
-                    <input type="text" id="id_direccion_edif" name="direccion_edif" value="{{ edificio.direccion_edif }}" class="w-full rounded-lg border border-gray-300 py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                <div class="mb-3">
+                    <label for="id_direccion_edif" class="py-2 text-left text-sm font-medium text-gray-700">Dirección del Edificio:</label>
+                    <input type="text" id="id_direccion_edif" name="direccion_edif" value="{{ edificio.direccion_edif }}" class="w-full rounded-md border border-gray-300 py-1 px-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
                 </div>
 
-                <div class="mb-4">
-                    <label for="id_foto_edif" class="block text-xl font-medium text-gray-700 mb-2">Seleccionar foto del Edificio:</label>
-                    <button type="button" id="upload-button" onclick="triggerFileUpload()" class="w-full bg-indigo-900 text-white py-2 px-4 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all duration-300">
+                <div class="mb-3">
+                    <label for="id_foto_edif" class="py-2 text-left text-sm font-medium text-gray-700">Seleccionar foto del Edificio:</label>
+                    <button type="button" id="upload-button" onclick="triggerFileUpload()" class="w-full bg-indigo-900 text-white py-1 px-3 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all duration-300">
                         Seleccionar Archivo
                     </button>
                     <input id="file-upload" type="file" style="display: none;" onchange="updateFileName()" name="archivo">
-                    <span id="file-name" class="block text-gray-600 mt-2">Ningún archivo seleccionado</span>
+                    <span id="file-name" class="py-2 text-left text-sm font-medium text-gray-700">Ningún archivo seleccionado</span>
                 </div>
 
-                <div class="flex justify-end mt-4">
-                    <button type="submit" class="w-full bg-indigo-900 text-white py-3 px-6 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all duration-300">
+                <div class="flex justify-end">
+                    <button type="submit" class="w-full bg-indigo-900 text-white py-2 px-4 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all duration-300">
                         Guardar Cambios
                     </button>
                 </div>
@@ -87,8 +87,8 @@
         </div>
 
         <!-- Cuadro de Imagen -->
-        <div class="bg-white rounded-lg shadow-md p-10 flex flex-col items-center justify-center" style="width: 1000px; height: 700px; margin-right: 24px;">
-            <label for="id_nombre_edif" class="block text-xl font-medium text-gray-700 mb-4">Imagen del Edificio:</label>
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center" style="width: 700px; height: 470px; margin-right: 16px;">
+            <label for="id_nombre_edif" class="px-4 py-2 text-left text-sm font-medium text-gray-700">Imagen del Edificio:</label>
             <div class="flex items-center justify-center w-full h-full">
                 {% if foto_url %}
                     <img id="preview-img" src="{{ foto_url }}" alt="Foto de {{ edificio.nombre_edif }}" class="rounded-lg shadow-md max-w-full max-h-full object-contain">
