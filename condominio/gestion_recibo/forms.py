@@ -93,7 +93,7 @@ class GastoDirectoForm(forms.ModelForm):
             'class': 'rounded-md'})
     )
 
-    clasificacion_gasto = forms.CharField(
+    clasificacion_pres = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={
             'placeholder': 'Ej: limpieza,jardin,...',

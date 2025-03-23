@@ -38,56 +38,60 @@
 
             <!-- Caja de la tabla de estado de cuenta -->
             <div class="bg-white rounded-lg shadow-md p-6">
+                {% if reportes %}
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">Estado de Cuenta</h2>
-                {% for r in reportes %}
-                <div class="mb-8">
-                    <h3 class="text-xl font-bold mb-4">Departamento: {{ r.departamento }}</h3>
-                    <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                        <table class="min-w-full">
-                            <thead class="bg-gray-200">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Mes/Año</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Alicuota</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Deuda</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Pago</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Saldo (Deuda - Pago)</th>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Deuda Acumulada</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                {% for item in r.reporte %}
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 text-sm text-gray-700">{{ item.mes }}/{{ item.anio }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">{{ item.alicuota }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">{{ item.deuda }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">
-                                        {% if item.pago == 0 %}
-                                            Sin Pago
-                                        {% else %}
-                                            {{ item.pago }}
-                                        {% endif %}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">
-                                        {% if item.saldo == 0 %}
-                                            0.00
-                                        {% else %}
-                                            {{ item.saldo }}
-                                        {% endif %}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">
-                                        {% if item.deuda_acumulada == 0 %}
-                                            0.00
-                                        {% else %}
-                                            {{ item.deuda_acumulada }}
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    {% for r in reportes %}
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4">Departamento: {{ r.departamento }}</h3>
+                        <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Mes/Año</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Alicuota</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Deuda</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Pago</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Saldo (Deuda - Pago)</th>
+                                        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase">Deuda Acumulada</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    {% for item in r.reporte %}
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 text-sm text-gray-700">{{ item.mes }}/{{ item.anio }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">{{ item.alicuota }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">{{ item.deuda }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            {% if item.pago == 0 %}
+                                                Sin Pago
+                                            {% else %}
+                                                {{ item.pago }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            {% if item.saldo == 0 %}
+                                                0.00
+                                            {% else %}
+                                                {{ item.saldo }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                            {% if item.deuda_acumulada == 0 %}
+                                                0.00
+                                            {% else %}
+                                                {{ item.deuda_acumulada }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">No se encontraron coincidencias</h2>
+                {% endif %}
             </div>
         </div>
     </section>

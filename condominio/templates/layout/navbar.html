@@ -12,6 +12,7 @@
     const gestRecDropdown = document.getElementById('gestRecDropdown');
     const gestAnaDropdown = document.getElementById('gestAnaDropdown');
     const gestEdifDropdown = document.getElementById('gestEdifDropdown');
+    const logoutDropdown = document.getElementById('logoutDropdown');
 
 
     if (
@@ -54,6 +55,14 @@
       gestEdifDropdown.classList.add('hidden');
     }
 
+    if (
+      logoutDropdown &&
+      !event.target.closest('#logoutDropdown') &&
+      !event.target.closest('button[onclick="toggleDropdown(\'logoutDropdown\')"]')
+    ) {
+        logoutDropdown.classList.add('hidden');
+    }
+
 
   });
 
@@ -65,7 +74,9 @@
   <header class="bg-white p-5 flex justify-between items-center">
       <div class="logo text-xl font-bold">CODOMI</div>
       <div class="user-info flex items-center">
-          <div class="admin-name mr-2.5">admin name</div>
+          <button onclick="toggleDropdown('logoutDropdown')" class="admin-name mr-2.5">{{ user.username }}</button>
+            <div id="logoutDropdown" class="absolute hidden bg-white text-gray-800 shadow-md rounded mt-2 w-48">
+                <a href="{% url 'iniciarSesion:logout' %}" class="block px-4 py-2 hover:bg-gray-100">Cerrar sesión</a>            </div>
           <div class="user-icon w-7 h-7 bg-gray-300 rounded-full"></div>
       </div>
   </header>

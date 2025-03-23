@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, Http404
+from django.http import Http404
 from django.db import connection
 from django.urls import reverse
-from .forms import FondoForm, MesAnioFiltroForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm, ComentarioForm
+from .forms import FondoForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm, ComentarioForm
 from .models import Fondo, Gasto, Presupuesto, Dpto, Asignacion, Recibo, Deuda, Comentario, Importe, ComentarioFrec
-from django.db.models import Sum
 from datetime import datetime, date
+import base64
 
 
 # Para ser guardado en la BD se genera la prox PK disponible en la tabla
@@ -281,6 +281,14 @@ def reciboBase(request, year, month, day, nro_dpto):
 
         iteradorGeneral -= 1
 
+    if edif.foto_edif:
+        foto_bytes = bytes(edif.foto_edif)
+        foto_base64 = base64.b64encode(foto_bytes).decode('utf-8')
+        from imghdr import what
+        image_type = what(None, foto_bytes)
+        foto_url = f"data:image/{image_type};base64,{foto_base64}" if image_type else None
+    else:
+        foto_url = None
 
 
 
@@ -317,6 +325,7 @@ def reciboBase(request, year, month, day, nro_dpto):
         'montoAnteriordl': montoAnteriordl,
         'montoAnteriorbs': montoAnteriorbs,
         'listaAdeudado': listaAdeudado,
+        'foto_url': foto_url,
     })
 
 def generarRecibo(request, year, month, day):
@@ -531,9 +540,6 @@ def generarRecibo(request, year, month, day):
                 return redirect(url)
                 
     return render(request, "generarRecibo.html", {
-#        'form_registro': form_registro,
-#        'form_filtro': form_filtro,
-#        'fondos': fondos,
         'recibo': recibo,
         'fondodl': fondodl,
         'form_presupuesto': form_presupuesto,

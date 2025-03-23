@@ -67,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    'middleware.middleware.LoginRequiredMiddleware',  # Middleware para autenticacion
 ]
 
 ROOT_URLCONF = 'condominio.urls'
