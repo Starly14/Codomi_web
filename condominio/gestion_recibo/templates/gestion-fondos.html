@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Fondos</title>
     {% tailwind_css %}
-
 </head>
 <body class="bg-gray-200 font-sans">
 
@@ -16,87 +15,82 @@
 
     <!-- Contenedor principal -->
     <div class="container mx-auto p-6">
-        <!-- Sección superior: Registro y Filtrado -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 
-            <!-- Sección de Registro -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Registrar Nuevo Ingreso</h2>
-                <form method="post" class="space-y-4">
-                    {% csrf_token %}
-                    <div class="space-y-4">
-                        {% for field in form_registro %}
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
-                            {% if field.name == "fecha_fondo" %}
-                            <input type="date" name="{{ field.name }}" class="w-full px-4 py-2 rounded-full border border-gray-300 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-300 date-input">
-                            {% else %}
-                            {{ field }}
-                            {% endif %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="col-span-1 space-y-6">
+                <!-- Sección de Filtrado -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtrar Fondos</h2>
+                    <form method="get" class="space-y-4">
+                        <div class="space-y-4">
+                            {% for field in form_filtro %}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
-                    <button type="submit" class="w-1/2 bg-indigo-900 text-white py-2 px-4 my-4 rounded-full hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                        Guardar Ingreso
-                    </button>
-                </form>
-            </div>
+                        <button type="submit"
+                            class="w-1/2 bg-indigo-900 text-white py-2 px-4 my-4 rounded-full hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                            Aplicar Filtros
+                        </button>
+                    </form>
+                </div>
 
-            <!-- Sección de Filtrado -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtrar Fondos</h2>
-                <form method="get" class="space-y-4">
-                    <div class="space-y-4">
-                        {% for field in form_filtro %}
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
-                            {{ field }}
+                <!-- Sección de Registro -->
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Registrar Nuevo Ingreso</h2>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="space-y-4">
+                            {% for field in form_registro %}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                                {% if field.name == "fecha_fondo" %}
+                                <input type="date" name="{{ field.name }}" class="w-full px-4 py-2 rounded-full border border-gray-300 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-300 date-input">
+                                {% else %}
+                                {{ field }}
+                                {% endif %}
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
-                    <button type="submit"
-                        class="w-1/2 bg-indigo-900 text-white py-2 px-4 my-4 rounded-full hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                        Aplicar Filtros
-                    </button>
-                </form>
+                        <button type="submit" class="w-1/2 bg-indigo-900 text-white py-2 px-4 my-4 rounded-full hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                            Guardar Ingreso
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
 
-        <!-- Sección de Listado -->
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Fondos</h2>
-            {% if fondos %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white border border-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Fecha</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Ingresos</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Egresos</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Moneda</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for fondo in fondos %}
-                        <tr class="hover:bg-gray-50 transition duration-200">
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ fondo.fecha_fondo|date:"d/m/Y H:i" }}
-                            </td>
-                            <td class="border px-4 py-2 text-sm text-gray-700">
-                                {{ fondo.ingresos }}
-                            </td>
-                            <td class="border px-4 py-2 text-sm text-gray-700">
-                                {{ fondo.egresos }}
-                            </td>
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ fondo.moneda_fondo }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <!-- Columna derecha: Sección de Listado -->
+            <div class="col-span-2 bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Fondos</h2>
+                {% if fondos %}
+                <div class="overflow-x-auto">
+                    <table class="bg-white border border-gray-200 w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Fecha</th>
+                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Ingresos</th>
+                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Egresos</th>
+                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Moneda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fondo in fondos %}
+                            <tr class="hover:bg-gray-50 transition duration-200">
+                                <td class="border px-2 py-1 text-md text-gray-700 text-center w-1/4">{{ fondo.fecha_fondo|date:"d/m/Y H:i" }}</td>
+                                <td class="border px-2 py-1 text-md text-gray-700 text-right w-1/4">{{ fondo.ingresos }}</td>
+                                <td class="border px-2 py-1 text-md text-gray-700 text-right w-1/4">{{ fondo.egresos }}</td>
+                                <td class="border px-2 py-1 text-md text-gray-700 text-right w-1/4">{{ fondo.moneda_fondo }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-gray-600">No se encontraron registros con los filtros aplicados.</p>
+                {% endif %}
             </div>
-            {% else %}
-            <p class="text-gray-600">No se encontraron registros con los filtros aplicados.</p>
-            {% endif %}
         </div>
     </div>
 
@@ -105,14 +99,12 @@
         /* Estilos para los selectores */
         select {
             width: 50%;
-            /* Ocupa el ancho completo del contenedor */
             border-radius: 9999px;
             padding: 0.5rem 1rem;
             border: 1px solid #d1d5db;
             transition: all 0.3s ease;
             outline: none;
             background-color: white;
-            /* Fondo blanco */
         }
 
         select:hover {
@@ -128,16 +120,13 @@
         /* Estilos para los inputs de fecha */
         input[type="date"].date-input {
             width: 50%;
-            /* Ocupa el ancho completo del contenedor */
             border-radius: 9999px;
             padding: 0.5rem 1rem;
             border: 1px solid #d1d5db;
             transition: all 0.3s ease;
             outline: none;
             background-color: white;
-            /* Fondo blanco */
             appearance: none;
-            /* Elimina los estilos nativos del navegador */
         }
 
         input[type="date"].date-input:hover {
@@ -153,9 +142,7 @@
         /* Estilos para el ícono del calendario en inputs de fecha */
         input[type="date"].date-input::-webkit-calendar-picker-indicator {
             filter: invert(0.5);
-            /* Cambia el color del ícono */
             cursor: pointer;
-            /* Cambia el cursor al pasar sobre el ícono */
         }
 
         /* Estilos para los inputs de texto */
@@ -163,14 +150,12 @@
         input[type="number"],
         input[type="date"] {
             width: 50%;
-            /* Ocupa el ancho completo del contenedor */
             border-radius: 9999px;
             padding: 0.5rem 1rem;
             border: 1px solid #d1d5db;
             transition: all 0.3s ease;
             outline: none;
             background-color: white;
-            /* Fondo blanco */
         }
 
         input[type="text"]:hover,
@@ -188,5 +173,4 @@
         }
     </style>
 </body>
-
 </html>

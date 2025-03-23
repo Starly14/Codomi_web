@@ -14,55 +14,60 @@
 
     <!-- Contenedor principal -->
     <div class="container mx-auto p-6">
-        <!-- Sección de Filtrado -->
-        <div class="bg-white shadow-md rounded-lg p-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtrar Importes</h2>
-            <form method="get" class="space-y-4">
-                <div class="space-y-4 w-[50%]">
-                    {% for field in filtro.form %}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
-                        {{ field }}
-                    </div>
-                    {% endfor %}
+        <!-- Grid para organizar las secciones -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Columna izquierda: Filtrado -->
+            <div class="col-span-1">
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtrar Importes</h2>
+                    <form method="get" class="space-y-4">
+                        <div class="space-y-4">
+                            {% for field in filtro.form %}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-900 text-white py-2 px-4 rounded-full hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95">
+                            Aplicar Filtros
+                        </button>
+                    </form>
                 </div>
-                <button type="submit" class="w-[50%] bg-indigo-900 text-white py-2 px-4 rounded-full block text-center hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                    Aplicar Filtros
-                </button>
-            </form>
-        </div>
-
-        <!-- Sección de Listado -->
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Importes</h2>
-            {% if queryset %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white border border-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Departamento</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Fecha</th>
-                            <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Pago (Dl)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in queryset %}
-                        <tr class="hover:bg-gray-50 transition duration-200">
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ item.id_dpto.id_dpto }}</td>
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ item.fecha_importe|date:"d/m/Y H:i" }}</td>
-                            <td class="border px-4 py-2 text-sm text-gray-700">{{ item.pago_dl }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
             </div>
-            {% else %}
-            <p class="text-gray-600">No se encontraron registros con los filtros aplicados.</p>
-            {% endif %}
+
+            <!-- Columna derecha: Tabla -->
+            <div class="col-span-2">
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Importes</h2>
+                    {% if queryset %}
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Departamento</th>
+                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Fecha</th>
+                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Pago (Dl)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in queryset %}
+                                <tr class="hover:bg-gray-50 transition duration-200">
+                                    <td class="border px-4 py-2 text-sm text-gray-700">{{ item.id_dpto.id_dpto }}</td>
+                                    <td class="border px-4 py-2 text-sm text-gray-700">{{ item.fecha_importe|date:"d/m/Y H:i" }}</td>
+                                    <td class="border px-4 py-2 text-sm text-gray-700">{{ item.pago_dl }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-600">No se encontraron registros con los filtros aplicados.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
-</body>
-</html>
 
     <!-- Estilos personalizados para los selectores -->
     <style>
