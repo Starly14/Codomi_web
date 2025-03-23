@@ -140,6 +140,18 @@ def registrarPropietarioView(request):
         'fecha_form': fecha_form,
     })
 
+def pre_propietario_detail(request):
+    # se definen las variables iniciales
+    propietarios = Propietario.objects.all()
+
+    if request.method == 'POST':
+        if 'redirect_propietario' in request.POST: #redirige al editar propietario del propietario seleccionado
+            propietario_id = request.POST.get('propietario_id')
+            return redirect('propietario-detail', id=propietario_id) 
+
+    return render(request, 'preEditarPropietario.html', {
+        'propietarios': propietarios,
+    })
 
 
 def plantillaBase(request):
