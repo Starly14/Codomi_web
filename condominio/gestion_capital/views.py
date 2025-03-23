@@ -34,6 +34,9 @@ def historial_recibos(request):
     })
 
 def consultar_fondo(request):
+
+    print("DATOS FORMULARIO")
+    
     form = FondoFiltroForm(request.GET)
     hoy = timezone.now()
     inicio_mes = hoy.replace(day=1)
@@ -50,7 +53,7 @@ def consultar_fondo(request):
 
         # Validar que los campos no sean "----"
         if mes != "----" and anio != "----":
-            datos_mostrados = True  # Se mostrarán los datos
+            datos_mostrados = True  
 
     # Calcular fechas de filtrado solo si mes y año son válidos
     if datos_mostrados:
@@ -73,8 +76,8 @@ def consultar_fondo(request):
         fin_mes_anterior = inicio_mes
 
     # Consultas para el mes seleccionado o actual
-    fondos_actuales = Fondo.objects.filter(fecha_fondo__gte=inicio_mes, fecha_fondo__lt=fin_mes)
-    fondos_anteriores = Fondo.objects.filter(fecha_fondo__gte=inicio_mes_anterior, fecha_fondo__lt=fin_mes_anterior)
+    fondos_actuales = Fondo.objects.filter(fecha_fondo__range=(inicio_mes, fin_mes))
+    fondos_anteriores = Fondo.objects.filter(fecha_fondo__range=(inicio_mes_anterior, fin_mes_anterior))
 
     # Calcular saldos e ingresos/egresos para ambas monedas
     def calcular_totales(fondos):
@@ -86,9 +89,16 @@ def consultar_fondo(request):
         egresos_dl = fondos.filter(moneda_fondo='$').aggregate(total=Sum('egresos'))['total'] or 0
         return saldo_bs, saldo_dl, ingresos_bs, ingresos_dl, egresos_bs, egresos_dl
 
+
+
     if datos_mostrados:
         saldo_actual_bs, saldo_actual_dl, ingresos_actual_bs, ingresos_actual_dl, egresos_actual_bs, egresos_actual_dl = calcular_totales(fondos_actuales)
         saldo_anterior_bs, saldo_anterior_dl, ingresos_anterior_bs, ingresos_anterior_dl, egresos_anterior_bs, egresos_anterior_dl = calcular_totales(fondos_anteriores)
+
+        print("DATOS FORMULARIO")
+        print("formulario vaildo", form.is_valid())
+        print("mes", mes)
+        print("anio", anio) 
 
         contexto = {
             'form': form,

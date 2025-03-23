@@ -23,14 +23,12 @@ def gestion_fondos(request):
             fondo.id_fondo = obtener_nuevo_id_fondo()
             fondo.save()
             return redirect('gestion-fondos')  # Recargamos la misma vista
-
-    # Si no es POST, crear formulario vacío
     else:
         form_registro = FondoForm()
 
     # Procesar formulario de FILTRADO (GET)
     form_filtro = FechaFiltroForm(request.GET or None)
-    fondos = Fondo.objects.all()
+    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)  # Inicializa con fondos válidos
 
     if form_filtro.is_valid():
         fecha_inicio = form_filtro.cleaned_data.get('fecha_inicio')
@@ -38,8 +36,6 @@ def gestion_fondos(request):
         
         if fecha_inicio and fecha_fin:
             fondos = fondos.filter(fecha_fondo__range=[fecha_inicio, fecha_fin])
-    
-    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)
 
     return render(request, 'gestion-fondos.html', {
         'form_registro': form_registro,
