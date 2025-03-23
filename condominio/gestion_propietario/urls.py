@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('editarPropietario/<int:id>/', views.propietario_detail, name='propietario-detail'),
+    path('editarPropietario/', views.pre_propietario_detail, name='pre-propietario-detail'),
     path('registrarPropietario/', views.registrarPropietarioView, name='registrarPropietario'),
     path('plantilla/', views.plantillaBase, name='plantillaBase'),
 ]

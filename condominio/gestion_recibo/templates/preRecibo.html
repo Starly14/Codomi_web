@@ -1,0 +1,62 @@
+{% load tailwind_tags %}
+{% block scripts %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Propietario</title>
+
+    <script> 
+        function toggleDropdown1() {
+            const dropdown = document.getElementById('reciboDropdown');
+            dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
+        }
+    
+        // Agregar la función para ocultar los menús desplegables al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const reciboDropdown = document.getElementById('reciboDropdown');
+    
+            if (!event.target.closest('#reciboDropdown') && !event.target.closest('button[onclick="toggleDropdown1()"]')) {
+                reciboDropdown.classList.add('hidden');
+            }
+        });
+    </script>
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-200">
+    {% include 'layout/navbar.html' %}
+
+    <section class="propietario p-6 rounded-lg w-screen flex justify-center">
+        <div class="flex flex-col w-full max-w-4xl bg-white rounded-lg shadow-md p-6 px-8" style="width: 40rem;">
+            <!-- Fila 1: Propietario y Editar Nombre -->
+            <div class="flex flex-wrap flex-col pt-10">
+                <!-- Propietario -->
+                <div class="w-full px-4 mb-8">
+                    <h2 class="text-xl mb-4">Recibo a fecha de:</h2>
+                    <button onclick="toggleDropdown1()" class="w-full bg-indigo-900 text-white py-2 px-4 my-2 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                        Seleccionar recibo
+                    </button>
+                    <div id="reciboDropdown" class="hidden mt-2 w-full">
+                        <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute">
+                            {% for recibo in recibos %}
+                            <li class="hover:bg-gray-100 p-2">
+                                <form method="post" class="flex items-center">
+                                    <input type="hidden" name="recibo_id" value="{{ recibo.recibo.id_recibo }}">
+                                    <button type="submit" name="redirect_recibo" class="w-full text-left hover:font-semibold">{{ recibo.recibo.fecha_recibo.day }} de {{recibo.mes}}, {{recibo.recibo.fecha_recibo.year}}</button>
+                                    {% csrf_token %}
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+{% endblock %}
+{% endblock %}
+</html>
