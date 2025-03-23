@@ -8,4 +8,5 @@ urlpatterns = [
     path('subir_tasa/', views.api_subir_nueva_tasa, name='subir_tasa'),
     path('ultima_tasa/', views.api_obtener_ultima_tasa, name='ultima_tasa'),
     path('rango_tasas/', views.api_consultar_rango_tasas, name='rango_tasas'),
+    path('presupuestos_vs_gastos/', views.presupuestos_vs_gastos, name='comparar_estadistica'),
 ]
