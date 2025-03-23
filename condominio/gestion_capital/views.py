@@ -12,9 +12,6 @@ from .filters import HistorialRecibosFilter
 from .models import Importe
 from .filters import FiltroFecha
 
-def gestion_capital(request):
-    return render(request, "gestion_capital/gestionCapital.html")
-
 def vista_con_filtro(request):
     filtro = FiltroFecha(request.GET)
     # Queryset inicial (todos los query)

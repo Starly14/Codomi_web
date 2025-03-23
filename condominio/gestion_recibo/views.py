@@ -47,44 +47,9 @@ def gestion_fondos(request):
         'fondos': fondos
     })
 
-def reporte_mensual(request):
-    form = MesAnioFiltroForm(request.GET)
-    gastos = Gasto.objects.none()
-    presupuestos = Presupuesto.objects.none()
-    ingresos = Fondo.objects.none()
-    egresos = Fondo.objects.none()
-    total_ingresos = 0
-    total_egresos = 0
-
-    if form.is_valid():
-        mes = form.cleaned_data['mes']
-        anio = form.cleaned_data['anio']
-        gastos = Gasto.objects.filter(fecha_gasto__year=anio, fecha_gasto__month=mes)
-        presupuestos = Presupuesto.objects.filter(fecha_pres__year=anio, fecha_pres__month=mes)
-        ingresos = Fondo.objects.filter(fecha_fondo__year=anio, fecha_fondo__month=mes, ingresos__gt=0)
-        egresos = Fondo.objects.filter(fecha_fondo__year=anio, fecha_fondo__month=mes, egresos__gt=0)
-        total_ingresos = ingresos.aggregate(Sum('ingresos'))['ingresos__sum'] or 0
-        total_egresos = egresos.aggregate(Sum('egresos'))['egresos__sum'] or 0
-
-    return render(request, 'reporte_mensual.html', {
-        'form': form,
-        'gastos': gastos,
-        'presupuestos': presupuestos,
-        'ingresos': ingresos,
-        'egresos': egresos,
-        'total_ingresos': total_ingresos,
-        'total_egresos': total_egresos
-    })
-
 def reciboBase(request, year, month, day, nro_dpto):
 
     dpto = get_object_or_404(Dpto, id_dpto=nro_dpto)
-
-    # Filtrar asignaciones por el departamento y con fecha menor a `year`
-    asignacion = Asignacion.objects.filter(
-        id_dpto=dpto,
-        fecha_inicio__lt=f"{year}-{month}-{day}"  # Fecha menor al año dado
-    ).order_by('-fecha_inicio').first()  # Ordenar por fecha descendente y tomar el más reciente
 
     fechas = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
@@ -174,20 +139,6 @@ def reciboBase(request, year, month, day, nro_dpto):
     
     totalImportes = sum(importes)
     totalDeudas = sum(deudas)
-
-    print(totalImportes)
-    print(totalDeudas)
-    for i in importes:
-        print(i)
-
-    print('\n\n\nespacio\n\n\n')
-
-    for i in deudas:
-        print(i)
-
-    print('\n\n\nespacio\n\n\n')
-
-    print(totalImportes-totalDeudas)
 
     deudaFinal = totalDeudas-totalImportes
     totalPagar = totales + deudaFinal
@@ -598,3 +549,53 @@ def generarRecibo(request, year, month, day):
         'comentarios': comentarios,
     })
     
+    
+def preReciboBase(request):
+    # se definen las variables iniciales
+    recibosCrudos = Recibo.objects.all()
+    recibos = []
+    meses = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 9:'Septiembre', 10:'Octubre', 11:'Noviembre', 12:'Diciembre'}
+    for i in recibosCrudos:
+        recibos.append({'recibo': i, 'mes': meses[i.fecha_recibo.month]})
+    if request.method == 'POST':
+        if 'redirect_recibo' in request.POST: #redirige al ver recibo de la fecha seleccionada
+            recibo_id = request.POST.get('recibo_id')
+            recibo = Recibo.objects.get(id_recibo=recibo_id)
+            year = recibo.fecha_recibo.year
+            month = recibo.fecha_recibo.month
+            day = recibo.fecha_recibo.day
+            return redirect('reciboBase', year, month, day, 11) 
+
+    return render(request, 'preRecibo.html', {
+        'recibos': recibos,
+        'meses': meses,
+    })
+
+
+def preGenerarRecibo(request):
+    fondos = Fondo.objects.filter(moneda_fondo='bs', ingresos=0.00, egresos=0.00)
+    recibosCrudos = []
+    for fondo in fondos:
+        recibos = Recibo.objects.filter(
+            fecha_recibo__year=fondo.fecha_fondo.year,
+            fecha_recibo__month=fondo.fecha_fondo.month
+        )
+        if recibos.exists():  # Verificar si hay resultados
+            recibosCrudos.append(recibos.first())  # Agregar el primer recibo encontrado
+    recibos = []
+    meses = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 9:'Septiembre', 10:'Octubre', 11:'Noviembre', 12:'Diciembre'}
+    for i in recibosCrudos:
+        recibos.append({'recibo': i, 'mes': meses[i.fecha_recibo.month]})
+    if request.method == 'POST':
+        if 'redirect_recibo' in request.POST: #redirige al ver recibo de la fecha seleccionada
+            recibo_id = request.POST.get('recibo_id')
+            recibo = Recibo.objects.get(id_recibo=recibo_id)
+            year = recibo.fecha_recibo.year
+            month = recibo.fecha_recibo.month
+            day = recibo.fecha_recibo.day
+            return redirect('generar_recibo', year, month, day) 
+
+    return render(request, 'preGenerarRecibo.html', {
+        'recibos': recibos,
+        'meses': meses,
+    })
