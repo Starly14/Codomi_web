@@ -108,8 +108,6 @@ def ingresos_egresos_saldo(request):
         for key, value in promedios_tasas.items():
             promedios_tasas[key] = round(sum(value) / len(value), 4)
 
-    promedios_tasas.update({(2025, 1): float(promedio_tasa_mes(2025, 1))})
-
     fondos = (Fondo.objects
               .filter(fecha_fondo__range=[fecha_inicio, fecha_fin])
               .annotate(mes=ExtractMonth('fecha_fondo'), anio=ExtractYear('fecha_fondo'))
@@ -248,42 +246,40 @@ def obtener_promedios_rango():
 
 def presupuestos_vs_gastos(request):
 
-    fecha_min, fecha_max = obtener_rango_fechas_PG()  # Obtener el rango inicial
+    fecha_min, fecha_max = obtener_rango_fechas_PG()  
 
-    # Si el usuario envía el formulario, actualizar las fechas
-    if request.method == 'GET':
+    if request.method == 'GET' and 'fecha_inicio' in request.GET and 'fecha_fin' in request.GET:
         form = FechaFiltroForm(request.GET)
         if form.is_valid():
-            fecha_min = form.cleaned_data['fecha_inicio']
+            fecha_inicio = form.cleaned_data['fecha_inicio']
             fecha_max = form.cleaned_data['fecha_fin']
-
-    # Obtener tasas de cambio en el rango de fechas seleccionado
+            # En este caso, actualizamos los valores de fecha_min y fecha_max con los enviados por el usuario
+            fecha_min = fecha_inicio
+            fecha_max = fecha_max
+        else:
+            fecha_inicio, fecha_max = fecha_min, fecha_max
+    else:
+        form = FechaFiltroForm(initial={'fecha_inicio': fecha_min, 'fecha_fin': fecha_max})
+        fecha_inicio, fecha_max = fecha_min, fecha_max
     promedios_tasas = obtener_promedios_rango()
-
-
-    promedioDiciembreAdicional = float (promedio_tasa_mes(2024, 12))
-    print("PROMEDIO DICIEMBRE ADICIONAL")  
-    print(promedioDiciembreAdicional)
-
-    promedios_tasas.update({(2024, 12): promedioDiciembreAdicional})
 
     print("PROMEDIOS TASAS PRESUPUESTOS VS GASTOS")
     print(promedios_tasas)
     presupuestos = (Presupuesto.objects
-                    .annotate(mes=ExtractMonth('fecha_pres'), anio=ExtractYear('fecha_pres'))
-                    .values('mes', 'anio') # AGRUPAMOS POR MES Y ANIO
-                    .annotate(total_pres=Sum('monto_pres_dl')) # SE AÑADE EL TOTAL DE PRESUPUESTOS 
-                    .order_by('anio', 'mes'))
+                .filter(fecha_pres__range=[fecha_min, fecha_max])
+                .annotate(mes=ExtractMonth('fecha_pres'), anio=ExtractYear('fecha_pres'))
+                .values('mes', 'anio')
+                .annotate(total_pres=Sum('monto_pres_dl'))
+                .order_by('anio', 'mes'))
     
     print("PRESUPUESTOS") 
     print(presupuestos)
     
-    gastos = (
-    Gasto.objects
-        .annotate(mes=ExtractMonth('fecha_gasto'), anio=ExtractYear('fecha_gasto'))
-        .values('mes', 'anio', 'monto_gasto_bs', 'monto_gasto_dl')
-        .order_by('anio', 'mes')
-    )
+    gastos = (Gasto.objects
+          .filter(fecha_gasto__range=[fecha_min, fecha_max])
+          .annotate(mes=ExtractMonth('fecha_gasto'), anio=ExtractYear('fecha_gasto'))
+          .values('mes', 'anio', 'monto_gasto_bs', 'monto_gasto_dl')
+          .order_by('anio', 'mes'))
 
     print("GASTOS")
     print(gastos)
@@ -372,10 +368,6 @@ def presupuestos_vs_gastos(request):
 
     return render(request, 'presupuestos_vs_gastos.html', contexto)
 
-
-
-
-
 def clasificacion(request):
     # Obtener todos los gastos
     gastos = Gasto.objects.all()
@@ -399,3 +391,11 @@ def clasificacion(request):
         'frecuencias': df['Frecuencia'].tolist(),
         }
     return render(request, 'clasificacion_torta.html', context)
+
+def intentoComparacion(request):
+    Gastos = Gasto.objects.all()
+
+
+    
+    
+    return render(request, 'intentoComparacion.html')
