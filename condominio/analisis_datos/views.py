@@ -13,6 +13,11 @@ from decimal import Decimal
 from django.db.models import Min, Max
 from datetime import datetime
 
+from django.shortcuts import render
+from .models import Gasto
+from collections import Counter
+import pandas as pd
+
 # Vista para renderizar el HTML principal
 def analisis_datos(request):
     return render(request, 'analisis_datos.html')
@@ -284,6 +289,41 @@ def presupuestos_vs_gastos(request):
     }
 
     return render(request, 'presupuestos_vs_gastos.html', contexto)
+
+
+
+
+
+def clasificacion(request):
+    # Obtener todos los gastos
+    gastos = Gasto.objects.all()
+
+    # Procesar las clasificaciones
+    clasificaciones = []
+    for gasto in gastos:
+        if gasto.clasificacion_gasto:
+            # Dividir las clasificaciones por comas y agregarlas a la lista
+            clasificaciones.extend(gasto.clasificacion_gasto.split(','))
+
+    # Contar la frecuencia de cada clasificación
+    frecuencia = Counter(clasificaciones)
+
+    # Convertir a un DataFrame de Pandas para facilitar el manejo
+    df = pd.DataFrame(frecuencia.items(), columns=['Clasificacion', 'Frecuencia'])
+
+    # Pasar los datos a la plantilla
+    context = {
+        'clasificaciones': df['Clasificacion'].tolist(),
+        'frecuencias': df['Frecuencia'].tolist(),
+        }
+    return render(request, 'clasificacion_torta.html', context)
+
+
+
+
+
+
+
 
 '''
 def conversion_dl(anio, mes, monto_bs, monto_dl):
