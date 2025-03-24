@@ -3,12 +3,15 @@
     <button type="submit">Filtrar</button>
     <button type="button" id="reset">Restablecer</button>
 </form>
-
 <script>
     document.getElementById("reset").addEventListener("click", function() {
         window.location.href = window.location.pathname;
     });
 </script>
+
+
 <div>
-    {{ plot_div|safe }} 
+    {{ plot_div|safe }}
 </div>
+
+<!-- FUCK <html> -->
