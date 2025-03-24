@@ -8,7 +8,6 @@ from django.core.exceptions import ValidationError
 
 
 
-# UPDATE: he borrado detalles_fondo de los campos a llenar por el administrador
 class FondoForm(forms.ModelForm):
     ingresos = forms.DecimalField(
         min_value=0,
@@ -29,6 +28,28 @@ class FondoForm(forms.ModelForm):
                 'class': 'fecha-input'
             }),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha = cleaned_data.get("fecha_fondo")
+        if not fecha:  # Validar que la fecha no esté vacía
+            self.add_error('fecha_fondo', "La fecha del fondo es obligatoria.")
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        self.allowed_month = kwargs.pop('allowed_month', None)
+        self.allowed_year = kwargs.pop('allowed_year', None)
+        super(FondoForm, self).__init__(*args, **kwargs)  # Corregido
+        self.fields['fecha_fondo'].label = 'Fecha del Fondo'  # Corregido
+
+    def clean_fecha_fondo(self):  # Corregido: 'clean_fecha_fondo' en lugar de 'clean_fecha_gasto'
+        fecha = self.cleaned_data.get('fecha_fondo')
+        if fecha and self.allowed_month and self.allowed_year:
+            if fecha.month > self.allowed_month or fecha.year > self.allowed_year:
+                raise forms.ValidationError(
+                    f'La fecha debe ser previa al mes {self.allowed_month} y al año {self.allowed_year}.'
+                )
+        return fecha
 
 class FechaFiltroForm(forms.Form):
     fecha_inicio = forms.DateField(
