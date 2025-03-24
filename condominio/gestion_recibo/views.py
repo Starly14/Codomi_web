@@ -15,9 +15,13 @@ def obtener_nuevo_id_fondo():
         return cursor.fetchone()[0]
 
 def gestion_fondos(request):
+    fecha_actual = date.today()
+    year = fecha_actual.year
+    month = fecha_actual.month
+
     # Procesar formulario de REGISTRO (POST)
     if request.method == 'POST':
-        form_registro = FondoForm(request.POST)
+        form_registro = FondoForm(request.POST, allowed_month=month, allowed_year=year)  # Corregido
         if form_registro.is_valid():
             fondo = form_registro.save(commit=False)
             fondo.id_fondo = obtener_nuevo_id_fondo()
@@ -26,7 +30,7 @@ def gestion_fondos(request):
 
     # Si no es POST, crear formulario vacío
     else:
-        form_registro = FondoForm()
+        form_registro = FondoForm(allowed_month=month, allowed_year=year)  # Corregido
 
     # Procesar formulario de FILTRADO (GET)
     form_filtro = FechaFiltroForm(request.GET or None)

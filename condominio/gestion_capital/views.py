@@ -177,7 +177,6 @@ def estado_cuenta(request):
                 deuda = deuda_dict.get((anio, mes), 0)
                 pago, fecha_pago = pago_dict.get((anio, mes), (0, None))
 
-                print("COMIENZO DEL BUCBLEEEE")
                 saldo = deuda + deuda_acumulada - pago
 
                 if saldo < 0:  # Pago mayor que la deuda total (actual + acumulada)
@@ -185,8 +184,6 @@ def estado_cuenta(request):
                     deuda_acumulada = 0
                     saldo = 0
 
-                    print("SALDO NEGATIVO, PAGO DE MAS")
-                    print("DEUDA ACUMULADA: ", deuda_acumulada)
                     if fecha_pago:
                         # PARA QUE NO LLORE POR EL NAIVE
                         if timezone.is_naive(fecha_pago):
