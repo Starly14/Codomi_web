@@ -1,0 +1,48 @@
+{% load tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificacion Grafico</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-200 font-sans">
+    {% include 'layout/navbar.html' %}
+
+      <!-- Contenedor principal -->
+      <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-4">Gráfica de Gastos por Clasificación</h1>
+        <div id="grafica" class="bg-white shadow-md rounded-lg p-6 "></div>
+    </div>
+
+    <!-- Script para generar la gráfica -->
+    <script>
+        // Datos desde Django
+        const clasificaciones = {{ clasificaciones|safe }};
+        const frecuencias = {{ frecuencias|safe }};
+
+        // Crear la gráfica de pastel
+        const data = [{
+            values: frecuencias,
+            labels: clasificaciones,
+            type: 'pie',
+            textinfo: 'label+percent',
+            hoverinfo: 'label+value',
+            hole: 0.4, // Para un gráfico de dona
+        }];
+
+        const layout = {
+            title: 'Distribución de Gastos por Clasificación',
+            showlegend: true,
+            height: 600, // Altura de la gráfica
+            width: 900,  // Ancho de la gráfica
+            margin: { l: 50, r: 50, b: 50, t: 50, pad: 4 }, // Márgenes
+        };
+
+        Plotly.newPlot('grafica', data, layout);
+    </script>
+</body>
+</html>

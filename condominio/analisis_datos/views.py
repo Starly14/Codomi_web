@@ -14,6 +14,11 @@ from django.db.models import Min, Max
 from datetime import datetime
 from .forms import FechaFiltroForm
 
+from django.shortcuts import render
+from .models import Gasto
+from collections import Counter
+import pandas as pd
+
 # Vista para renderizar el HTML principal
 def analisis_datos(request):
     return render(request, 'analisis_datos.html')
@@ -242,6 +247,7 @@ def obtener_promedios_rango():
     return {}
 
 def presupuestos_vs_gastos(request):
+
     fecha_min, fecha_max = obtener_rango_fechas_PG()  # Obtener el rango inicial
 
     # Si el usuario envía el formulario, actualizar las fechas
@@ -254,51 +260,142 @@ def presupuestos_vs_gastos(request):
     # Obtener tasas de cambio en el rango de fechas seleccionado
     promedios_tasas = obtener_promedios_rango()
 
-    # Consultar presupuestos en el rango seleccionado
+
+    promedioDiciembreAdicional = float (promedio_tasa_mes(2024, 12))
+    print("PROMEDIO DICIEMBRE ADICIONAL")  
+    print(promedioDiciembreAdicional)
+
+    promedios_tasas.update({(2024, 12): promedioDiciembreAdicional})
+
+    print("PROMEDIOS TASAS PRESUPUESTOS VS GASTOS")
+    print(promedios_tasas)
     presupuestos = (Presupuesto.objects
-                    .filter(fecha_pres__range=[fecha_min, fecha_max])
                     .annotate(mes=ExtractMonth('fecha_pres'), anio=ExtractYear('fecha_pres'))
-                    .values('mes', 'anio')
-                    .annotate(total_pres=Sum('monto_pres_dl'))
+                    .values('mes', 'anio') # AGRUPAMOS POR MES Y ANIO
+                    .annotate(total_pres=Sum('monto_pres_dl')) # SE AÑADE EL TOTAL DE PRESUPUESTOS 
                     .order_by('anio', 'mes'))
+    
+    print("PRESUPUESTOS") 
+    print(presupuestos)
+    
+    gastos = (
+    Gasto.objects
+        .annotate(mes=ExtractMonth('fecha_gasto'), anio=ExtractYear('fecha_gasto'))
+        .values('mes', 'anio', 'monto_gasto_bs', 'monto_gasto_dl')
+        .order_by('anio', 'mes')
+    )
 
-    # Consultar gastos en el rango seleccionado
-    gastos = (Gasto.objects
-              .filter(fecha_gasto__range=[fecha_min, fecha_max])
-              .annotate(mes=ExtractMonth('fecha_gasto'), anio=ExtractYear('fecha_gasto'))
-              .values('mes', 'anio', 'monto_gasto_bs', 'monto_gasto_dl')
-              .order_by('anio', 'mes'))
+    print("GASTOS")
+    print(gastos)
 
-    # Procesar datos de gastos con conversión de moneda
     data_gastos = {}
+
     for gasto in gastos:
         anio, mes = gasto['anio'], gasto['mes']
-        monto_dolarizado = float(gasto['monto_gasto_dl']) if gasto['monto_gasto_dl'] else float(gasto['monto_gasto_bs']) / promedios_tasas.get((anio, mes), 1)
-        
+
+        if gasto['monto_gasto_dl'] != None:
+            monto_dolarizado = float(gasto['monto_gasto_dl'])
+        elif gasto['monto_gasto_bs'] != None and gasto['monto_gasto_dl'] == None:
+            # LOGICA DE CONVERSION
+            tasa_promedio = promedios_tasas.get((anio, mes), 1)  # SE TOMA EL PROMEDIO DE LA TASA PARA ESE AGNO Y MES
+            #print("TASA PROMEDIO")
+            #print(tasa_promedio)
+
+            #print("MONTOS UN POCO RAROS EN BS")
+            #print(gasto['monto_gasto_bs'])
+            if tasa_promedio != 0:
+                monto_dolarizado = round(float(gasto['monto_gasto_bs']) / tasa_promedio, 2)                   
+                #print(monto_dolarizado)
+          
+
+        # Acumular el gasto dolarizado por mes/año
         if (anio, mes) not in data_gastos:
             data_gastos[(anio, mes)] = 0
         data_gastos[(anio, mes)] += monto_dolarizado
 
-    # Procesar datos de presupuestos
-    data_pres = { (item['anio'], item['mes']): item.get('total_pres', 0) for item in presupuestos }
+    # Convertir resultados de presupuestos a diccionario
+    data_pres = {}
 
-    # Ordenar claves
+    for item in presupuestos:
+        clave = (item['anio'], item['mes'])
+        total_pres = item.get('total_pres', 0) or 0
+        if total_pres > 0:
+            data_pres[clave] = total_pres
+            # No hay problema que sean decimales
+
+    print("DATA PRESUPUESTO")
+    print(data_pres)
+
+    # Unir las claves (mes, anio) de ambos conjuntos y ordenarlas
     keys = sorted(set(data_pres.keys()).union(data_gastos.keys()))
-    meses = [f"{mes:02d}/{anio}" for anio, mes in keys]
-    presupuestos_values = [data_pres.get(key, 0) for key in keys]
-    gastos_values = [data_gastos.get(key, 0) for key in keys]
+
+    # Preparar listas para el gráfico
+    meses = []
+    presupuestos_values = []
+    gastos_values = []
+
+    for key in keys:
+        anio, mes = key
+        label = f"{mes:02d}/{anio}"
+        meses.append(label)
+        presupuestos_values.append(data_pres.get(key, 0))
+        gastos_values.append(data_gastos.get(key, 0))
 
     # Crear el gráfico con Plotly
     fig = go.Figure()
-    fig.add_trace(go.Bar(x=meses, y=presupuestos_values, name='Presupuestos (USD)', marker_color='blue'))
-    fig.add_trace(go.Bar(x=meses, y=gastos_values, name='Gastos (USD)', marker_color='red'))
-    
-    fig.update_layout(title='Relación entre Presupuestos y Gastos (USD)',
-                      xaxis_title='Mes/Año',
-                      yaxis_title='Monto en USD',
-                      barmode='group')
+    fig.add_trace(go.Bar(
+        x=meses,
+        y=presupuestos_values,
+        name='Presupuestos (USD)',
+        marker_color='blue'
+    ))
+    fig.add_trace(go.Bar(
+        x=meses,
+        y=gastos_values,
+        name='Gastos (USD)',
+        marker_color='red'
+    ))
+    fig.update_layout(
+        title='Relación entre Presupuestos y Gastos en USD a lo largo de los meses',
+        xaxis_title='Mes/Año',
+        yaxis_title='Monto en USD',
+        barmode='group'
+    )
 
+    # Obtener el código HTML del gráfico
     plot_div = plot(fig, output_type='div', include_plotlyjs=True)
 
-    contexto = {'plot_div': plot_div, 'form': form}
+    contexto = {
+        'plot_div': plot_div,
+        'form': form
+    }
+
     return render(request, 'presupuestos_vs_gastos.html', contexto)
+
+
+
+
+
+def clasificacion(request):
+    # Obtener todos los gastos
+    gastos = Gasto.objects.all()
+
+    # Procesar las clasificaciones
+    clasificaciones = []
+    for gasto in gastos:
+        if gasto.clasificacion_gasto:
+            # Dividir las clasificaciones por comas y agregarlas a la lista
+            clasificaciones.extend(gasto.clasificacion_gasto.split(','))
+
+    # Contar la frecuencia de cada clasificación
+    frecuencia = Counter(clasificaciones)
+
+    # Convertir a un DataFrame de Pandas para facilitar el manejo
+    df = pd.DataFrame(frecuencia.items(), columns=['Clasificacion', 'Frecuencia'])
+
+    # Pasar los datos a la plantilla
+    context = {
+        'clasificaciones': df['Clasificacion'].tolist(),
+        'frecuencias': df['Frecuencia'].tolist(),
+        }
+    return render(request, 'clasificacion_torta.html', context)
