@@ -7,7 +7,7 @@
 
 
 document.addEventListener('click', function (event) {
-  const dropdowns = ['gestPropDropdown', 'gestCapDropdown', 'gestRecDropdown', 'gestAnaDropdown', 'gestEdifDropdown'];
+  const dropdowns = ['gestPropDropdown', 'gestCapDropdown', 'gestRecDropdown', 'gestAnaDropdown', 'gestEdifDropdown', 'logoutDropdown'];
   dropdowns.forEach((id) => {
     const dropdown = document.getElementById(id);
     if (dropdown && !event.target.closest(`#${id}`) && !event.target.closest(`button[onclick*="${id}"]`)) {
@@ -18,13 +18,26 @@ document.addEventListener('click', function (event) {
   });
 });
 </script>
+
+
 <section class="sticky top-0 z-10 shadow-md w-screen">
   <header class="bg-white p-5 flex justify-between items-center">
     <div class="logo text-xl font-bold">CODOMI</div>
+    
     <div class="user-info flex items-center">
-      <div class="admin-name mr-2.5">admin name</div>
-      <div class="user-icon w-7 h-7 bg-gray-300 rounded-full"></div>
+      <button onclick="toggleDropdown('logoutDropdown')" class="admin-name mr-2.5">{{ user.username }}</button>
+        <div id="logoutDropdown" class="absolute scale-0 bg-white text-gray-800 shadow-md rounded mt-2 w-32 absolute -ml-5">
+            <a href="{% url 'iniciarSesion:logout' %}" class="block px-4 py-2 hover:bg-gray-100">Cerrar sesión</a>
+        </div>
+        <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="20" fill="#e5e7eb"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M26.0002 16C26.0002 19.3137 23.314 22 20.0002 22C16.6865 22 14.0002 19.3137 14.0002 16C14.0002 12.6863 16.6865 10 20.0002 10C23.314 10 26.0002 12.6863 26.0002 16ZM24.0002 16C24.0002 18.2091 22.2094 20 20.0002 20C17.7911 20 16.0002 18.2091 16.0002 16C16.0002 13.7909 17.7911 12 20.0002 12C22.2094 12 24.0002 13.7909 24.0002 16Z" fill="#242424"/>
+          <path d="M20.0002 25C13.5259 25 8.00952 28.8284 5.9082 34.192C6.4201 34.7004 6.95934 35.1812 7.52353 35.6321C9.08827 30.7077 13.997 27 20.0002 27C26.0035 27 30.9122 30.7077 32.477 35.6321C33.0412 35.1812 33.5804 34.7004 34.0923 34.1921C31.991 28.8284 26.4746 25 20.0002 25Z" fill="#242424"/>
+        </svg>
+              
     </div>
+
+
   </header>
 
   <nav class="bg-slate-500 text-white w-screen">
