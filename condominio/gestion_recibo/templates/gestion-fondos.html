@@ -1,175 +1,233 @@
 {% load tailwind_tags %}
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Fondos</title>
+    <title>Gestión de Fondos | Condominio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% tailwind_css %}
 </head>
-<body class="bg-gray-200 font-sans">
+<body class="bg-gray-100 font-sans">
 
     <!-- Navbar -->
     {% include 'layout/navbar.html' %}
 
     <!-- Contenedor principal -->
-    <div class="container mx-auto p-6">
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Encabezado -->
+           
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="col-span-1 space-y-6">
-                <!-- Sección de Filtrado -->
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Filtrar Fondos</h2>
-                    <form method="get" class="space-y-4">
-                        <div class="space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Columna izquierda: Filtros y Registro -->
+                <div class="space-y-6">
+                    <!-- Sección de Filtrado -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="flex items-center mb-4">
+                            <div class="p-2 rounded-lg text-indigo-900 mr-3">
+                                <i class="fas fa-filter"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-800">Filtrar Fondos</h2>
+                        </div>
+                        
+                        <form method="get" class="space-y-4">
                             {% for field in form_filtro %}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
-                                {{ field }}
+                                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                    {% if field.name == "fecha" %}
+                                        <i class="far fa-calendar-alt text-gray-500 mr-2"></i>
+                                    {% elif field.name == "moneda" %}
+                                        <i class="fas fa-coins text-gray-500 mr-2"></i>
+                                    {% else %}
+                                        <i class="fas fa-search text-gray-500 mr-2"></i>
+                                    {% endif %}
+                                    {{ field.label }}
+                                </label>
+                                <div class="relative">
+                                    {{ field }}
+                                    {% if field.name == "fecha" or field.name == "moneda" %}
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                        {% if field.name == "fecha" %}
+                                            <i class="fas fa-calendar"></i>
+                                        {% elif field.name == "moneda" %}
+                                            <i class="fas fa-money-bill-wave"></i>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                </div>
                             </div>
                             {% endfor %}
-                        </div>
-                        <button type="submit"
-                            class="w-1/2 bg-indigo-900 text-white py-2 px-4 my-4 rounded-full hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                            Aplicar Filtros
-                        </button>
-                    </form>
-                </div>
+                            
+                            <div class="pt-2">
+                                <button type="submit" class="w-full bg-indigo-900 text-white py-2 px-4 rounded-lg block text-center hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-sm:hidden max-[900px]:ml-auto max-[900px]:mr-4
+                                ">
+                                    <i class="fas fa-filter mr-2"></i>
+                                    <span>Aplicar Filtros</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-                <!-- Sección de Registro -->
-                <div class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Registrar Nuevo Ingreso</h2>
-                    <form method="post" class="space-y-4">
-                        {% csrf_token %}
-                        <div class="space-y-4">
+                    <!-- Sección de Registro -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="flex items-center mb-4">
+                            <div class="p-2 rounded-lg text-indigo-900 mr-3">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-800">Registrar Fondo</h2>
+                        </div>
+                        
+                        <form method="post" class="space-y-4">
+                            {% csrf_token %}
                             {% for field in form_registro %}
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
-                                {% if field.name == "fecha_fondo" %}
-                                <input type="date" name="{{ field.name }}" class="w-full px-4 py-2 rounded-full border border-gray-300 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-300 date-input">
-                                {% else %}
-                                {{ field }}
-                                {% endif %}
+                                <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                    {% if field.name == "fecha_fondo" %}
+                                        <i class="far fa-calendar text-gray-500 mr-2"></i>
+                                    {% elif field.name == "ingresos" %}
+                                        <i class="fas fa-arrow-down text-gray-500 mr-2"></i>
+                                    {% elif field.name == "egresos" %}
+                                        <i class="fas fa-arrow-up text-gray-500 mr-2"></i>
+                                    {% elif field.name == "moneda_fondo" %}
+                                        <i class="fas fa-money-bill text-gray-500 mr-2"></i>
+                                    {% else %}
+                                        <i class="fas fa-edit text-gray-500 mr-2"></i>
+                                    {% endif %}
+                                    {{ field.label }}
+                                </label>
+                                <div class="relative">
+                                    {% if field.name == "fecha_fondo" %}
+                                    <input type="date" name="{{ field.name }}" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                        <i class="fas fa-calendar-day"></i>
+                                    </div>
+                                    {% else %}
+                                    {{ field }}
+                                    {% endif %}
+                                </div>
                             </div>
                             {% endfor %}
-                        </div>
-                        <button type="submit" class="w-1/2 bg-indigo-900 text-white py-2 px-4 my-4 rounded-full hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                            Guardar Ingreso
-                        </button>
-                    </form>
+                            
+                            <div class="pt-2">
+                                <button type="submit" class="w-full bg-indigo-900 text-white py-2 px-4 rounded-lg block text-center hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-sm:hidden max-[900px]:ml-auto max-[900px]:mr-4
+                                ">
+                                    <i class="fas fa-save mr-2"></i>
+                                    <span>Guardar Fondo</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Columna derecha: Sección de Listado -->
-            <div class="col-span-2 bg-white shadow-md rounded-lg p-6">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historial de Fondos</h2>
-                {% if fondos %}
-                <div class="overflow-x-auto">
-                    <table class="bg-white border border-gray-200 w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Fecha</th>
-                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Ingresos</th>
-                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Egresos</th>
-                                <th class="px-2 py-1 text-center text-sm font-medium text-gray-700 w-1/4">Moneda</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for fondo in fondos %}
-                            <tr class="hover:bg-gray-50 transition duration-200">
-                                <td class="border px-2 py-1 text-md text-gray-700 text-center w-1/4">{{ fondo.fecha_fondo|date:"d/m/Y H:i" }}</td>
-                                <td class="border px-2 py-1 text-md text-gray-700 text-right w-1/4">{{ fondo.ingresos }}</td>
-                                <td class="border px-2 py-1 text-md text-gray-700 text-right w-1/4">{{ fondo.egresos }}</td>
-                                <td class="border px-2 py-1 text-md text-gray-700 text-right w-1/4">{{ fondo.moneda_fondo }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <!-- Columna derecha: Historial -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100 h-full">
+                        <div class="flex items-center mb-6">
+                            <div class="p-2 rounded-lg  text-indigo-900 mr-3">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-800">Historial de Fondos</h2>
+                        </div>
+                        
+                        {% if fondos %}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <i class="far fa-calendar mr-1"></i> Fecha
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <i class="fas fa-arrow-down mr-1"></i> Ingresos
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <i class="fas fa-arrow-up mr-1"></i> Egresos
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <i class="fas fa-coins mr-1"></i> Moneda
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for fondo in fondos %}
+                                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            <i class="far fa-clock text-gray-400 mr-2"></i>{{ fondo.fecha_fondo|date:"d/m/Y H:i" }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-medium">
+                                            {{ fondo.ingresos }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-medium">
+                                            {{ fondo.egresos }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            {% if fondo.moneda_fondo == 'USD' %}
+                                                <i class="fas fa-dollar-sign text-gray-500 mr-1"></i>
+                                            {% else %}
+                                                <i class="fas fa-bolt text-gray-500 mr-1"></i>
+                                            {% endif %}
+                                            {{ fondo.moneda_fondo }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-12">
+                            <i class="fas fa-file-search text-5xl text-gray-300 mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-600">No se encontraron registros</h3>
+                            <p class="text-gray-500 mt-1">No hay movimientos con los filtros aplicados</p>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-                {% else %}
-                <p class="text-gray-600">No se encontraron registros con los filtros aplicados.</p>
-                {% endif %}
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Estilos personalizados para los selectores -->
+    <!-- Estilos personalizados -->
     <style>
-        /* Estilos para los selectores */
+        /* Estilos para inputs y selects */
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
         select {
-            width: 50%;
-            border-radius: 9999px;
-            padding: 0.5rem 1rem;
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
             border: 1px solid #d1d5db;
-            transition: all 0.3s ease;
-            outline: none;
-            background-color: white;
-        }
-
-        select:hover {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        /* Estilos para los inputs de fecha */
-        input[type="date"].date-input {
-            width: 50%;
-            border-radius: 9999px;
-            padding: 0.5rem 1rem;
-            border: 1px solid #d1d5db;
-            transition: all 0.3s ease;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
             outline: none;
             background-color: white;
             appearance: none;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: #374151;
         }
 
-        input[type="date"].date-input:hover {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        input[type="date"].date-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        /* Estilos para el ícono del calendario en inputs de fecha */
-        input[type="date"].date-input::-webkit-calendar-picker-indicator {
-            filter: invert(0.5);
-            cursor: pointer;
-        }
-
-        /* Estilos para los inputs de texto */
-        input[type="text"],
-        input[type="number"],
-        input[type="date"] {
-            width: 50%;
-            border-radius: 9999px;
-            padding: 0.5rem 1rem;
-            border: 1px solid #d1d5db;
-            transition: all 0.3s ease;
-            outline: none;
-            background-color: white;
-        }
-
-        input[type="text"]:hover,
-        input[type="number"]:hover,
-        input[type="date"]:hover {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
+        /* Focus states */
         input[type="text"]:focus,
         input[type="number"]:focus,
-        input[type="date"]:focus {
+        input[type="date"]:focus,
+        select:focus {
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Select dropdown arrow */
+        select {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25em;
+        }
+
+        /* Date input calendar icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+            cursor: pointer;
         }
     </style>
 </body>

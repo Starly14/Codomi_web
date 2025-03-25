@@ -1,142 +1,261 @@
 {% load tailwind_tags %}
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico de Clasificación de Gastos</title>
+    <title>Análisis de Clasificación de Gastos</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% tailwind_css %}
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
     {% include 'layout/navbar.html' %}
     
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Distribución de Gastos por Clasificación</h1>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Encabezado mejorado -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-tags text-indigo-900 mr-2"></i>Desglose de Gastos por Categoría
+            </h1>
+            <p class="text-gray-600 text-lg">
+                <i class="fas fa-info-circle text-indigo-900 mr-1"></i>Distribución porcentual de los gastos por clasificación
+            </p>
+        </div>
         
-        <!-- Filtros de fecha -->
-        <div class="bg-white p-4 rounded-lg shadow mb-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Panel de Filtros mejorado -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-filter text-indigo-900 mr-2 text-xl"></i>
+                <h2 class="text-xl font-semibold text-gray-700">Filtros de Fecha</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Fecha Inicio -->
                 <div>
-                    <label for="fecha_inicio" class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
-                    <input type="text" id="fecha_inicio" class="w-full p-2 border rounded-md">
+                    <label for="fecha_inicio" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i class="far fa-calendar-alt text-gray-400 mr-2"></i>Fecha Inicial
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="fecha_inicio" 
+                               class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Fecha Fin -->
                 <div>
-                    <label for="fecha_fin" class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
-                    <input type="text" id="fecha_fin" class="w-full p-2 border rounded-md">
+                    <label for="fecha_fin" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i class="far fa-calendar-alt text-gray-400 mr-2"></i>Fecha Final
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="fecha_fin" 
+                               class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Botón Filtrar -->
                 <div class="flex items-end">
-                    <button id="btnFiltrar" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
-                        Filtrar
+                    <button id="btnFiltrar" 
+                            class=" bg-indigo-900 text-white py-2 px-4 my-1 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                        <i class="fas fa-search mr-2"></i>
+                        <span>Generar Reporte</span>
                     </button>
                 </div>
             </div>
         </div>
         
-        <!-- Gráfico -->
-        <div id="grafica" class="bg-white p-4 rounded-lg shadow " style="height: 700px;"></div>
+        <!-- Panel del Gráfico mejorado -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <!-- Encabezado del gráfico -->
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center">
+                <i class="fas fa-chart-pie text-indigo-900 mr-3 text-lg"></i>
+                <h3 class="text-lg font-semibold text-gray-700">Visualización de Distribución</h3>
+            </div>
+            
+            <!-- Contenedor del gráfico -->
+            <div id="grafica" class="p-6" style="height: 700px;">
+                <!-- El gráfico se renderizará aquí -->
+            </div>
+            
+            <!-- Pie del gráfico -->
+            <div class="px-6 py-3 border-t border-gray-200 bg-gray-50 text-sm text-gray-500 flex items-center">
+                <i class="fas fa-clock text-indigo-900 mr-2"></i>
+                <span>Última actualización: {% now "SHORT_DATETIME_FORMAT" %}</span>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
     <script>
-        // Inicializar calendarios
+        // Inicializar calendarios en español con mejor configuración
         flatpickr("#fecha_inicio", {
             dateFormat: "Y-m-d",
-            allowInput: true
+            allowInput: true,
+            locale: "es",
+            defaultDate: "today",
+            maxDate: "today"
         });
         
         flatpickr("#fecha_fin", {
             dateFormat: "Y-m-d",
-            allowInput: true
+            allowInput: true,
+            locale: "es",
+            defaultDate: "today"
         });
 
         // Datos iniciales
         const clasificaciones = {{ clasificaciones|safe }};
         const frecuencias = {{ frecuencias|safe }};
 
-        // Función para crear/actualizar el gráfico
+        // Función mejorada para crear/actualizar el gráfico
         function actualizarGrafica(clasificaciones, frecuencias, titulo = 'Distribución de Gastos por Clasificación') {
-    // Verificar que hay datos
-    if (!clasificaciones || !frecuencias || clasificaciones.length === 0 || frecuencias.length === 0) {
-        document.getElementById('grafica').innerHTML = '<div class="p-4 text-center text-red-500">No hay datos para mostrar con los filtros seleccionados</div>';
-        return;
-    }
-    
-    // Ordenar datos por frecuencia (mayor a menor)
-    const combined = clasificaciones.map((label, i) => ({
-        label,
-        value: frecuencias[i]
-    })).sort((a, b) => b.value - a.value);
-    
-    const sortedLabels = combined.map(item => item.label);
-    const sortedValues = combined.map(item => item.value);
-    
-    const data = [{
-        values: sortedValues,
-        labels: sortedLabels,
-        type: 'pie',
-        textinfo: 'label+percent',
-        hoverinfo: 'label+value+percent',
-        hole: 0.4,
-        marker: {
-            colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-        }
-    }];
-    
-    const layout = {
-        title: titulo,
-        showlegend: true,
-        height: 600,
-        margin: { t: 50, l: 0, r: 0, b: 0 },
-    };
-    
-    // Purge cualquier gráfico existente
-    Plotly.purge('grafica');
-    // Crear nuevo gráfico
-    Plotly.newPlot('grafica', data, layout);
-}
-
-// Función para filtrar
-document.getElementById('btnFiltrar').addEventListener('click', function() {
-    const fechaInicio = document.getElementById('fecha_inicio').value;
-    const fechaFin = document.getElementById('fecha_fin').value;
-    
-    if (!fechaInicio || !fechaFin) {
-        alert('Por favor seleccione ambas fechas');
-        return;
-    }
-    
-    // Mostrar carga
-    document.getElementById('grafica').innerHTML = '<div class="flex justify-center items-center h-full"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div></div>';
-    
-    // Obtener datos filtrados
-    fetch(`/analisis_datos/datos-grafica-gastos/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
-        .then(response => {
-            if (!response.ok) throw new Error('Error en la respuesta');
-            return response.json();
-        })
-        .then(data => {
-            if (!data.clasificaciones || !data.frecuencias) {
-                throw new Error('Datos incompletos');
+            // Verificar que hay datos
+            if (!clasificaciones || !frecuencias || clasificaciones.length === 0 || frecuencias.length === 0) {
+                document.getElementById('grafica').innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full p-6 text-center">
+                        <i class="fas fa-database text-4xl text-gray-300 mb-3"></i>
+                        <h4 class="text-lg font-medium text-gray-500">No hay datos disponibles</h4>
+                        <p class="text-gray-400 mt-1">No se encontraron registros con los filtros seleccionados</p>
+                    </div>
+                `;
+                return;
             }
-            const titulo = `Distribución de Gastos (${fechaInicio} a ${fechaFin})`;
-            actualizarGrafica(data.clasificaciones, data.frecuencias, titulo);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('grafica').innerHTML = '<div class="p-4 text-center text-red-500">Error al cargar los datos. Verifique la consola para más detalles.</div>';
-        });
-});
+            
+            // Ordenar datos por frecuencia (mayor a menor)
+            const combined = clasificaciones.map((label, i) => ({
+                label,
+                value: frecuencias[i]
+            })).sort((a, b) => b.value - a.value);
+            
+            const sortedLabels = combined.map(item => item.label);
+            const sortedValues = combined.map(item => item.value);
+            
+            const data = [{
+                values: sortedValues,
+                labels: sortedLabels,
+                type: 'pie',
+                textinfo: 'label+percent',
+                hoverinfo: 'label+value+percent',
+                hole: 0.4,
+                marker: {
+                    colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8AC24A', '#FF5722', '#607D8B', '#9C27B0']
+                },
+                textfont: {
+                    family: 'Arial',
+                    size: 12
+                },
+                insidetextorientation: 'radial'
+            }];
+            
+            const layout = {
+                title: {
+                    text: titulo,
+                    font: {
+                        family: 'Arial',
+                        size: 18,
+                        color: '#2D3748'
+                    }
+                },
+                showlegend: true,
+                legend: {
+                    orientation: 'h',
+                    y: -0.8,
+                    font: {
+                        size: 12
+                    }
+                },
+                height: 600,
+                margin: { t: 60, l: 0, r: 0, b: 20 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                hoverlabel: {
+                    bgcolor: '#FFF',
+                    bordercolor: '#DDD',
+                    font: {
+                        family: 'Arial',
+                        size: 12,
+                        color: '#2D3748'
+                    }
+                }
+            };
+            
+            Plotly.newPlot('grafica', data, layout, {responsive: true});
+        }
 
-// Gráfico inicial (cargar con datos iniciales)
-actualizarGrafica(
-    {{ clasificaciones|safe }},
-    {{ frecuencias|safe }},
-    'Distribución de Gastos por Clasificación (Todos los datos)'
-);
-        
+        // Función mejorada para filtrar
+        document.getElementById('btnFiltrar').addEventListener('click', function() {
+            const fechaInicio = document.getElementById('fecha_inicio').value;
+            const fechaFin = document.getElementById('fecha_fin').value;
+            
+            if (!fechaInicio || !fechaFin) {
+                // Notificación más elegante
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 shadow-lg rounded-lg flex items-start max-w-xs';
+                notification.innerHTML = `
+                    <i class="fas fa-exclamation-circle mr-2 mt-1"></i>
+                    <div>
+                        <p class="font-medium">Fechas requeridas</p>
+                        <p class="text-sm">Por favor seleccione ambas fechas</p>
+                    </div>
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 5000);
+                return;
+            }
+            
+            // Mostrar estado de carga mejorado
+            document.getElementById('grafica').innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full">
+                    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+                    <p class="text-gray-500">Generando reporte...</p>
+                </div>
+            `;
+            
+            // Obtener datos filtrados
+            fetch(`/analisis_datos/datos-grafica-gastos/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.clasificaciones || !data.frecuencias) {
+                        throw new Error('Datos incompletos en la respuesta');
+                    }
+                    const titulo = `Distribución de Gastos<br>${fechaInicio} a ${fechaFin}`;
+                    actualizarGrafica(data.clasificaciones, data.frecuencias, titulo);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('grafica').innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full p-6 text-center">
+                            <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-3"></i>
+                            <h4 class="text-lg font-medium text-gray-700">Error al cargar datos</h4>
+                            <p class="text-gray-500 mt-1">${error.message}</p>
+                            <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-colors">
+                                <i class="fas fa-sync-alt mr-2"></i>Reintentar
+                            </button>
+                        </div>
+                    `;
+                });
+        });
+
+        // Gráfico inicial con animación
+        setTimeout(() => {
+            actualizarGrafica(
+                {{ clasificaciones|safe }},
+                {{ frecuencias|safe }},
+                'Distribución General de Gastos<br>Todos los períodos'
+            );
+        }, 500);
     </script>
 </body>
 </html>
