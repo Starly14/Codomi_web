@@ -5,44 +5,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clasificacion Grafico</title>
+    <title>Gráfico de Clasificación de Gastos</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     {% tailwind_css %}
 </head>
-<body class="bg-gray-200 font-sans">
+<body class="bg-gray-100">
     {% include 'layout/navbar.html' %}
-
-      <!-- Contenedor principal -->
-      <div class="container mx-auto p-6">
-        <h1 class="text-2xl font-semibold text-gray-800 mb-4">Gráfica de Gastos por Clasificación</h1>
-        <div id="grafica" class="bg-white shadow-md rounded-lg p-6 "></div>
+    
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Distribución de Gastos por Clasificación</h1>
+        
+        <!-- Filtros de fecha -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="fecha_inicio" class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
+                    <input type="text" id="fecha_inicio" class="w-full p-2 border rounded-md">
+                </div>
+                <div>
+                    <label for="fecha_fin" class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
+                    <input type="text" id="fecha_fin" class="w-full p-2 border rounded-md">
+                </div>
+                <div class="flex items-end">
+                    <button id="btnFiltrar" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+                        Filtrar
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gráfico -->
+        <div id="grafica" class="bg-white p-4 rounded-lg shadow " style="height: 700px;"></div>
     </div>
 
-    <!-- Script para generar la gráfica -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Datos desde Django
+        // Inicializar calendarios
+        flatpickr("#fecha_inicio", {
+            dateFormat: "Y-m-d",
+            allowInput: true
+        });
+        
+        flatpickr("#fecha_fin", {
+            dateFormat: "Y-m-d",
+            allowInput: true
+        });
+
+        // Datos iniciales
         const clasificaciones = {{ clasificaciones|safe }};
         const frecuencias = {{ frecuencias|safe }};
 
-        // Crear la gráfica de pastel
-        const data = [{
-            values: frecuencias,
-            labels: clasificaciones,
-            type: 'pie',
-            textinfo: 'label+percent',
-            hoverinfo: 'label+value',
-            hole: 0.4, // Para un gráfico de dona
-        }];
+        // Función para crear/actualizar el gráfico
+        function actualizarGrafica(clasificaciones, frecuencias, titulo = 'Distribución de Gastos por Clasificación') {
+    // Verificar que hay datos
+    if (!clasificaciones || !frecuencias || clasificaciones.length === 0 || frecuencias.length === 0) {
+        document.getElementById('grafica').innerHTML = '<div class="p-4 text-center text-red-500">No hay datos para mostrar con los filtros seleccionados</div>';
+        return;
+    }
+    
+    // Ordenar datos por frecuencia (mayor a menor)
+    const combined = clasificaciones.map((label, i) => ({
+        label,
+        value: frecuencias[i]
+    })).sort((a, b) => b.value - a.value);
+    
+    const sortedLabels = combined.map(item => item.label);
+    const sortedValues = combined.map(item => item.value);
+    
+    const data = [{
+        values: sortedValues,
+        labels: sortedLabels,
+        type: 'pie',
+        textinfo: 'label+percent',
+        hoverinfo: 'label+value+percent',
+        hole: 0.4,
+        marker: {
+            colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+        }
+    }];
+    
+    const layout = {
+        title: titulo,
+        showlegend: true,
+        height: 600,
+        margin: { t: 50, l: 0, r: 0, b: 0 },
+    };
+    
+    // Purge cualquier gráfico existente
+    Plotly.purge('grafica');
+    // Crear nuevo gráfico
+    Plotly.newPlot('grafica', data, layout);
+}
 
-        const layout = {
-            title: 'Distribución de Gastos por Clasificación',
-            showlegend: true,
-            height: 600, // Altura de la gráfica
-            width: 900,  // Ancho de la gráfica
-            margin: { l: 50, r: 50, b: 50, t: 50, pad: 4 }, // Márgenes
-        };
+// Función para filtrar
+document.getElementById('btnFiltrar').addEventListener('click', function() {
+    const fechaInicio = document.getElementById('fecha_inicio').value;
+    const fechaFin = document.getElementById('fecha_fin').value;
+    
+    if (!fechaInicio || !fechaFin) {
+        alert('Por favor seleccione ambas fechas');
+        return;
+    }
+    
+    // Mostrar carga
+    document.getElementById('grafica').innerHTML = '<div class="flex justify-center items-center h-full"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div></div>';
+    
+    // Obtener datos filtrados
+    fetch(`/analisis_datos/datos-grafica-gastos/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la respuesta');
+            return response.json();
+        })
+        .then(data => {
+            if (!data.clasificaciones || !data.frecuencias) {
+                throw new Error('Datos incompletos');
+            }
+            const titulo = `Distribución de Gastos (${fechaInicio} a ${fechaFin})`;
+            actualizarGrafica(data.clasificaciones, data.frecuencias, titulo);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('grafica').innerHTML = '<div class="p-4 text-center text-red-500">Error al cargar los datos. Verifique la consola para más detalles.</div>';
+        });
+});
 
-        Plotly.newPlot('grafica', data, layout);
+// Gráfico inicial (cargar con datos iniciales)
+actualizarGrafica(
+    {{ clasificaciones|safe }},
+    {{ frecuencias|safe }},
+    'Distribución de Gastos por Clasificación (Todos los datos)'
+);
+        
     </script>
 </body>
 </html>

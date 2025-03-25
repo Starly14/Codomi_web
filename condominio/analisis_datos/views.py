@@ -19,6 +19,13 @@ from .models import Gasto
 from collections import Counter
 import pandas as pd
 
+from django.http import JsonResponse
+from django.db.models import Q
+from datetime import datetime
+
+from django.utils.timezone import make_aware
+
+
 # Vista para renderizar el HTML principal
 def analisis_datos(request):
     return render(request, 'analisis_datos.html')
@@ -369,28 +376,77 @@ def presupuestos_vs_gastos(request):
     return render(request, 'presupuestos_vs_gastos.html', contexto)
 
 def clasificacion(request):
-    # Obtener todos los gastos
+    # Obtener parámetros de fechas
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    
+    # Consulta base
     gastos = Gasto.objects.all()
-
-    # Procesar las clasificaciones
+    
+    # Aplicar filtros de fecha si existen
+    if fecha_inicio and fecha_fin:
+        try:
+            fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+            fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+            gastos = gastos.filter(fecha_gasto__range=[fecha_inicio, fecha_fin])
+        except ValueError:
+            # Si hay error en el formato de fecha, ignorar los filtros
+            pass
+    
+    # Procesar clasificaciones
     clasificaciones = []
     for gasto in gastos:
         if gasto.clasificacion_gasto:
-            # Dividir las clasificaciones por comas y agregarlas a la lista
             clasificaciones.extend(gasto.clasificacion_gasto.split(','))
-
-    # Contar la frecuencia de cada clasificación
+    
     frecuencia = Counter(clasificaciones)
-
-    # Convertir a un DataFrame de Pandas para facilitar el manejo
     df = pd.DataFrame(frecuencia.items(), columns=['Clasificacion', 'Frecuencia'])
-
-    # Pasar los datos a la plantilla
+    
     context = {
         'clasificaciones': df['Clasificacion'].tolist(),
         'frecuencias': df['Frecuencia'].tolist(),
-        }
+    }
     return render(request, 'clasificacion_torta.html', context)
+
+def datos_grafica_gastos(request):
+    # Obtener parámetros de fechas
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    
+    # Consulta base
+    gastos = Gasto.objects.all()
+    
+    # Aplicar filtros de fecha si existen
+    if fecha_inicio and fecha_fin:
+        try:
+            # Convertir a datetime con timezone
+            fecha_inicio = make_aware(datetime.strptime(fecha_inicio, '%Y-%m-%d'))
+            fecha_fin = make_aware(datetime.strptime(fecha_fin, '%Y-%m-%d'))
+            
+            gastos = gastos.filter(fecha_gasto__range=[fecha_inicio, fecha_fin])
+        except ValueError as e:
+            print(f"Error al convertir fechas: {e}")
+            return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
+    
+    # Procesar clasificaciones
+    clasificaciones = []
+    for gasto in gastos:
+        if gasto.clasificacion_gasto:
+            # Limpiar espacios en blanco alrededor de las clasificaciones
+            clasificaciones.extend([c.strip() for c in gasto.clasificacion_gasto.split(',')])
+    
+    # Contar frecuencias ignorando espacios
+    frecuencia = Counter(clasificaciones)
+    
+    # Eliminar duplicados de espacios diferentes
+    clasificaciones_limpias = list(frecuencia.keys())
+    frecuencias_limpias = list(frecuencia.values())
+    
+    return JsonResponse({
+        'clasificaciones': clasificaciones_limpias,
+        'frecuencias': frecuencias_limpias,
+    })
+
 
 def intentoComparacion(request):
     Gastos = Gasto.objects.all()

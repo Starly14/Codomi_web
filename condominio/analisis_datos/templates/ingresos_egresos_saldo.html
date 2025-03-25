@@ -1,17 +1,32 @@
-<form method="GET">
-    {{ form.as_p }}
-    <button type="submit">Filtrar</button>
-    <button type="button" id="reset">Restablecer</button>
-</form>
-<script>
-    document.getElementById("reset").addEventListener("click", function() {
-        window.location.href = window.location.pathname;
-    });
-</script>
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresos, Egresos y Salgo Grafica</title>
+    {% tailwind_css %}
+</head>
+<body>
+    {% include 'layout/navbar.html' %}
+    <form method="GET">
+        {{ form.as_p }}
+        <button type="submit">Filtrar</button>
+        <button type="button" id="reset">Restablecer</button>
+    </form>
+    <script>
+        document.getElementById("reset").addEventListener("click", function() {
+            window.location.href = window.location.pathname;
+        });
+    </script>
+    
+    
+    <div>
+        {{ plot_div|safe }}
+    </div>
+</body>
+</html>
 
 
-<div>
-    {{ plot_div|safe }}
-</div>
 
 <!-- FUCK <html> -->
