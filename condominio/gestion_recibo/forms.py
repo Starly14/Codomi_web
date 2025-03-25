@@ -1,12 +1,10 @@
 # forms.py
 from django import forms
 from django.forms import inlineformset_factory # Formularios en relacion a un modelo padre Presupuesto y Recibo
-from .models import Recibo, Presupuesto, Fondo, Gasto, ComentarioFrec
+from .models import Recibo, Presupuesto, Fondo, Gasto, ComentarioFrec, Dpto
 from django.utils.dates import MONTHS
 from django.db.models.functions import ExtractYear
 from django.core.exceptions import ValidationError
-
-
 
 class FondoForm(forms.ModelForm):
     ingresos = forms.DecimalField(
@@ -497,3 +495,18 @@ class ComentarioForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ComentarioForm, self).__init__(*args, **kwargs)  # Corregido
         self.fields['desc_comentario'].label = 'Comentario'
+
+class DptoForm(forms.ModelForm):
+    dptos = Dpto.objects.all()
+    choices = []
+    for dpto in dptos:
+        choices.append((dpto.id_dpto, dpto.id_dpto))
+    id_dpto = forms.ChoiceField(
+        choices=choices,
+        label="Apartamentos",
+        required=True  # Hacerlo requerido
+    )
+
+    class Meta:
+        model = Dpto
+        fields = ['id_dpto']

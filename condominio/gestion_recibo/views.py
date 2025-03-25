@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from django.db import connection
 from django.urls import reverse
-from .forms import FondoForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm, ComentarioForm
+from .forms import FondoForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm, ComentarioForm, DptoForm
 from .models import Fondo, Gasto, Presupuesto, Dpto, Asignacion, Recibo, Deuda, Comentario, Importe, ComentarioFrec
 from datetime import datetime, date
 import base64
@@ -333,7 +333,21 @@ def reciboBase(request, year, month, day, nro_dpto):
     })
 
 def generarRecibo(request, year, month, day):
+    fechas = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+
     fecha_recibida = date(year, month, day)
+    fechaRecibidaLetra = f'{fechas[month]} de {year}'
+
+    if month == 12:
+        mes_siguiente = 1
+        ano_siguiente = year + 1
+    else:
+        mes_siguiente = month + 1
+        ano_siguiente = year
+
+    fechaSiguienteLetra = f'{fechas[mes_siguiente]} de {ano_siguiente}'
+
+
     fecha_actual = date.today()
     form_presupuesto = PresupuestoForm(allowed_year=year, allowed_month=month)
     form_GastoDirecto = GastoDirectoForm(allowed_year=year, allowed_month=month)
@@ -557,6 +571,8 @@ def generarRecibo(request, year, month, day):
         'fondoImprevisto': fondoImprevisto,
         'form_comentario': form_comentario,
         'comentarios': comentarios,
+        'fechaSiguienteLetra': fechaSiguienteLetra,
+        'fechaRecibidaLetra': fechaRecibidaLetra,
     })
     
     
@@ -567,18 +583,22 @@ def preReciboBase(request):
     meses = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 9:'Septiembre', 10:'Octubre', 11:'Noviembre', 12:'Diciembre'}
     for i in recibosCrudos:
         recibos.append({'recibo': i, 'mes': meses[i.fecha_recibo.month]})
+    dptoForm = DptoForm()
     if request.method == 'POST':
+        dptoForm = DptoForm(request.POST)
         if 'redirect_recibo' in request.POST: #redirige al ver recibo de la fecha seleccionada
             recibo_id = request.POST.get('recibo_id')
             recibo = Recibo.objects.get(id_recibo=recibo_id)
             year = recibo.fecha_recibo.year
             month = recibo.fecha_recibo.month
             day = recibo.fecha_recibo.day
-            return redirect('reciboBase', year, month, day, 11) 
+            id_dpto = dptoForm['id_dpto'].value()
+            return redirect('reciboBase', year, month, day, id_dpto) 
 
     return render(request, 'preRecibo.html', {
         'recibos': recibos,
         'meses': meses,
+        'dptoForm': dptoForm,
     })
 
 
@@ -596,6 +616,9 @@ def preGenerarRecibo(request):
     meses = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 9:'Septiembre', 10:'Octubre', 11:'Noviembre', 12:'Diciembre'}
     for i in recibosCrudos:
         recibos.append({'recibo': i, 'mes': meses[i.fecha_recibo.month]})
+    if len(recibos) == 0:
+        fecha_actual = date.today()
+        return redirect('generar_recibo', fecha_actual.year, fecha_actual.month, fecha_actual.day)
     if request.method == 'POST':
         if 'redirect_recibo' in request.POST: #redirige al ver recibo de la fecha seleccionada
             recibo_id = request.POST.get('recibo_id')
