@@ -50,13 +50,17 @@
                             <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute">
                                 {% for recibo in recibos %}
                                 <li class="hover:bg-gray-100 p-2">
-                                    <input type="hidden" name="recibo_id" value="{{ recibo.recibo.id_recibo }}">
-                                    <button type="submit" name="redirect_recibo" class="w-full text-left hover:font-semibold">{{ recibo.recibo.fecha_recibo.day }} de {{recibo.mes}}, {{recibo.recibo.fecha_recibo.year}}</button>
-                                    {% csrf_token %}
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="recibo_id" value="{{ recibo.recibo.id_recibo }}" required>
+                                        <span>{{ recibo.recibo.fecha_recibo.day }} de {{recibo.mes}}, {{recibo.recibo.fecha_recibo.year}}</span>
+                                    </label>
                                 </li>
                                 {% endfor %}
                             </ul>
                         </div>
+                        <button type="submit" name="redirect_recibo" class="w-full bg-indigo-900 text-white py-2 px-4 my-2 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all">
+                            Confirmar selección
+                        </button>
                     </div>
                 </form>
             </div>
