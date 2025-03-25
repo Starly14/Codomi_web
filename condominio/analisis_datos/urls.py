@@ -8,4 +8,8 @@ urlpatterns = [
     path('subir_tasa/', views.api_subir_nueva_tasa, name='subir_tasa'),
     path('ultima_tasa/', views.api_obtener_ultima_tasa, name='ultima_tasa'),
     path('rango_tasas/', views.api_consultar_rango_tasas, name='rango_tasas'),
+    path('presupuestos_vs_gastos/', views.presupuestos_vs_gastos, name='comparar_estadistica'),
+    path('ingresos_egresos_saldo/', views.ingresos_egresos_saldo, name='ingresos_egresos_saldo'),
+    path('clasificacion/', views.clasificacion, name='clasificacion_torta'),
+    path('datos-grafica-gastos/', views.datos_grafica_gastos, name='datos_grafica_gastos'),
 ]

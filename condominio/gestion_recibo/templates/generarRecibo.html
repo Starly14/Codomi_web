@@ -58,14 +58,14 @@
     
 
       
-    <h1 class="text-3xl mb-5">Mes Actual: </h1>
+    <h1 class="text-3xl mb-5">Mes Actual: {{fechaRecibidaLetra}}</h1>
       
     <!-- Sección de presupuesto -->
     <form method="POST">
         {% csrf_token %}
         <div class="mb-5">
             <div class="mb-4">
-                <h2 class="text-2xl mb-5 text-gray-800">Presupuesto para el mes siguiente</h2>
+                <h2 class="text-2xl mb-5 text-gray-800">Presupuesto para {{fechaSiguienteLetra}} </h2>
                 
                 <!-- Mostrar errores generales del formulario -->
                 {% if form_presupuesto.non_field_errors %}
@@ -150,7 +150,7 @@
 
             <div class="mb-4">
 
-                <h2 class="text-2xl mb-5 text-gray-800">Gastos directos de cada departamento en el mes de *mes*</h2>
+                <h2 class="text-2xl mb-5 text-gray-800">Gastos directos de cada apartamento para {{fechaSiguienteLetra}}</h2>
                 {% if form_GastoDirecto.non_field_errors %}
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         {% for error in form_GastoDirecto.non_field_errors %}
@@ -237,7 +237,7 @@
 
             <div class="mb-4">
 
-                <h2 class="text-2xl mb-5 text-gray-800">Gastos aplicados en el mes de *mes*</h2>
+                <h2 class="text-2xl mb-5 text-gray-800">Gastos aplicados en {{fechaRecibidaLetra}}</h2>
 
                 {% if form_GastoAplicado.non_field_errors %}
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -324,7 +324,7 @@
 
             <div class="mb-4">
 
-                <h2 class="text-2xl mb-5 text-gray-800">Fondo para gastos imprevistos en el mes de *mes*</h2>
+                <h2 class="text-2xl mb-5 text-gray-800">Fondo para gastos imprevistos para {{fechaSiguienteLetra}} </h2>
                 {% csrf_token %}
         
                     {% if form_fondo.non_field_errors %}

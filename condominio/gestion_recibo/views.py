@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from django.db import connection
 from django.urls import reverse
-from .forms import FondoForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm, ComentarioForm
+from .forms import FondoForm, FechaFiltroForm, PresupuestoForm, GastoDirectoForm, GastoAplicadoForm, FondoImprevistoForm, ComentarioForm, DptoForm
 from .models import Fondo, Gasto, Presupuesto, Dpto, Asignacion, Recibo, Deuda, Comentario, Importe, ComentarioFrec
 from datetime import datetime, date
 import base64
@@ -27,14 +27,12 @@ def gestion_fondos(request):
             fondo.id_fondo = obtener_nuevo_id_fondo()
             fondo.save()
             return redirect('gestion-fondos')  # Recargamos la misma vista
-
-    # Si no es POST, crear formulario vacío
     else:
         form_registro = FondoForm(allowed_month=month, allowed_year=year)  # Corregido
 
     # Procesar formulario de FILTRADO (GET)
     form_filtro = FechaFiltroForm(request.GET or None)
-    fondos = Fondo.objects.all()
+    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)  # Inicializa con fondos válidos
 
     if form_filtro.is_valid():
         fecha_inicio = form_filtro.cleaned_data.get('fecha_inicio')
@@ -42,8 +40,70 @@ def gestion_fondos(request):
         
         if fecha_inicio and fecha_fin:
             fondos = fondos.filter(fecha_fondo__range=[fecha_inicio, fecha_fin])
-    
-    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)
+
+    return render(request, 'gestion-fondos.html', {
+        'form_registro': form_registro,
+        'form_filtro': form_filtro,
+        'fondos': fondos
+    })
+
+def obtener_nuevo_id_fondo():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COALESCE(MAX(id_fondo), 0) + 1 FROM fondo")
+        return cursor.fetchone()[0]
+
+def obtener_saldo_actual(mes, anio, moneda):
+    fondo_mas_reciente = Fondo.objects.filter(
+        fecha_fondo__year=anio,
+        fecha_fondo__month=mes,
+        moneda_fondo=moneda
+    ).order_by('-fecha_fondo').first()  # Orden descendente por fecha
+
+    return fondo_mas_reciente.saldo_fondo if fondo_mas_reciente else 0
+
+
+def gestion_fondos(request):
+    if request.method == 'POST':
+        form_registro = FondoForm(request.POST)
+        if form_registro.is_valid():
+            fondo_nuevo = form_registro.save(commit=False)
+            mes = fondo_nuevo.fecha_fondo.month
+            anio = fondo_nuevo.fecha_fondo.year
+            moneda = fondo_nuevo.moneda_fondo  
+
+            fondo_existente = Fondo.objects.filter(
+                fecha_fondo__year=anio,
+                fecha_fondo__month=mes,
+                moneda_fondo=moneda
+            ).first()
+
+            if fondo_existente:
+                # Si existe, actualizar ingresos, egresos y saldo
+                fondo_existente.ingresos += fondo_nuevo.ingresos
+                fondo_existente.egresos += fondo_nuevo.egresos
+                fondo_existente.saldo_fondo = (fondo_existente.saldo_fondo + 
+                                               fondo_nuevo.ingresos - fondo_nuevo.egresos)
+                fondo_existente.save()
+            else:
+                fondo_nuevo.id_fondo = obtener_nuevo_id_fondo()
+                saldo_actual = obtener_saldo_actual(mes, anio, moneda)
+                fondo_nuevo.saldo_fondo = saldo_actual + fondo_nuevo.ingresos - fondo_nuevo.egresos
+                fondo_nuevo.save()
+
+            return redirect('gestion_fondos')  # Recargar la vista
+    else:
+        form_registro = FondoForm()
+
+    # Procesar formulario de FILTRADO (GET)
+    form_filtro = FechaFiltroForm(request.GET or None)
+    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)  # Excluir fondos sin movimiento
+
+    if form_filtro.is_valid():
+        fecha_inicio = form_filtro.cleaned_data.get('fecha_inicio')
+        fecha_fin = form_filtro.cleaned_data.get('fecha_fin')
+        
+        if fecha_inicio and fecha_fin:
+            fondos = fondos.filter(fecha_fondo__range=[fecha_inicio, fecha_fin]).order_by('fecha_fondo')
 
     return render(request, 'gestion-fondos.html', {
         'form_registro': form_registro,
@@ -333,7 +393,21 @@ def reciboBase(request, year, month, day, nro_dpto):
     })
 
 def generarRecibo(request, year, month, day):
+    fechas = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+
     fecha_recibida = date(year, month, day)
+    fechaRecibidaLetra = f'{fechas[month]} de {year}'
+
+    if month == 12:
+        mes_siguiente = 1
+        ano_siguiente = year + 1
+    else:
+        mes_siguiente = month + 1
+        ano_siguiente = year
+
+    fechaSiguienteLetra = f'{fechas[mes_siguiente]} de {ano_siguiente}'
+
+
     fecha_actual = date.today()
     form_presupuesto = PresupuestoForm(allowed_year=year, allowed_month=month)
     form_GastoDirecto = GastoDirectoForm(allowed_year=year, allowed_month=month)
@@ -557,6 +631,8 @@ def generarRecibo(request, year, month, day):
         'fondoImprevisto': fondoImprevisto,
         'form_comentario': form_comentario,
         'comentarios': comentarios,
+        'fechaSiguienteLetra': fechaSiguienteLetra,
+        'fechaRecibidaLetra': fechaRecibidaLetra,
     })
     
     
@@ -567,18 +643,22 @@ def preReciboBase(request):
     meses = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 9:'Septiembre', 10:'Octubre', 11:'Noviembre', 12:'Diciembre'}
     for i in recibosCrudos:
         recibos.append({'recibo': i, 'mes': meses[i.fecha_recibo.month]})
+    dptoForm = DptoForm()
     if request.method == 'POST':
+        dptoForm = DptoForm(request.POST)
         if 'redirect_recibo' in request.POST: #redirige al ver recibo de la fecha seleccionada
             recibo_id = request.POST.get('recibo_id')
             recibo = Recibo.objects.get(id_recibo=recibo_id)
             year = recibo.fecha_recibo.year
             month = recibo.fecha_recibo.month
             day = recibo.fecha_recibo.day
-            return redirect('reciboBase', year, month, day, 11) 
+            id_dpto = dptoForm['id_dpto'].value()
+            return redirect('reciboBase', year, month, day, id_dpto) 
 
     return render(request, 'preRecibo.html', {
         'recibos': recibos,
         'meses': meses,
+        'dptoForm': dptoForm,
     })
 
 
@@ -596,6 +676,9 @@ def preGenerarRecibo(request):
     meses = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 9:'Septiembre', 10:'Octubre', 11:'Noviembre', 12:'Diciembre'}
     for i in recibosCrudos:
         recibos.append({'recibo': i, 'mes': meses[i.fecha_recibo.month]})
+    if len(recibos) == 0:
+        fecha_actual = date.today()
+        return redirect('generar_recibo', fecha_actual.year, fecha_actual.month, fecha_actual.day)
     if request.method == 'POST':
         if 'redirect_recibo' in request.POST: #redirige al ver recibo de la fecha seleccionada
             recibo_id = request.POST.get('recibo_id')
