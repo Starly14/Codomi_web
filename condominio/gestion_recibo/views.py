@@ -27,14 +27,12 @@ def gestion_fondos(request):
             fondo.id_fondo = obtener_nuevo_id_fondo()
             fondo.save()
             return redirect('gestion-fondos')  # Recargamos la misma vista
-
-    # Si no es POST, crear formulario vacío
     else:
         form_registro = FondoForm(allowed_month=month, allowed_year=year)  # Corregido
 
     # Procesar formulario de FILTRADO (GET)
     form_filtro = FechaFiltroForm(request.GET or None)
-    fondos = Fondo.objects.all()
+    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)  # Inicializa con fondos válidos
 
     if form_filtro.is_valid():
         fecha_inicio = form_filtro.cleaned_data.get('fecha_inicio')
@@ -42,8 +40,70 @@ def gestion_fondos(request):
         
         if fecha_inicio and fecha_fin:
             fondos = fondos.filter(fecha_fondo__range=[fecha_inicio, fecha_fin])
-    
-    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)
+
+    return render(request, 'gestion-fondos.html', {
+        'form_registro': form_registro,
+        'form_filtro': form_filtro,
+        'fondos': fondos
+    })
+
+def obtener_nuevo_id_fondo():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COALESCE(MAX(id_fondo), 0) + 1 FROM fondo")
+        return cursor.fetchone()[0]
+
+def obtener_saldo_actual(mes, anio, moneda):
+    fondo_mas_reciente = Fondo.objects.filter(
+        fecha_fondo__year=anio,
+        fecha_fondo__month=mes,
+        moneda_fondo=moneda
+    ).order_by('-fecha_fondo').first()  # Orden descendente por fecha
+
+    return fondo_mas_reciente.saldo_fondo if fondo_mas_reciente else 0
+
+
+def gestion_fondos(request):
+    if request.method == 'POST':
+        form_registro = FondoForm(request.POST)
+        if form_registro.is_valid():
+            fondo_nuevo = form_registro.save(commit=False)
+            mes = fondo_nuevo.fecha_fondo.month
+            anio = fondo_nuevo.fecha_fondo.year
+            moneda = fondo_nuevo.moneda_fondo  
+
+            fondo_existente = Fondo.objects.filter(
+                fecha_fondo__year=anio,
+                fecha_fondo__month=mes,
+                moneda_fondo=moneda
+            ).first()
+
+            if fondo_existente:
+                # Si existe, actualizar ingresos, egresos y saldo
+                fondo_existente.ingresos += fondo_nuevo.ingresos
+                fondo_existente.egresos += fondo_nuevo.egresos
+                fondo_existente.saldo_fondo = (fondo_existente.saldo_fondo + 
+                                               fondo_nuevo.ingresos - fondo_nuevo.egresos)
+                fondo_existente.save()
+            else:
+                fondo_nuevo.id_fondo = obtener_nuevo_id_fondo()
+                saldo_actual = obtener_saldo_actual(mes, anio, moneda)
+                fondo_nuevo.saldo_fondo = saldo_actual + fondo_nuevo.ingresos - fondo_nuevo.egresos
+                fondo_nuevo.save()
+
+            return redirect('gestion_fondos')  # Recargar la vista
+    else:
+        form_registro = FondoForm()
+
+    # Procesar formulario de FILTRADO (GET)
+    form_filtro = FechaFiltroForm(request.GET or None)
+    fondos = Fondo.objects.exclude(ingresos=0, egresos=0)  # Excluir fondos sin movimiento
+
+    if form_filtro.is_valid():
+        fecha_inicio = form_filtro.cleaned_data.get('fecha_inicio')
+        fecha_fin = form_filtro.cleaned_data.get('fecha_fin')
+        
+        if fecha_inicio and fecha_fin:
+            fondos = fondos.filter(fecha_fondo__range=[fecha_inicio, fecha_fin]).order_by('fecha_fondo')
 
     return render(request, 'gestion-fondos.html', {
         'form_registro': form_registro,

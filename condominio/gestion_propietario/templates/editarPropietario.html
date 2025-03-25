@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Propietario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
         function validateEmail() {
@@ -53,17 +54,17 @@
             <div class="flex flex-wrap flex-col pt-10">
                 <!-- Propietario -->
                 <div class="w-full px-4 mb-8">
-                    <h2 class="text-xl mb-4">Propietario:</h2>
+                    <h2 class="text-xl mb-4"><i class="fas fa-user text-indigo-900 mr-2"></i>Propietario:</h2>
                     <button onclick="toggleDropdown1()" class="w-full bg-indigo-900 text-white py-2 px-4 my-2 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                        Seleccionar propietario
+                        <i class="fas fa-list mr-2"></i>Seleccionar propietario
                     </button>
                     <div id="propDropdown" class="hidden mt-2 w-full">
-                        <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute z-50">
+                        <ul class="bg-white border z-50 border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute">
                             {% for prop in propietarios %}
                             <li class="hover:bg-gray-100 p-2">
                                 <form method="post" class="flex items-center">
                                     <input type="hidden" name="propietario_id" value="{{ prop.id_prop }}">
-                                    <button type="submit" name="redirect_propietario" class="w-full text-left hover:font-semibold">{{ prop.nombre_prop }}</button>
+                                    <button type="submit" name="redirect_propietario" class="w-full text-left hover:font-semibold"><i class="fas fa-user-circle mr-2"></i>{{ prop.nombre_prop }}</button>
                                     {% csrf_token %}
                                 </form>
                             </li>
@@ -74,12 +75,12 @@
 
                 <!-- Editar Nombre -->
                 <div class="w-full px-4 mb-8">
-                    <h2 class="text-xl mb-4">Editar nombre</h2>
+                    <h2 class="text-xl mb-4"><i class="fas fa-edit text-indigo-900 mr-2"></i>Editar nombre</h2>
                     <form method="post">
                         {% csrf_token %}
                         {{ propietario_form.as_p }}
                         <button type="submit" name="edit_nombre" class="w-full bg-indigo-900 text-white py-2 px-4 my-4 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                            Guardar Nombre
+                            <i class="fas fa-save mr-2"></i>Guardar Nombre
                         </button>
                     </form>
                 </div>
@@ -89,15 +90,15 @@
             <div class="flex flex-wrap flex-col">
                 <!-- Correos Registrados -->
                 <div class="w-full px-4 mb-8">
-                    <h2 class="text-xl mb-4">Correos:</h2>
+                    <h2 class="text-xl mb-4"><i class="fas fa-envelope text-indigo-900 mr-2"></i>Correos:</h2>
                     <button onclick="toggleDropdown2()" class="w-full bg-indigo-900 text-white py-2 px-4 my-4 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                        Correos registrados
+                        <i class="fas fa-mail-bulk mr-2"></i>Correos registrados
                     </button>
                     <div id="correoDropdown" class="hidden mt-2 w-full">
                         <ul class="bg-white z-50 border border-gray-200 rounded-md overflow-y-auto max-h-48 absolute w-96">
                             {% for correo in correos %}
                             <li class="hover:bg-gray-100 p-2 flex items-center justify-between ">
-                                <span>{{ correo.correo }}</span>
+                                <span><i class="fas fa-at  mr-2"></i>{{ correo.correo }}</span>
                                 <form method="post" class="inline ">
                                     {% csrf_token %}
                                     <input type="hidden" name="correo_id" value="{{ correo.correo }}">
@@ -117,12 +118,12 @@
 
                 <!-- Agregar Correo -->
                 <div class="w-full px-4 mb-6">
-                    <h3 class="text-xl mb-4">Agregar Correo:</h3>
+                    <h3 class="text-xl mb-4"><i class="fas fa-plus-circle text-indigo-900 mr-2"></i>Agregar Correo:</h3>
                     <form method="post">
                         {% csrf_token %}
                         {{ correo_form.as_p }}
                         <button type="submit" name="add_correo" class="w-full bg-indigo-900 text-white py-2 px-4 my-4 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                            Agregar
+                            <i class="fas fa-plus mr-2"></i>Agregar
                         </button>
                     </form>
                 </div>

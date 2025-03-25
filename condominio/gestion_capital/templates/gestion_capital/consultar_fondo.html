@@ -1,47 +1,68 @@
 {% load tailwind_tags %}
-
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de fondos</title>
+    <title>Consulta de Fondos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% tailwind_css %}
 </head>
-<body class="bg-gray-200 font-sans">
+<body class="bg-gray-100 font-sans">
     {% include 'layout/navbar.html' %}
 
-    <section class="p-6 rounded-lg w-screen flex justify-center">
-        <div class="flex flex-col w-full max-w-6xl">
+    <section class="py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto w-1/2">
             <!-- Caja del formulario de filtrado -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                <h1 class="text-2xl font-semibold text-gray-800 mb-4">Estado de los Fondos del Condominio</h1>
-                <form method="GET" action="{% url 'consultar_fondo' %}" class="space-y-4">
-                    <div class="flex flex-wrap -mx-4">
-                        <div class="w-full md:w-1/2 px-4 mb-4">
-                            <label for="mes" class="block text-sm font-medium text-gray-700 mb-1">Mes:</label>
-                            <select name="mes" id="mes" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">----</option>
-                                {% for numero, nombre in meses %}
-                                    <option value="{{ numero }}" {% if form.cleaned_data.mes == numero %}selected{% endif %}>{{ nombre }}</option>
-                                {% endfor %}
-                            </select>
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
+                <div class="flex items-center mb-6">
+                    <i class="fas fa-piggy-bank text-3xl text-indigo-900 mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-800">Estado de los Fondos del Condominio</h1>
+                </div>
+                
+                <form method="GET" action="{% url 'consultar_fondo' %}" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <!-- Selector de Mes -->
+                        <div>
+                            <label for="mes" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="far fa-calendar-alt text-gray-500 mr-2"></i>Mes:
+                            </label>
+                            <div class="relative">
+                                <select name="mes" id="mes" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none">
+                                    <option value="">Seleccione un mes</option>
+                                    {% for numero, nombre in meses %}
+                                        <option value="{{ numero }}" {% if form.cleaned_data.mes == numero %}selected{% endif %}>{{ nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fas fa-calendar"></i>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="w-full md:w-1/2 px-4 mb-4">
-                            <label for="anio" class="block text-sm font-medium text-gray-700 mb-1">Año:</label>
-                            <select name="anio" id="anio" class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="">----</option>
-                                {% for anio, anio_label in anios %}
-                                    <option value="{{ anio }}" {% if form.cleaned_data.anio == anio %}selected{% endif %}>{{ anio_label }}</option>
-                                {% endfor %}
-                            </select>
+                        <!-- Selector de Año -->
+                        <div>
+                            <label for="anio" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-calendar-year text-gray-500 mr-2"></i>Año:
+                            </label>
+                            <div class="relative">
+                                <select name="anio" id="anio" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none">
+                                    <option value="">Seleccione un año</option>
+                                    {% for anio, anio_label in anios %}
+                                        <option value="{{ anio }}" {% if form.cleaned_data.anio == anio %}selected{% endif %}>{{ anio_label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                    <i class="fas fa-history"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="w-full px-4">
-                        <button type="submit" class="w-1/2 bg-indigo-900 text-white py-2 px-4 -mx-4 rounded-full block text-center hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
-                            Filtrar
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class=" w-[48%] bg-indigo-900 text-white py-2 px-4 rounded-lg block text-center hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-sm:hidden max-[900px]:ml-auto max-[900px]:mr-4">
+                            <i class="fas fa-filter mr-2"></i>
+                            <span>Filtrar Resultados</span>
                         </button>
                     </div>
                 </form>
@@ -49,50 +70,95 @@
 
             <!-- Caja de los resultados -->
             {% if saldo_actual_dl or saldo_actual_bs or ingresos_actual_dl or ingresos_actual_bs or egresos_actual_dl or egresos_actual_bs %}
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Resultados</h2>
+                <div class="bg-white  rounded-xl shadow-lg p-6 border border-gray-100">
+                    <div class="flex items-center mb-6">
+                        <i class="fas fa-chart-line text-3xl text-indigo-900 mr-3"></i>
+                        <h2 class="text-2xl font-bold text-gray-800">Resumen Financiero</h2>
+                    </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-2 gap-6">
                         <!-- Saldo Actual -->
-                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
-                            <h3 class="text-xl font-bold mb-2">Saldo Actual</h3>
-                            <p class="text-gray-700">Dólares ($): {{ saldo_actual_dl }}</p>
-                            <p class="text-gray-700">Bolívares (Bs): {{ saldo_actual_bs }}</p>
+                        <div class="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                            <div class="flex items-center mb-3">
+                                <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 mr-3">
+                                    <i class="fas fa-wallet text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">Saldo Actual</h3>
+                            </div>
+                            <div class="pl-14">
+                                <p class="text-gray-700 mb-1"><span class="font-medium">Dólares:</span> <span class="text-blue-600 font-semibold">${{ saldo_actual_dl }}</span></p>
+                                <p class="text-gray-700"><span class="font-medium">Bolívares:</span> <span class="text-blue-600 font-semibold">Bs{{ saldo_actual_bs }}</span></p>
+                            </div>
                         </div>
 
                         <!-- Saldo del Mes Anterior -->
-                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
-                            <h3 class="text-xl font-bold mb-2">Saldo del Mes Anterior</h3>
-                            <p class="text-gray-700">Dólares ($): {{ saldo_anterior_dl }}</p>
-                            <p class="text-gray-700">Bolívares (Bs): {{ saldo_anterior_bs }}</p>
+                        <div class="bg-indigo-50 rounded-xl p-5 border border-blue-100">
+                            <div class="flex items-center mb-3">
+                                <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 mr-3">
+                                    <i class="fas fa-clock-rotate-left text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">Saldo Anterior</h3>
+                            </div>
+                            <div class="pl-14">
+                                <p class="text-gray-700 mb-1"><span class="font-medium">Dólares:</span> <span class="text-blue-600 font-semibold">${{ saldo_anterior_dl }}</span></p>
+                                <p class="text-gray-700"><span class="font-medium">Bolívares:</span> <span class="text-blue-600 font-semibold">Bs{{ saldo_anterior_bs }}</span></p>
+                            </div>
                         </div>
 
                         <!-- Ingresos del Mes -->
-                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
-                            <h3 class="text-xl font-bold mb-2">Ingresos del Mes</h3>
-                            <p class="text-gray-700">Dólares ($): {{ ingresos_actual_dl }}</p>
-                            <p class="text-gray-700">Bolívares (Bs): {{ ingresos_actual_bs }}</p>
+                        <div class="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                            <div class="flex items-center mb-3">
+                                <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 mr-3">
+                                    <i class="fa fa-arrow-right text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">Ingresos</h3>
+                            </div>
+                            <div class="pl-14">
+                                <p class="text-gray-700 mb-1"><span class="font-medium">Dólares:</span> <span class="text-blue-600 font-semibold">${{ ingresos_actual_dl }}</span></p>
+                                <p class="text-gray-700"><span class="font-medium">Bolívares:</span> <span class="text-blue-600 font-semibold">Bs{{ ingresos_actual_bs }}</span></p>
+                            </div>
                         </div>
 
                         <!-- Egresos del Mes -->
-                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
-                            <h3 class="text-xl font-bold mb-2">Egresos del Mes</h3>
-                            <p class="text-gray-700">Dólares ($): {{ egresos_actual_dl }}</p>
-                            <p class="text-gray-700">Bolívares (Bs): {{ egresos_actual_bs }}</p>
+                        <div class="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                            <div class="flex items-center mb-3">
+                                <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 mr-3">
+                                    <i class="fa fa-arrow-left text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">Egresos</h3>
+                            </div>
+                            <div class="pl-14">
+                                <p class="text-gray-700 mb-1"><span class="font-medium">Dólares:</span> <span class="text-blue-600 font-semibold">${{ egresos_actual_dl }}</span></p>
+                                <p class="text-gray-700"><span class="font-medium">Bolívares:</span> <span class="text-blue-600 font-semibold">Bs{{ egresos_actual_bs }}</span></p>
+                            </div>
                         </div>
 
                         <!-- Ingresos del Mes Anterior -->
-                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
-                            <h3 class="text-xl font-bold mb-2">Ingresos del Mes Anterior</h3>
-                            <p class="text-gray-700">Dólares ($): {{ ingresos_anterior_dl }}</p>
-                            <p class="text-gray-700">Bolívares (Bs): {{ ingresos_anterior_bs }}</p>
+                        <div class="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                            <div class="flex items-center mb-3">
+                                <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 mr-3">
+                                    <i class="fas fa-caret-down text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">Ingresos Anteriores</h3>
+                            </div>
+                            <div class="pl-14">
+                                <p class="text-gray-700 mb-1"><span class="font-medium">Dólares:</span> <span class="text-blue-600 font-semibold">${{ ingresos_anterior_dl }}</span></p>
+                                <p class="text-gray-700"><span class="font-medium">Bolívares:</span> <span class="text-blue-600 font-semibold">Bs{{ ingresos_anterior_bs }}</span></p>
+                            </div>
                         </div>
 
                         <!-- Egresos del Mes Anterior -->
-                        <div class="bg-gray-50 rounded-lg shadow-md p-4">
-                            <h3 class="text-xl font-bold mb-2">Egresos del Mes Anterior</h3>
-                            <p class="text-gray-700">Dólares ($): {{ egresos_anterior_dl }}</p>
-                            <p class="text-gray-700">Bolívares (Bs): {{ egresos_anterior_bs }}</p>
+                        <div class="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                            <div class="flex items-center mb-3">
+                                <div class="p-3 rounded-lg bg-indigo-100 text-indigo-900 mr-3">
+                                    <i class="fas fa-caret-up text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">Egresos Anteriores</h3>
+                            </div>
+                            <div class="pl-14">
+                                <p class="text-gray-700 mb-1"><span class="font-medium">Dólares:</span> <span class="text-blue-600 font-semibold">${{ egresos_anterior_dl }}</span></p>
+                                <p class="text-gray-700"><span class="font-medium">Bolívares:</span> <span class="text-blue-600 font-semibold">Bs{{ egresos_anterior_bs }}</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
