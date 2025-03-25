@@ -7,7 +7,15 @@
 
 {% block content %}
 
-<section class="propietario p-6 rounded-lg relative flex justify-center">
+<div class="flex justify-center mt-8">
+    <button onclick="window.print()" class="bg-indigo-900 hover:bg-blue-900 text-white py-2 px-4 rounded hover:font-semibold">
+      Imprimir Recibo
+    </button>
+</div>
+
+
+
+<section class="propietario p-6 rounded-lg relative flex justify-center" style="page-break-after: always;">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
@@ -241,7 +249,7 @@
 <!-- Aquí va la segunda parte del recibo -->
 
 
-<section class="propietario p-6 rounded-lg relative flex justify-center">
+<section class="propietario p-6 rounded-lg relative flex justify-center" style="page-break-after: always;">
 
   
     <div class="bg-white rounded-lg shadow-md mb-10 " style="width: 60rem;">  
