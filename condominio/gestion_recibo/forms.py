@@ -1,14 +1,11 @@
 # forms.py
 from django import forms
 from django.forms import inlineformset_factory # Formularios en relacion a un modelo padre Presupuesto y Recibo
-from .models import Recibo, Presupuesto, Fondo, Gasto, ComentarioFrec
+from .models import Recibo, Presupuesto, Fondo, Gasto, ComentarioFrec, Dpto
 from django.utils.dates import MONTHS
 from django.db.models.functions import ExtractYear
 from django.core.exceptions import ValidationError
 
-
-
-# UPDATE: he borrado detalles_fondo de los campos a llenar por el administrador
 class FondoForm(forms.ModelForm):
     ingresos = forms.DecimalField(
         min_value=0,
@@ -29,6 +26,28 @@ class FondoForm(forms.ModelForm):
                 'class': 'fecha-input'
             }),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha = cleaned_data.get("fecha_fondo")
+        if not fecha:  # Validar que la fecha no esté vacía
+            self.add_error('fecha_fondo', "La fecha del fondo es obligatoria.")
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        self.allowed_month = kwargs.pop('allowed_month', None)
+        self.allowed_year = kwargs.pop('allowed_year', None)
+        super(FondoForm, self).__init__(*args, **kwargs)  # Corregido
+        self.fields['fecha_fondo'].label = 'Fecha del Fondo'  # Corregido
+
+    def clean_fecha_fondo(self):  # Corregido: 'clean_fecha_fondo' en lugar de 'clean_fecha_gasto'
+        fecha = self.cleaned_data.get('fecha_fondo')
+        if fecha and self.allowed_month and self.allowed_year:
+            if fecha.month > self.allowed_month or fecha.year > self.allowed_year:
+                raise forms.ValidationError(
+                    f'La fecha debe ser previa al mes {self.allowed_month} y al año {self.allowed_year}.'
+                )
+        return fecha
 
 class FechaFiltroForm(forms.Form):
     fecha_inicio = forms.DateField(
@@ -80,7 +99,8 @@ class GastoDirectoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese el título',
             'oninvalid': "this.setCustomValidity('Este campo es obligatorio.')",
-            'oninput': "this.setCustomValidity('')"
+            'oninput': "this.setCustomValidity('')",
+            'class': 'rounded-md'
         }),
         error_messages={'required': "El título del presupuesto es obligatorio."}
     )
@@ -88,13 +108,15 @@ class GastoDirectoForm(forms.ModelForm):
     detalle_pres = forms.CharField(
         required=False,
         max_length=255,
-        widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)'})
+        widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)',
+            'class': 'rounded-md'})
     )
 
-    clasificacion_gasto = forms.CharField(
+    clasificacion_pres = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Ej: limpieza,jardin,...'
+            'placeholder': 'Ej: limpieza,jardin,...',
+            'class': 'rounded-md'
         }),
         help_text="Ingresa las clasificaciones separadas por comas."
     )
@@ -114,7 +136,8 @@ class GastoDirectoForm(forms.ModelForm):
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
             'oninput': "this.setCustomValidity('')",
-            'placeholder': 'Ej: 3.14'
+            'placeholder': 'Ej: 3.14',
+            'class': 'rounded-md'
         }),
         error_messages={
             'invalid': "Ingresa un número válido.",
@@ -177,7 +200,8 @@ class PresupuestoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese el título',
             'oninvalid': "this.setCustomValidity('Este campo es obligatorio.')",
-            'oninput': "this.setCustomValidity('')"
+            'oninput': "this.setCustomValidity('')",
+            'class': 'rounded-md'
         }),
         error_messages={'required': "El título del presupuesto es obligatorio."}
     )
@@ -185,13 +209,15 @@ class PresupuestoForm(forms.ModelForm):
     detalle_pres = forms.CharField(
         required=False,
         max_length=255,
-        widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)'})
+        widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)',
+            'class': 'rounded-md'})
     )
 
     clasificacion_pres = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Ej: limpieza,jardin,...'
+            'placeholder': 'Ej: limpieza,jardin,...',
+            'class': 'rounded-md'
         }),
         help_text="Ingresa las clasificaciones separadas por comas."
     )
@@ -211,7 +237,8 @@ class PresupuestoForm(forms.ModelForm):
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
             'oninput': "this.setCustomValidity('')",
-            'placeholder': 'Ej: 3.14'
+            'placeholder': 'Ej: 3.14',
+            'class': 'rounded-md'
         }),
         error_messages={
             'invalid': "Ingresa un número válido.",
@@ -274,7 +301,8 @@ class GastoAplicadoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese el título',
             'oninvalid': "this.setCustomValidity('Este campo es obligatorio.')",
-            'oninput': "this.setCustomValidity('')"
+            'oninput': "this.setCustomValidity('')",
+            'class': 'rounded-md'
         }),
         error_messages={'required': "El título del presupuesto es obligatorio."}
     )
@@ -282,7 +310,8 @@ class GastoAplicadoForm(forms.ModelForm):
     detalle_gasto = forms.CharField(
         required=False,
         max_length=255,
-        widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)'})
+        widget=forms.Textarea(attrs={'placeholder': 'Ingrese un detalle (opcional)',
+            'class': 'rounded-md'})
     )
 
     moneda_gasto = forms.ChoiceField(
@@ -290,7 +319,8 @@ class GastoAplicadoForm(forms.ModelForm):
         choices=[('bs', 'Bolívares'), ('$', 'Dólares')],
         widget=forms.Select(attrs={
             'oninvalid': "this.setCustomValidity('Seleccione una moneda.')",
-            'oninput': "this.setCustomValidity('')"
+            'oninput': "this.setCustomValidity('')",
+            'class': 'rounded-md'
         }),
         help_text="Seleccione la moneda en la que se hará el gasto originalmente.",
         error_messages={'required': "La selección de la moneda es obligatoria."}
@@ -299,7 +329,8 @@ class GastoAplicadoForm(forms.ModelForm):
     clasificacion_gasto = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Ej: limpieza,jardin,...'
+            'placeholder': 'Ej: limpieza,jardin,...',
+            'class': 'rounded-md'
         }),
         help_text="Ingresa las clasificaciones separadas por comas."
     )
@@ -319,7 +350,8 @@ class GastoAplicadoForm(forms.ModelForm):
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
             'oninput': "this.setCustomValidity('')",
-            'placeholder': 'Ej: 3.14'
+            'placeholder': 'Ej: 3.14',
+            'class': 'rounded-md'
         }),
         error_messages={
             'invalid': "Ingresa un número válido.",
@@ -335,7 +367,8 @@ class GastoAplicadoForm(forms.ModelForm):
             'step': '0.01',
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
             'oninput': "this.setCustomValidity('')",
-            'placeholder': 'Ej: 10.11'
+            'placeholder': 'Ej: 10.11',
+            'class': 'rounded-md'
         }),
         error_messages={
             'invalid': "Ingresa un número válido.",
@@ -418,7 +451,8 @@ class FondoImprevistoForm(forms.ModelForm):
             'step': '0.01', 
             'oninvalid': "this.setCustomValidity('Si el monto es 0, deja el campo vacío.')",
             'oninput': "this.setCustomValidity('')",
-            'placeholder': 'Ej: 3.14'
+            'placeholder': 'Ej: 3.14',
+            'class': 'rounded-md'
         }),
         error_messages={
             'invalid': "Ingresa un número válido.",
@@ -461,3 +495,18 @@ class ComentarioForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ComentarioForm, self).__init__(*args, **kwargs)  # Corregido
         self.fields['desc_comentario'].label = 'Comentario'
+
+class DptoForm(forms.ModelForm):
+    dptos = Dpto.objects.all()
+    choices = []
+    for dpto in dptos:
+        choices.append((dpto.id_dpto, dpto.id_dpto))
+    id_dpto = forms.ChoiceField(
+        choices=choices,
+        label="Apartamentos",
+        required=True  # Hacerlo requerido
+    )
+
+    class Meta:
+        model = Dpto
+        fields = ['id_dpto']

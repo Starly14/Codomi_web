@@ -16,13 +16,23 @@
   
       <div class="p-20 pb-12 pr-10 pl-10 w-full">
 
-    <div class="mb-4 flex-row flex justify-between">
+    <div class=" flex-row flex justify-between">
 
         <!-- Aquí va el nombre de la residencia -->
         <h2 class="text-xl font-bold mb-5 pr-64">{{edif.nombre_edif}}</h2>
 
+
+        <div class="flex flex-row justify-end">
         <!-- Aquí va el RIF de la residencia -->
-        <h1 class="text-l font-bold mb-5"> Rif: J-{{edif.rif}}</h1>
+        <h1 class="text-l font-bold mb-5" style="margin-right: 8rem;"> Rif: J-{{edif.rif}}</h1>
+
+        <div class="absolute" style="width: 6rem;">
+            {% if foto_url %}
+                <img src="{{ foto_url }}" alt="logo" class="rounded-lg shadow-md w-full h-full object-cover">
+            {% endif %}
+        </div>
+    
+        </div>
     </div>
 
     <div class="mb-4">
@@ -31,7 +41,7 @@
         <h1 class="text-l font-bold mb-5">{{edif.direccion_edif}}</h1>
     </div>
 
-    <div class="mb-4 mt-10 flex flex-row justify-center">
+    <div class="mb-2 mt-10 flex flex-row justify-center">
         <!-- Aquí va el mes del recibo -->
         <h2 class="text-l font-bold mb-5">Recibo de condominio para el mes de {{fecha_escrita}}</h2>
 
@@ -213,7 +223,7 @@
 
         </div>
         {% for comentario in comentarios %}
-            <div class=" pl-5 border border-b-gray-800 pr-5 flex flex-col items-center text-center">
+            <div class=" pl-5 border border-t-gray-800 border-transparent pr-5 flex flex-col items-center text-center">
 
                 <h1 class="text-l font-bold my-3 max-w-2xl">{{comentario.desc_comentario}}</h1>
 
@@ -240,14 +250,24 @@
   
       <div class="p-20 pb-12 pr-10 pl-10 w-full">
   
-      <div class="mb-4 flex-row flex justify-between">
-  
-          <!-- Aquí va el nombre de la residencia -->
-          <h2 class="text-xl font-bold mb-5 pr-64">{{edif.nombre_edif}}</h2>
-  
-          <!-- Aquí va el RIF de la residencia -->
-          <h1 class="text-l font-bold mb-5"> Rif: J-{{edif.rif}}</h1>
-      </div>
+    <div class=" flex-row flex justify-between">
+
+            <!-- Aquí va el nombre de la residencia -->
+            <h2 class="text-xl font-bold mb-5 pr-64">{{edif.nombre_edif}}</h2>
+    
+    
+            <div class="flex flex-row justify-end">
+            <!-- Aquí va el RIF de la residencia -->
+            <h1 class="text-l font-bold mb-5" style="margin-right: 8rem;"> Rif: J-{{edif.rif}}</h1>
+    
+            <div class="absolute" style="width: 6rem;">
+                {% if foto_url %}
+                    <img src="{{ foto_url }}" alt="logo" class="rounded-lg shadow-md w-full h-full object-cover">
+                {% endif %}
+            </div>
+        
+            </div>
+    </div>
   
       <div class="mb-4">
           
@@ -317,7 +337,7 @@
   
           
   
-          <div class="border-2 border-gray-800 px-5 flex flex-row justify-end rounded-b-lg" style="background-color: #ffff00;">
+          <div class="border-t-2 border-t-gray-800 px-5 border-transparent flex flex-row justify-end rounded-b-lg" style="background-color: #ffff00;">
   
               <h1 class="text-l font-bold my-3 mr-5">Total de débitos en cuentas:</h1>
   
@@ -347,14 +367,24 @@
   
       <div class="p-20 pb-12 pr-10 pl-10 w-full">
   
-      <div class="mb-4 flex-row flex justify-between">
-  
-          <!-- Aquí va el nombre de la residencia -->
-          <h2 class="text-xl font-bold mb-5 pr-64">{{edif.nombre_edif}}</h2>
-  
-          <!-- Aquí va el RIF de la residencia -->
-          <h1 class="text-l font-bold mb-5"> Rif: J-{{edif.rif}}</h1>
-      </div>
+        <div class=" flex-row flex justify-between">
+
+            <!-- Aquí va el nombre de la residencia -->
+            <h2 class="text-xl font-bold mb-5 pr-64">{{edif.nombre_edif}}</h2>
+    
+    
+            <div class="flex flex-row justify-end">
+            <!-- Aquí va el RIF de la residencia -->
+            <h1 class="text-l font-bold mb-5" style="margin-right: 8rem;"> Rif: J-{{edif.rif}}</h1>
+    
+            <div class="absolute" style="width: 6rem;">
+                {% if foto_url %}
+                    <img src="{{ foto_url }}" alt="logo" class="rounded-lg shadow-md w-full h-full object-cover">
+                {% endif %}
+            </div>
+        
+            </div>
+        </div>
   
       <div class="mb-4">
           

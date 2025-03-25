@@ -6,14 +6,10 @@ from datetime import datetime, timedelta
 
 from .forms import EstadoCuentaFiltroForm, FondoFiltroForm
 
-from .models import Recibo_p, Recibo, Deuda, Dpto, Importe, Fondo
-from .filters import HistorialRecibosFilter
+from .models import Deuda, Dpto, Importe, Fondo
  # permite mostrar una lista de objetos del modelo
 from .models import Importe
 from .filters import FiltroFecha
-
-def gestion_capital(request):
-    return render(request, "gestion_capital/gestionCapital.html")
 
 def vista_con_filtro(request):
     filtro = FiltroFecha(request.GET)
@@ -25,13 +21,6 @@ def vista_con_filtro(request):
         contexto = {'filtro': filtro, 'queryset': queryset}
 
     return render(request, 'gestion_capital/importe_list.html', contexto)
-
-def historial_recibos(request):
-    filtro = HistorialRecibosFilter(request.GET, queryset=Recibo_p.objects.all())
-    return render(request, 'gestion_capital/historial_recibos.html', {
-        'filtro': filtro,
-        'queryset': filtro.qs  # los resultados filtrados
-    })
 
 def consultar_fondo(request):
 
@@ -198,7 +187,6 @@ def estado_cuenta(request):
                 deuda = deuda_dict.get((anio, mes), 0)
                 pago, fecha_pago = pago_dict.get((anio, mes), (0, None))
 
-                print("COMIENZO DEL BUCBLEEEE")
                 saldo = deuda + deuda_acumulada - pago
 
                 if saldo < 0:  # Pago mayor que la deuda total (actual + acumulada)
@@ -206,8 +194,6 @@ def estado_cuenta(request):
                     deuda_acumulada = 0
                     saldo = 0
 
-                    print("SALDO NEGATIVO, PAGO DE MAS")
-                    print("DEUDA ACUMULADA: ", deuda_acumulada)
                     if fecha_pago:
                         # PARA QUE NO LLORE POR EL NAIVE
                         if timezone.is_naive(fecha_pago):
@@ -243,11 +229,13 @@ def estado_cuenta(request):
                     'deuda_acumulada': deuda_acumulada,
                 })
 
-            reportes.append({
-                'departamento': dpto,
-                'reporte': reporte_dpto
-            })
-
+            if len(reporte_dpto) > 0:
+                reportes.append({
+                    'departamento': dpto,
+                    'reporte': reporte_dpto
+                })
+    if len(reportes) == 0:
+        reportes = None
     return render(request, 'gestion_capital/estado_cuenta.html', {
         'form': form,
         'reportes': reportes

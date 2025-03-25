@@ -27,7 +27,6 @@ class CorreoForm(forms.ModelForm):
             'correo': forms.EmailInput(attrs={
                 'placeholder': 'Introduzca el correo',  # Placeholder
                 'required': 'required',
-                'oninvalid': "this.setCustomValidity('Por favor, introduce un correo electrónico válido.')",
                 'oninput': "this.setCustomValidity('')",
                 'class': 'rounded-lg py-1 pl-5' ,
             }),

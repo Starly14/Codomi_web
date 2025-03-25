@@ -101,7 +101,6 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
-
 class Edif(models.Model):
     id_edif = models.AutoField(primary_key=True)
     nombre_edif = models.CharField(max_length=255, blank=True, null=True)
