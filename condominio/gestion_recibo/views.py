@@ -647,6 +647,11 @@ def preReciboBase(request):
     if request.method == 'POST':
         dptoForm = DptoForm(request.POST)
         if 'redirect_recibo' in request.POST: #redirige al ver recibo de la fecha seleccionada
+            print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+            print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+            print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+            print(request.POST)
+            print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
             recibo_id = request.POST.get('recibo_id')
             recibo = Recibo.objects.get(id_recibo=recibo_id)
             year = recibo.fecha_recibo.year
