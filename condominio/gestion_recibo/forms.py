@@ -504,7 +504,10 @@ class DptoForm(forms.ModelForm):
     id_dpto = forms.ChoiceField(
         choices=choices,
         label="Apartamentos",
-        required=True  # Hacerlo requerido
+        required=True,  # Hacerlo requerido
+        widget=forms.Select(attrs={
+            'class': 'rounded-md mb-5'
+        }),
     )
 
     class Meta:
