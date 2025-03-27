@@ -47,7 +47,7 @@
                             Seleccionar recibo
                         </button>
                         <div id="reciboDropdown" class="hidden mt-2 w-full">
-                            <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute">
+                            <ul class="bg-white border border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute z-10">
                                 {% for recibo in recibos %}
                                 <li class="hover:bg-gray-100 p-2">
                                     <label class="flex items-center space-x-2">
@@ -58,7 +58,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                        <button type="submit" name="redirect_recibo" class="w-full bg-indigo-900 text-white py-2 px-4 my-2 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all">
+                        <button type="submit" name="redirect_recibo" class="w-full bg-indigo-900 text-white py-2 px-4 my-2 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
                             Ver recibo
                         </button>
                     </div>
