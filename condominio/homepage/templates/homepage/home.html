@@ -1,0 +1,16 @@
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codomi</title>
+    {% tailwind_css %}
+</head>
+<body>
+    {% include 'layout/navbar.html'%}
+    <div class="font-poppins bg-white flex justify-center  h-screen m-0">
+        <h1 class="text-[4em] mt-48 py-5"> Bienvenido,  {{ user.username }} </h1>
+    </div>
+</body>
+</html>

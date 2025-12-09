@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,13 +32,31 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'gestion_propietario.apps.GestionPropietarioConfig',
+    'iniciarSesion',
+    'homepage',
+    'gestion_capital',
+    'tailwind',
+    'tailwindcss',
+
+    'django_browser_reload',
+    'gestion_recibo',
+
+    'editar_edificio.apps.editarEdificioConfig',
+    'analisis_datos'
+
 ]
+
+TAILWIND_APP_NAME = 'theme'
+
+NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,14 +66,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    'middleware.middleware.LoginRequiredMiddleware',  # Middleware para autenticacion
 ]
 
 ROOT_URLCONF = 'condominio.urls'
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,8 +119,6 @@ DATABASES = {
     }
 }
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -132,8 +155,28 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
+
+
+TAILWIND_APP_NAME = 'tailwindcss'
+
+
+NPM_BIN_PATH = 'c:/Program Files/nodejs/npm.cmd'
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+#Para la selección de archivos de imagen para editar_edificio
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,0 +1,147 @@
+{% load tailwind_tags %}
+{% block scripts %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Propietario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        function validateEmail() {
+            var emailInput = document.getElementById('correo');
+            emailInput.setCustomValidity('');
+    
+            if (!emailInput.validity.valid) {
+                emailInput.setCustomValidity('Por favor, introduce un correo electrónico válido.');
+            }
+        }
+    
+        function toggleDropdown1() {
+            const dropdown = document.getElementById('propDropdown');
+            dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
+        }
+        function toggleDropdown2() {
+            const dropdown = document.getElementById('correoDropdown');
+            dropdown.classList.toggle('hidden'); // Alterna la clase 'hidden'
+        }
+    
+        // Agregar la función para ocultar los menús desplegables al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const propDropdown = document.getElementById('propDropdown');
+            const correoDropdown = document.getElementById('correoDropdown');
+    
+            if (!event.target.closest('#propDropdown') && !event.target.closest('button[onclick="toggleDropdown1()"]')) {
+                propDropdown.classList.add('hidden');
+            }
+    
+            if (!event.target.closest('#correoDropdown') && !event.target.closest('button[onclick="toggleDropdown2()"]')) {
+                correoDropdown.classList.add('hidden');
+            }
+        });
+    </script>
+    {% tailwind_css %}
+</head>
+<body class="bg-gray-200">
+    {% include 'layout/navbar.html' %}
+
+    <section class="propietario p-6 rounded-lg w-full flex justify-center">
+        <div class="flex flex-col w-full max-w-4xl bg-white rounded-lg shadow-md p-6 px-8" style="width: 40rem;">
+            <!-- Fila 1: Propietario y Editar Nombre -->
+            <div class="flex flex-wrap flex-col pt-10">
+                <!-- Propietario -->
+                <div class="w-full px-4 mb-8">
+                    <h2 class="text-xl mb-4"><i class="fas fa-user text-indigo-900 mr-2"></i>Propietario:</h2>
+                    <button onclick="toggleDropdown1()" class="w-full bg-indigo-900 text-white py-2 px-4 my-2 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                        <i class="fas fa-list mr-2"></i>Seleccionar propietario
+                    </button>
+                    <div id="propDropdown" class="hidden mt-2 w-full">
+                        <ul class="bg-white border z-50 border-gray-200 rounded-md overflow-y-auto max-h-48 w-96 absolute">
+                            {% for prop in propietarios %}
+                            <li class="hover:bg-gray-100 p-2">
+                                <form method="post" class="flex items-center">
+                                    <input type="hidden" name="propietario_id" value="{{ prop.id_prop }}">
+                                    <button type="submit" name="redirect_propietario" class="w-full text-left hover:font-semibold"><i class="fas fa-user-circle mr-2"></i>{{ prop.nombre_prop }}</button>
+                                    {% csrf_token %}
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Editar Nombre -->
+                <div class="w-full px-4 mb-8">
+                    <h2 class="text-xl mb-4"><i class="fas fa-edit text-indigo-900 mr-2"></i>Editar nombre</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ propietario_form.as_p }}
+                        <button type="submit" name="edit_nombre" class="w-full bg-indigo-900 text-white py-2 px-4 my-4 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                            <i class="fas fa-save mr-2"></i>Guardar Nombre
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Fila 2: Correos y Agregar Correo -->
+            <div class="flex flex-wrap flex-col">
+                <!-- Correos Registrados -->
+                <div class="w-full px-4 mb-8">
+                    <h2 class="text-xl mb-4"><i class="fas fa-envelope text-indigo-900 mr-2"></i>Correos:</h2>
+                    <button onclick="toggleDropdown2()" class="w-full bg-indigo-900 text-white py-2 px-4 my-4 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                        <i class="fas fa-mail-bulk mr-2"></i>Correos registrados
+                    </button>
+                    <div id="correoDropdown" class="hidden mt-2 w-full">
+                        <ul class="bg-white z-50 border border-gray-200 rounded-md overflow-y-auto max-h-48 absolute w-96">
+                            {% for correo in correos %}
+                            <li class="hover:bg-gray-100 p-2 flex items-center justify-between ">
+                                <span><i class="fas fa-at  mr-2"></i>{{ correo.correo }}</span>
+                                <form method="post" class="inline ">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="correo_id" value="{{ correo.correo }}">
+                                    <button type="submit" name="delete_correo" class="p-2">
+                                        <div class="rounded-full bg-gray-200 hover:bg-red-500 hover:stroke-white transition-colors duration-200 stroke-gray-700">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="size-5 stroke p-1">
+                                                <path d="M7 21C6.45 21 5.97917 20.8042 5.5875 20.4125C5.19583 20.0208 5 19.55 5 19V6H4V4H9V3H15V4H20V6H19V19C19 19.55 18.8042 20.0208 18.4125 20.4125C18.0208 20.8042 17.55 21 17 21H7ZM17 6H7V19H17V6ZM9 17H11V8H9V17ZM13 17H15V8H13V17Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>       
+                                    </button>
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Agregar Correo -->
+                <div class="w-full px-4 mb-6">
+                    <h3 class="text-xl mb-4"><i class="fas fa-plus-circle text-indigo-900 mr-2"></i>Agregar Correo:</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ correo_form.as_p }}
+                        <button type="submit" name="add_correo" class="w-full bg-indigo-900 text-white py-2 px-4 my-4 rounded-lg hover:bg-blue-900 hover:font-semibold hover:text-white transition-all duration-900 ease-in-out scale-100 active:bg-blue-900 active:text-white active:scale-95 max-[900px]:ml-auto max-[900px]:mr-4">
+                            <i class="fas fa-plus mr-2"></i>Agregar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <style>
+        input[type="text"], input[type="number"], input[type="date"] , input[type="email"]{
+            width: 100%; /* Ocupa el ancho completo del contenedor */
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 0.375rem; /* rounded-lg */
+            transition: all 0.3s ease; /* transition-colors */
+            outline: none; /* focus:outline-none */
+            background-color: white; /* bg-white */
+        }
+    </style>
+</body>
+{% endblock %}
+{% endblock %}
+</html>

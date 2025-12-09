@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block scripts %}
+<script>
+    function validateForm(event) {
+        const fileInput = document.getElementById('file-upload');
+        if (!fileInput.files.length) {
+            return true;
+        }
+    }
+
+    function triggerFileUpload() {
+        document.getElementById('file-upload').click();
+    }
+
+    function updateFileName() {
+        const fileInput = document.getElementById('file-upload');
+        const fileNameDisplay = document.getElementById('file-name');
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            if (allowedTypes.includes(file.type)) {
+                fileNameDisplay.textContent = file.name;
+                previewImage(file);
+            } else {
+                fileNameDisplay.textContent = 'Ningún archivo seleccionado';
+                alert('Solo se permiten archivos de formato de imagen (JPEG, PNG, GIF).');
+                fileInput.value = ''; // Restablecer el campo de entrada de archivo
+            }
+        } else {
+            fileNameDisplay.textContent = 'Ningún archivo seleccionado';
+        }
+    }
+
+    function previewImage(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="propietario p-4 rounded-lg relative flex justify-center">
+    <div class="flex w-full justify-center space-x-6">
+        <!-- Cuadro del Formulario -->
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between" style="width: 700px; height: 470px; margin-left: 16px;">
+            <h1 class="text-2xl font-semibold text-gray-800 mb-4">Editar Edificio: {{ edificio.nombre_edif }}</h1>
+            
+            <form method="POST" enctype="multipart/form-data" class="flex flex-col justify-between h-full" onsubmit="validateForm(event)">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_nombre_edif" class="py-2 text-left text-sm font-medium text-gray-700">Nombre del Edificio:</label>
+                    <input type="text" id="id_nombre_edif" name="nombre_edif" value="{{ edificio.nombre_edif }}" class="w-full rounded-md border border-gray-300 py-1 px-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_rif" class="py-2 text-left text-sm font-medium text-gray-700">RIF:</label>
+                    <input type="text" id="id_rif" name="rif" value="{{ edificio.rif }}" class="w-full rounded-md border border-gray-300 py-1 px-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_direccion_edif" class="py-2 text-left text-sm font-medium text-gray-700">Dirección del Edificio:</label>
+                    <input type="text" id="id_direccion_edif" name="direccion_edif" value="{{ edificio.direccion_edif }}" class="w-full rounded-md border border-gray-300 py-1 px-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_foto_edif" class="py-2 text-left text-sm font-medium text-gray-700">Seleccionar foto del Edificio:</label>
+                    <button type="button" id="upload-button" onclick="triggerFileUpload()" class="w-full bg-indigo-900 text-white py-1 px-3 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all duration-300">
+                        Seleccionar Archivo
+                    </button>
+                    <input id="file-upload" type="file" style="display: none;" onchange="updateFileName()" name="archivo">
+                    <span id="file-name" class="py-2 text-left text-sm font-medium text-gray-700">Ningún archivo seleccionado</span>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="w-full bg-indigo-900 text-white py-2 px-4 rounded-lg hover:bg-blue-900 hover:font-semibold transition-all duration-300">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Cuadro de Imagen -->
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center" style="width: 700px; height: 470px; margin-right: 16px;">
+            <label for="id_nombre_edif" class="px-4 py-2 text-left text-sm font-medium text-gray-700">Imagen del Edificio:</label>
+            <div class="flex items-center justify-center w-full h-full">
+                {% if foto_url %}
+                    <img id="preview-img" src="{{ foto_url }}" alt="Foto de {{ edificio.nombre_edif }}" class="rounded-lg shadow-md max-w-full max-h-full object-contain">
+                {% else %}
+                    <img id="preview-img" src="https://www.shorttermprograms.com/images/other/no-image.png" alt="Imagen por defecto" class="rounded-lg shadow-md max-w-full max-h-full object-contain">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
